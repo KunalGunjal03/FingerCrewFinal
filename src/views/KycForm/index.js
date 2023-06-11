@@ -6,6 +6,7 @@ import { getForm, setStepStatus, setFormData } from './store/dataSlice'
 import { setCurrentStep } from './store/stateSlice'
 import reducer from './store'
 import { injectReducer } from 'store/index'
+import { Card } from 'components/ui'
 
 injectReducer('accountDetailForm', reducer)
 
@@ -20,25 +21,33 @@ const EducationalQualificationDetails = lazy(() =>
 const CertificationDetails = lazy(() =>
     import('./components/CertificationDetails')
 )
-const previousExperienceDetails = lazy(() =>
+const PreviousExperienceDetails = lazy(() =>
     import('./components/previousExperienceDetails')
 )
-const AccountReview = lazy(() => import('./components/AccountReview'))
 
+const Skills = lazy(() => import ('./components/Skills'))
+const UploadDocuments = lazy(() => import ('./components/UploadDocuments'))
+const BankDetails = lazy(() =>
+     import('./components/BankDetails')
+ )
+ const BackgroundCheckDetails = lazy (()=> import('./components/BackgroundCheckDetails') )
+ const InsuranceDetails = lazy(()=> import ('./components/InsuranceDetails'))
 const DetailForm = () => {
     const dispatch = useDispatch()
     const stepStatus = useSelector(
         (state) => state.accountDetailForm.data.stepStatus
     )
+    
     const currentStep = useSelector(
         (state) => state.accountDetailForm.state.currentStep
     )
+    
     const formData = useSelector(
-        (state) => state.accountDetailForm.data.formData
+        (state) => state.accountDetailForm.data.formData.getData
     )
-
+      
     useEffect(() => {
-        dispatch(getForm())
+        // dispatch(getForm())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -68,8 +77,8 @@ const DetailForm = () => {
         <Container className="h-full">
             <AdaptableCard className="h-full" bodyClass="h-full">
                 <div className="grid lg:grid-cols-5 xl:grid-cols-3 2xl:grid-cols-5 gap-4 h-full">
-                    {currentStep !== 10 && (
-                        <div className="2xl:col-span-1 xl:col-span-1 lg:col-span-2">
+                    {currentStep !== 11 && (
+                        <div className="2xl:col-span-1 xl:col-span-1 lg:col-span-4">
                             <FormStep
                                 currentStep={currentStep}
                                 currentStepStatus={currentStepStatus}
@@ -77,24 +86,26 @@ const DetailForm = () => {
                             />
                         </div>
                     )} 
+                    
                     <div
                         className={
-                            currentStep !== 10
-                                ? '2xl:col-span-4 lg:col-span-3 xl:col-span-2'
+                            currentStep !== 11
+                                ? '2xl:col-span-4 lg:col-span-3 xl:col-span-2 ml-5'
                                 : 'lg:col-span-5'
                         }
                     >
+                        <Card className = 'ml-5'>
                         <Suspense fallback={<></>}>
                             {currentStep === 0 && (
                                 <PersonalInformation
-                                    data={formData.personalInformation}
+                                    data={formData}
                                     onNextChange={handleNextChange}
                                     currentStepStatus={currentStepStatus}
                                 />
                             )}
                             {currentStep === 1 && (
                                 <KYCForm
-                                    data={formData.KYCForm}
+                                    data={formData}
                                     onNextChange={handleNextChange}
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
@@ -102,7 +113,7 @@ const DetailForm = () => {
                             )}
                             {currentStep === 2 && (
                                 <AddressDetails
-                                    data={formData.AddressDetails}
+                                    data={formData}
                                     onNextChange={handleNextChange}
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
@@ -110,7 +121,7 @@ const DetailForm = () => {
                             )}
                             {currentStep === 3 && (
                                 <EducationalQualificationDetails
-                                    data={formData.EducationalQualificationDetails}
+                                    data={formData}
                                     onNextChange={handleNextChange}
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
@@ -118,24 +129,66 @@ const DetailForm = () => {
                             )}
                             {currentStep === 4 && (
                                 <CertificationDetails
-                                    data={formData.CertificationDetails}
+                                    data={formData}
                                     onNextChange={handleNextChange}
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
                                 />
                             )}
                              {currentStep === 5 && (
-                                <previousExperienceDetails
-                                    data={formData.financialInformation}
+                                <PreviousExperienceDetails
+                                    data={formData}
                                     onNextChange={handleNextChange}
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
                                 />
                             )} 
-    
-                            {currentStep === 10 && <AccountReview />}
+                            {currentStep === 6 && (
+                                <Skills
+                                    data={formData}
+                                    onNextChange={handleNextChange}
+                                    onBackChange={handleBackChange}
+                                    currentStepStatus={currentStepStatus}
+                                />
+                            )} 
+                             {currentStep === 7 && (
+                                <BankDetails
+                                    data={formData}
+                                    onNextChange={handleNextChange}
+                                    onBackChange={handleBackChange}
+                                    currentStepStatus={currentStepStatus}
+                                />
+                            )} 
+                             
+                             {currentStep === 8 && (
+                                <UploadDocuments
+                                    data={formData}
+                                    onNextChange={handleNextChange}
+                                    onBackChange={handleBackChange}
+                                    currentStepStatus={currentStepStatus}
+                                />
+                            )} 
+                              {currentStep === 9 && (
+                                <InsuranceDetails
+                                    data={formData}
+                                    onNextChange={handleNextChange}
+                                    onBackChange={handleBackChange}
+                                    currentStepStatus={currentStepStatus}
+                                />
+                            )} 
+                              {currentStep === 10 && (
+                                <BackgroundCheckDetails
+                                    data={formData}
+                                    onNextChange={handleNextChange}
+                                    onBackChange={handleBackChange}
+                                    currentStepStatus={currentStepStatus}
+                                />
+                            )} 
+                        
                         </Suspense>
+                        </Card>
                     </div>
+                    
                 </div>
             </AdaptableCard>
         </Container>

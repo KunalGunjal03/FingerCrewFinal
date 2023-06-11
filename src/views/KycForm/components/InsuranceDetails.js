@@ -1,44 +1,36 @@
-import React from 'react'
 import {
     Input,
+    InputGroup,
     Button,
-    Checkbox,
-    Select,
+    DatePicker,
+    //Select,
     FormItem,
     FormContainer,
+
 } from 'components/ui'
-import { Field, Form, Formik, getIn } from 'formik'
+import { Field, Form, Formik } from 'formik'
 import NumberFormat from 'react-number-format'
-import {
-    occupationOptions,
-    annualIncomeOptions,
-    sourceOfWealthOptions,
-    noTinReasonOption,
-} from '../constants'
-import { countryList } from 'constants/countries.constant'
-//import * as Yup from 'yup'
-import {FiCheckCircle} from 'react-icons/fi'
-import {  useDispatch ,useSelector} from 'react-redux'
+// import { countryList } from 'constants/countries.constant'
+// import { statusOptions } from '../constants'
+import { components } from 'react-select'
+//import {useSelector} from 'react'
+// import * as Yup from 'yup'
+import {  useDispatch,useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 //import { apiGetAccountFormData } from 'services/AccountServices'
-import { getForm } from '../store/dataSlice'
-import { useLocation, useParams } from 'react-router-dom'
-//import {getEducation} from '../store/dataSlice'
-import { getCertification } from '../store/dataSlice'
-const excludedOccupation = ['unemployed', 'student', 'retired']
+import { getInsured } from '../store/dataSlice'
+import { useLocation } from 'react-router-dom'
+import {FiCheckCircle} from 'react-icons/fi'
 
-
-const CertificationDetails
-    = ({
+const InsuranceDetails = ({
     data = {
-        certificate_name:'',
-        certification_year:''
+        isInsured:'',
+        policy_Expiry_date:''
     },
     onNextChange,
     currentStepStatus,
 }) => {
-      
-  //sakshi
+   
     const location = useLocation()
     const {token,tokenKey} = useSelector((state) => state.auth.user)
      useEffect(() => {
@@ -55,39 +47,29 @@ const CertificationDetails
  }, []);
  const dispatch = useDispatch()
  const fetchData = (requestParam) => {
-     try {
-        const Param = {
-            surveyor_master_id : requestParam.surveyor_master_id , 
-            token : token , 
-            tokenKey : tokenKey
-        }
-         //const surveyor_master_id = { surveyor_master_id : requestParam.surveyor_master_id}
-       //dispatch(getForm({ surveyor_master_id,token,tokenKey}));
-       dispatch(getCertification( requestParam));
-       //console.log(surveyor_master_id)
-       
-     } catch (error) {
-       console.error(error);
-       return error;
-     }
-   };
-
-
-
-
+    try {
     
-    const onNext = (values, setSubmitting) => {
-        onNextChange?.(values, 'CertificationDetails', setSubmitting)
+      dispatch(getInsured( requestParam));
+      
+    } catch (error) {
+      console.error(error);
+      return error;
     }
-
+  };
+   
+    const onNext = async(values, setSubmitting) => {
+        onNextChange?.(values, 'InsuranceDetails', setSubmitting)
+    }
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
-    console.log(data)
+    // const handleSubmit = async (values, { setSubmitting }) => {
+   
+console.log(data)
     return (
         <>
             <div className="mb-8">
-                <h3 className="mb-2">Certification Details</h3>
+                <h3 className="mb-2">Insurance Details</h3>
                 {/* <p>Basic information for an account opening</p> */}
             </div>
             <Formik
@@ -103,40 +85,44 @@ const CertificationDetails
             >
                 {({ values, touched, errors, isSubmitting }) => {
                     return (
-                        <>
+                        
                         <Form>
                             <FormContainer>
-                                
-                            {Array.isArray(data) && data.length!==0? (
-                                data.map((item) => (
+                            {Array.isArray(data) && data.length!== 0 ? (
+                                    data.map((items) => (
                                     <div>
-                                    <FormItem key={item}>
-                                    <label>Certificate</label>
-
+                                    <FormItem
+                                    label="Insured"
+                                >
                                     <Field
                                         type="text"
-                                        name="certificate_name"
+                                        name="isInsured"
                                         component={Input}
-                                        value={item.certificate_name}
+                                        value = {items && items.isInsured}
                                         readOnly
                                     />
-                                    <div className="mt-4"></div>
+                                </FormItem>
+                                
+                                <FormItem
+                                    label="Policy-Expiry-Date"
+                                 
+                                >
                                     <Field
                                         type="text"
-                                        name="certification_year"
+                                        name="policy_Expiry_date"
                                         component={Input}
-                                        value={item.certification_year}
+                                        value = {items && items.policy_Expiry_date} 
                                         readOnly
                                     />
-                                    </FormItem>
-                                    <div className="flex justify-end gap-2">
-                                    <Button
+                                </FormItem>
+                                <div className="flex justify-end gap-2">
+                                <Button
                                         loading={isSubmitting}
                                         size="md"
                                         className="ltr:mr-3 rtl:ml-3"
                                         // onClick={() => onDiscard?.()}
                                         // icon = {<MdOutlineNavigateNext/>}
-                                        type="submit"
+                                        type="button"
                                     >
                                         Next
                                     </Button>
@@ -149,16 +135,18 @@ const CertificationDetails
                                     Verify
                                      </Button>
                                 </div>
-                                    </div>
-                                ))
-                                ) : (
-                                <p>No data available.</p>
-                                )}                                    
                                    
+                                    </div>
+                                 ))
+                                 
+                                ) : (
+                                    <p>No data available.</p>
+                                )} 
+                                    
+                                    
                                 
                             </FormContainer>
                         </Form>
-                        </>
                     )
                 }}
             </Formik>
@@ -166,4 +154,4 @@ const CertificationDetails
     )
 }
 
-export default CertificationDetails
+export default InsuranceDetails

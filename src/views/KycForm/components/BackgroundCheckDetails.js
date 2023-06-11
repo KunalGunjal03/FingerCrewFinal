@@ -9,30 +9,25 @@ import {
 } from 'components/ui'
 import { Field, Form, Formik, getIn } from 'formik'
 import NumberFormat from 'react-number-format'
-import {
-    occupationOptions,
-    annualIncomeOptions,
-    sourceOfWealthOptions,
-    noTinReasonOption,
-} from '../constants'
-import { countryList } from 'constants/countries.constant'
-//import * as Yup from 'yup'
-import {FiCheckCircle} from 'react-icons/fi'
 import {  useDispatch ,useSelector} from 'react-redux'
 import { useEffect, useState } from 'react'
 //import { apiGetAccountFormData } from 'services/AccountServices'
-import { getForm } from '../store/dataSlice'
+import { getBackground } from '../store/dataSlice'
 import { useLocation, useParams } from 'react-router-dom'
-//import {getEducation} from '../store/dataSlice'
-import { getCertification } from '../store/dataSlice'
-const excludedOccupation = ['unemployed', 'student', 'retired']
+import {FiCheckCircle} from 'react-icons/fi'
 
 
-const CertificationDetails
+
+
+
+
+const BackgroundCheckDetails
     = ({
     data = {
-        certificate_name:'',
-        certification_year:''
+        bg_quest:'',
+        bg_check_ans:'',
+        remarks:''
+
     },
     onNextChange,
     currentStepStatus,
@@ -63,7 +58,7 @@ const CertificationDetails
         }
          //const surveyor_master_id = { surveyor_master_id : requestParam.surveyor_master_id}
        //dispatch(getForm({ surveyor_master_id,token,tokenKey}));
-       dispatch(getCertification( requestParam));
+       dispatch(getBackground( requestParam));
        //console.log(surveyor_master_id)
        
      } catch (error) {
@@ -77,7 +72,7 @@ const CertificationDetails
 
     
     const onNext = (values, setSubmitting) => {
-        onNextChange?.(values, 'CertificationDetails', setSubmitting)
+        onNextChange?.(values, 'BackgroundCheckDetails', setSubmitting)
     }
 
     const formData = useSelector(
@@ -87,7 +82,7 @@ const CertificationDetails
     return (
         <>
             <div className="mb-8">
-                <h3 className="mb-2">Certification Details</h3>
+                <h3 className="mb-2">BackgroundCheck Details</h3>
                 {/* <p>Basic information for an account opening</p> */}
             </div>
             <Formik
@@ -106,37 +101,54 @@ const CertificationDetails
                         <>
                         <Form>
                             <FormContainer>
-                                
-                            {Array.isArray(data) && data.length!==0? (
-                                data.map((item) => (
+                            {Array.isArray(data) && data.length!== 0 ? (
+                                    data.map((items) => (
                                     <div>
-                                    <FormItem key={item}>
-                                    <label>Certificate</label>
-
+                                    <FormItem
+                                    label="Que.1"
+                                 
+                                >
                                     <Field
                                         type="text"
-                                        name="certificate_name"
+                                        name="bg_quest"
+                                         component={Input}
+                                         value = {items && items.bg_quest}
+                                         readOnly
+                                    />
+                                </FormItem>
+                                <FormItem
+                                    label="ANS:"
+                                 
+                                >
+                                     <Field
+                                        type="text"
+                                        name="bg_check_ans"
                                         component={Input}
-                                        value={item.certificate_name}
+                                        value = {items && items.bg_check_ans} 
                                         readOnly
                                     />
-                                    <div className="mt-4"></div>
+                                </FormItem>
+                                <FormItem
+                                    label="Remark"
+                                 
+                                >
                                     <Field
                                         type="text"
-                                        name="certification_year"
+                                        name="remarks"
                                         component={Input}
-                                        value={item.certification_year}
+                                        value = {data && data.remarks}
                                         readOnly
                                     />
-                                    </FormItem>
-                                    <div className="flex justify-end gap-2">
-                                    <Button
+                                </FormItem>
+                            
+                                <div className="flex justify-end gap-2">
+                                <Button
                                         loading={isSubmitting}
                                         size="md"
                                         className="ltr:mr-3 rtl:ml-3"
                                         // onClick={() => onDiscard?.()}
                                         // icon = {<MdOutlineNavigateNext/>}
-                                        type="submit"
+                                        type="button"
                                     >
                                         Next
                                     </Button>
@@ -150,11 +162,11 @@ const CertificationDetails
                                      </Button>
                                 </div>
                                     </div>
-                                ))
+                                 ))
+                                 
                                 ) : (
-                                <p>No data available.</p>
-                                )}                                    
-                                   
+                                    <p>No data available.</p>
+                                )}
                                 
                             </FormContainer>
                         </Form>
@@ -166,4 +178,4 @@ const CertificationDetails
     )
 }
 
-export default CertificationDetails
+export default BackgroundCheckDetails

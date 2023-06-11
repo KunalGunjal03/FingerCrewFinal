@@ -39,39 +39,111 @@ export async function apiGetAccountLogData(data) {
     })
 }
 
-// export async function apiGetAccountFormData() {
-//     return ApiService.fetchData({
-//         url: 'https://localhost:7076/api/SurveyorPersonalDetailsViewAndInsert/getSurveyorPersonalDetails ' ,
-//         method: 'post',
-//     })
 
-// }
+// export const apiGetAccountFormData = async (data) => {
+//   try {
+//     const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
+//     const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
 
-
-export const apiGetAccountFormData = async (data) => {
-  try {
-    const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
-    const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
-
-    const response = await BaseService({
-      url: COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorPersonalDetails',
-      method: 'post',
-      data: data,
-      headers: {
-        Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,
-        [TOKEN_KEY]: tokenKey || undefined,
-      },
+//     const response = await BaseService({
+//       url: COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorPersonalDetails',
+//       method: 'post',
+//       data: data,
+//       headers: {
+//         Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,
+//         [TOKEN_KEY]: tokenKey || undefined,
+//       },
      
-    });
+//     });
 
-    if (response && response.data) {
-      console.log(response.data)
-      return response.data;
-    } else {
-      throw new Error('Invalid response');
-    }
-  } catch (error) {
-    console.error(error);
-    throw new Error(error.response?.data || 'An error occurred');
+//     if (response && response.data) {
+//       console.log(response.data)
+//       return response.data;
+//     } else {
+//       throw new Error('Invalid response');
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error(error.response?.data || 'An error occurred');
+//   }
+// };
+export async function apiGetAccountFormData(data) {
+  return ApiService.fetchData({
+      url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorPersonalDetails',
+      method: 'post',
+      data,
+  })
+
+}
+export async function apiGetAddressDetails(data) {
+  return ApiService.fetchData({
+      url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorAddressDetails',
+      method: 'post',
+      data,
+  })
+
+}
+export async function apiGetEducationDetails(data) {
+  return ApiService.fetchData({
+      url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorQualificationDetails',
+      method: 'post',
+      data,
+  })
+
+}
+export async function apiGetCertificationDetails(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorCertificationDetails',
+        method: 'post',
+        data,
+    })
+  
   }
-};
+  export async function apiGetBankDetails(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorBankDetails',
+        method: 'post',
+        data,
+    })
+  
+  }
+  export async function apiGetInsuredDetails(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorInsuranceDetails',
+        method: 'post',
+        data,
+    })
+  
+  }
+  export async function apiGetKYCDetails(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorKYCDetails',
+        method: 'post',
+        data,
+    })
+  
+  }
+  export async function apiGetBackgroundDetails(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorBackgroundDetails',
+        method: 'post',
+        data,
+    })
+}
+  
+export async function apiGetSurveyorSkills(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorSkillsDetails',
+        method: 'post',
+        data,
+    })
+  
+  }
+  export async function apiGetPreviousExp(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorExperienceDetails',
+        method: 'post',
+        data,
+    })
+  
+  }

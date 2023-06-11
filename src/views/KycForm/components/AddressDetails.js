@@ -10,6 +10,13 @@ import {
 import { Field, Form, Formik } from 'formik'
 import get from 'lodash/get'
 import { countryList } from 'constants/countries.constant'
+import {FiCheckCircle} from 'react-icons/fi'
+import {  useDispatch ,useSelector} from 'react-redux'
+import { useEffect } from 'react'
+//import { apiGetAccountFormData } from 'services/AccountServices'
+import { getForm } from '../store/dataSlice'
+import { getAddress } from '../store/dataSlice'
+import { useLocation } from 'react-router-dom'
 //import * as Yup from 'yup'
 
 // const validationSchema = Yup.object().shape({
@@ -34,185 +41,81 @@ import { countryList } from 'constants/countries.constant'
 //     }),
 // })
 
-const AddressForm = (props) => {
-    const {
-        values,
-        touched,
-        errors,
-        countryName,
-        addressLine1Name,
-        addressLine2Name,
-        cityName,
-        stateName,
-        zipCodeName,
-    } = props
-
-    const getError = useCallback(
-        (name) => {
-            return get(errors, name)
-        },
-        [errors]
-    )
-
-    const getTouched = useCallback(
-        (name) => {
-            return get(touched, name)
-        },
-        [touched]
-    )
-
-    return (
-        <>
-            <div className="md:grid grid-cols-2 gap-4">
-                <FormItem
-                    label="Country"
-                    invalid={getError(countryName) && getTouched(countryName)}
-                    errorMessage={getError(countryName)}
-                >
-                    <Field name={countryName}>
-                        {({ field, form }) => (
-                            <Select
-                                placeholder="Country"
-                                field={field}
-                                form={form}
-                                options={countryList}
-                                value={countryList.filter(
-                                    (c) => c.value === get(values, countryName)
-                                )}
-                                onChange={(c) =>
-                                    form.setFieldValue(field.name, c.value)
-                                }
-                            />
-                        )}
-                    </Field>
-                </FormItem>
-                <FormItem
-                    label="Address Line 1"
-                    invalid={
-                        getError(addressLine1Name) &&
-                        getTouched(addressLine1Name)
-                    }
-                    errorMessage={getError(addressLine1Name)}
-                >
-                    <Field
-                        type="text"
-                        autoComplete="off"
-                        name={addressLine1Name}
-                        placeholder="Address Line 1"
-                        component={Input}
-                    />
-                </FormItem>
-            </div>
-            <div className="md:grid grid-cols-2 gap-4">
-                <FormItem
-                    label="Address Line 2"
-                    invalid={
-                        getError(addressLine2Name) &&
-                        getTouched(addressLine2Name)
-                    }
-                    errorMessage={getError(addressLine2Name)}
-                >
-                    <Field
-                        type="text"
-                        autoComplete="off"
-                        name={addressLine2Name}
-                        placeholder="Address Line 2"
-                        component={Input}
-                    />
-                </FormItem>
-                <FormItem
-                    label="City"
-                    invalid={getError(cityName) && getTouched(cityName)}
-                    errorMessage={getError(cityName)}
-                >
-                    <Field
-                        type="text"
-                        autoComplete="off"
-                        name={cityName}
-                        placeholder="City"
-                        component={Input}
-                    />
-                </FormItem>
-            </div>
-            <div className="md:grid grid-cols-2 gap-4">
-                <FormItem
-                    label="State"
-                    invalid={getError(stateName) && getTouched(stateName)}
-                    errorMessage={getError(stateName)}
-                >
-                    <Field
-                        type="text"
-                        autoComplete="off"
-                        name={stateName}
-                        placeholder="State"
-                        component={Input}
-                    />
-                </FormItem>
-                <FormItem
-                    label="Zip Code"
-                    invalid={getError(zipCodeName) && getTouched(zipCodeName)}
-                    errorMessage={getError(zipCodeName)}
-                >
-                    <Field
-                        type="text"
-                        autoComplete="off"
-                        name={zipCodeName}
-                        placeholder="Zip Code"
-                        component={Input}
-                    />
-                </FormItem>
-            </div>
-        </>
-    )
-}
-
 const AddressInfomation = ({
     data = {
-        country: '',
-        addressLine1: '',
-        addressLine2: '',
-        city: '',
-        state: '',
-        zipCode: '',
-        sameCorrespondenceAddress: true,
-        correspondenceAddress: {
-            country: '',
-            addressLine1: '',
-            addressLine2: '',
-            city: '',
-            state: '',
-            zipCode: '',
-        },
+        //Surveyor_master_id: '',
+        Address1: '',
+        Address2: '',
+        Address3: '',
+        Landmark: '',
+        city_name:'',
+        // residentCountry: '',
+        // nationality: '',
+        // dialCode: '',
+        state_name: '',
+        zip_code: '',
+        latitude:'',
+        longitude:''
+        // gender: '',
+        // maritalStatus: '',
     },
     onNextChange,
-    onBackChange,
     currentStepStatus,
 }) => {
+    
+
+     
+        
+    const location = useLocation()
+    const {token,tokenKey} = useSelector((state) => state.auth.user)
+     useEffect(() => {
+         const path = location.pathname.substring(
+         location.pathname.lastIndexOf('/') + 1
+     )
+     const requestParam = {surveyor_master_id : path , 
+        token : token , 
+        tokenKey : tokenKey
+    }
+        
+ 
+     fetchData(requestParam);
+ }, []);
+ const dispatch = useDispatch()
+ const fetchData = (requestParam) => {
+     try {
+         //const surveyor_master_id = { surveyor_master_id : requestParam.surveyor_master_id}
+       //dispatch(getForm({ surveyor_master_id,token,tokenKey}));
+       dispatch(getAddress( requestParam));
+       //console.log(surveyor_master_id)
+       
+     } catch (error) {
+       console.error(error);
+       return error;
+     }
+   };
+
+
+
+
+    
     const onNext = (values, setSubmitting) => {
-        onNextChange?.(values, 'addressInformation', setSubmitting)
+        onNextChange?.(values, 'AddressDetails', setSubmitting)
     }
 
-    const onCheck = (value, field, form) => {
-        form.setFieldValue(field.name, value)
-    }
-
-    const onBack = () => {
-        onBackChange?.()
-    }
-
+    const formData = useSelector(
+        (state) => state.accountDetailForm.data.formData.getData
+    )
+        console.log(formData)
     return (
         <>
             <div className="mb-8">
-                <h3 className="mb-2">Address Information</h3>
-                <p>
-                    Enter your address information help us to speed up the
-                    verication process.
-                </p>
+                <h3 className="mb-2">Address Details</h3>
+                {/* <p>Basic information for an account opening</p> */}
             </div>
             <Formik
                 initialValues={data}
-                enableReinitialize
-                //validationSchema={validationSchema}
+                //enableReinitialize={true}
+                // validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true)
                     setTimeout(() => {
@@ -220,72 +123,150 @@ const AddressInfomation = ({
                     }, 1000)
                 }}
             >
-                {({ values, touched, errors, setFieldValue, isSubmitting }) => {
-                    const formProps = { values, touched, errors }
+                {({ values, touched, errors, isSubmitting }) => {
                     return (
+                        
                         <Form>
                             <FormContainer>
-                                <h5 className="mb-4">Permanent Address</h5>
-                                <AddressForm
-                                    countryName="country"
-                                    addressLine1Name="addressLine1"
-                                    addressLine2Name="addressLine2"
-                                    cityName="city"
-                                    stateName="state"
-                                    zipCodeName="zipCode"
-                                    {...formProps}
-                                />
-                                <FormItem>
-                                    <Field name="sameCorrespondenceAddress">
-                                        {({ field, form }) => (
-                                            <Checkbox
-                                                checked={
-                                                    values.sameCorrespondenceAddress
-                                                }
-                                                onChange={(val) =>
-                                                    onCheck(
-                                                        val,
-                                                        field,
-                                                        form,
-                                                        setFieldValue
-                                                    )
-                                                }
-                                            >
-                                                Correspondence address is same
-                                                as above
-                                            </Checkbox>
-                                        )}
-                                    </Field>
+                            <div className="md:grid grid-cols-2 gap-4">
+ 
+                                    <FormItem
+                                    label="Address1"
+                                >
+                                    <Field
+                                        type="text"
+                                        name="Address1"
+                                        component={Input}
+                                        value = {data && data.Address1}
+                                        readOnly
+                                    />
+                                    </FormItem>
+                                    <FormItem
+                                    label="Address2"
+                                >
+                                    <Field
+                                        type="text"
+                                        name="Address2"
+                                        component={Input}
+                                        value = {data && data.Address2}
+                                        readOnly
+                                    />
+                                    </FormItem>
+                                    <FormItem
+                                    label="Address3"
+                                >
+                                    <Field
+                                        type="text"
+                                        name="Address3"
+                                        component={Input}
+                                        value = {data && data.Address2}
+                                        readOnly
+                                    />
+                                    </FormItem>
+                                
+                                <FormItem
+                                    label="Landmark"
+                                >
+                                    <Field
+                                        type="text"
+                                        name="Landmark"
+                                        component={Input}
+                                        value = {data && data.Landmark}
+                                        readOnly
+                                    />
                                 </FormItem>
-                                {!values.sameCorrespondenceAddress && (
-                                    <>
-                                        <h5 className="mb-4">
-                                            Correspondence Address
-                                        </h5>
-                                        <AddressForm
-                                            countryName="correspondenceAddress.country"
-                                            addressLine1Name="correspondenceAddress.addressLine1"
-                                            addressLine2Name="correspondenceAddress.addressLine2"
-                                            cityName="correspondenceAddress.city"
-                                            stateName="correspondenceAddress.state"
-                                            zipCodeName="correspondenceAddress.zipCode"
-                                            {...formProps}
+                                <FormItem
+                                    label="city_name"
+                                 
+                                >
+                                    <Field
+                                        type="text"
+                                        name="city_name"
+                                        component={Input}
+                                        value = {data && data.city_name} 
+                                        readOnly
+                                    />
+                                </FormItem>
+                                {/* </div> */}
+                                
+                                
+                                {/* <div className="md:grid grid-cols-2 gap-4"> */}
+                                    <FormItem
+                                        label="State_name"
+                                       
+                                    >
+                                        <Field
+                                            type="text"
+                                            name="state_name"
+                                            component={Input}
+                                            value = {data && data.state_name}
+                                            readOnly 
                                         />
-                                    </>
-                                )}
+                                    </FormItem>
+                                    <FormItem
+                                        label="Zip_code"
+                                      
+                                    >
+                                        <Field
+                                            type="text"
+                                            name="zip_code"
+                                            component={Input}
+                                            value = {data && data.zip_code}
+                                            readOnly 
+                                           />
+                                       
+                                </FormItem>
+                                {/* </div>
+                                <div className="md:grid grid-cols-2 gap-4"> */}
+                                    <FormItem
+                                        label="Latitude"
+                                     
+                                    >
+                                        <Field name="latitude" 
+                                         type="text"
+                                         component={Input}
+                                         value = {data && data.latitude}
+                                         readOnly
+                                         >
+                                        
+                                        </Field>
+                                            
+                                       
+                                    </FormItem>
+                                    <FormItem
+                                        label=" Longitude"
+                                     
+                                    >
+                                        <Field name="longitude" 
+                                         type="text"
+                                         component={Input}
+                                         value = {data && data.longitude}
+                                         readOnly
+                                          >
+                                        </Field>
+                                            
+                                       
+                                    </FormItem>
+                                </div>
                                 <div className="flex justify-end gap-2">
-                                    <Button type="button" onClick={onBack}>
-                                        Back
-                                    </Button>
-                                    <Button
+                                <Button
                                         loading={isSubmitting}
-                                        variant="solid"
+                                        size="md"
+                                        className="ltr:mr-3 rtl:ml-3"
+                                        // onClick={() => onDiscard?.()}
+                                        // icon = {<MdOutlineNavigateNext/>}
                                         type="submit"
                                     >
-                                        {currentStepStatus === 'complete'
-                                            ? 'Save'
-                                            : 'Next'}
+                                        Next
                                     </Button>
+                                     <Button
+                                         loading={isSubmitting}
+                                         variant="solid"
+                                         type="submit"
+                                         icon={<FiCheckCircle />}
+                                     >
+                                    Verify
+                                     </Button>
                                 </div>
                             </FormContainer>
                         </Form>

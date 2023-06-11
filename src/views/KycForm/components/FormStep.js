@@ -5,15 +5,20 @@ import { HiCheckCircle } from 'react-icons/hi'
 import useThemeClass from 'utils/hooks/useThemeClass'
 import { setCurrentStep } from '../store/stateSlice'
 import { setStepStatus } from '../store/dataSlice'
-
+import { BiCaretRight } from "react-icons/bi";
 
 const steps = [
-    { label: 'Personal Information', value: 0 },
+    { label: 'Personal Information', value: 0},
     { label: 'KYCForm', value: 1 },
     { label: 'Address Details', value: 2 },
-    { label: 'Educational Qualification Details', value: 3 },
+    { label: 'Qualification Details', value: 3 },
     { label:'Certification Details',value: 4},
-    { label:'previous Experience Details',value:5}
+    { label:'Experience Details',value:5},
+    {label:'Skills',value:6},
+    {label:'Bank Details',value:7},
+    {label:'Uploaded Documents',value:8 },
+    {label: 'Insurance Details', value:9},
+    {label:'Background Check Details',value:10}
     
 ]
 
@@ -70,6 +75,7 @@ const FormStep = ({ currentStep, currentStepStatus, stepStatus }) => {
                         {/* {stepStatus[step.value].status === 'invalid' && (
                             <HiCheckCircle className="text-gray-400" />
                         )} */}
+                        <BiCaretRight/>
                     </span>
                     <span>{step.label}</span>
                 </Menu.MenuItem>

@@ -16,7 +16,7 @@ import useAuth from 'utils/hooks/useAuth'
 
 
 const ActionColumn = ({ row }) => {
-    const dispatch = useDispatch()
+    // const dispatch = useDispatch()
     const { textTheme } = useThemeClass()
     const navigate = useNavigate()
 
@@ -76,19 +76,6 @@ const SurveyorTable = () => {
     const {signOut} = useAuth()
     const tableRef = useRef(null)
 
-    const dispatch = useDispatch()
-
-    const { pageIndex, pageSize, sort, query, total } = useSelector(
-        (state) => state.listsSurveyorList.data.tableData
-    )
-
-    const filterData = useSelector(
-        (state) => state.listsSurveyorList.data.filterData
-    )
-
-    const loading = useSelector((state) => state.listsSurveyorList.data.loading)
-    
-    const data= useSelector((state) => state.listsSurveyorList.data.surveyorList.getData)
     var  d = useSelector((state) => state.listsSurveyorList.data.surveyorList.status)
     console.log(d)
     if(d ==="Failed")
@@ -102,6 +89,20 @@ const SurveyorTable = () => {
         }
       
     }
+    const dispatch = useDispatch()
+
+    const { pageIndex, pageSize, sort, query, total } = useSelector(
+        (state) => state.listsSurveyorList.data.tableData
+    )
+
+    const filterData = useSelector(
+        (state) => state.listsSurveyorList.data.filterData
+    )
+
+    const loading = useSelector((state) => state.listsSurveyorList.data.loading)
+    
+    const data= useSelector((state) => state.listsSurveyorList.data.surveyorList.getData)
+  
     useEffect(() => {
         fetchData()
         //getSurveyor()

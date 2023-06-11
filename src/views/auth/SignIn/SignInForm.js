@@ -74,7 +74,7 @@ const SignInForm = (props) => {
                 initialValues={{
                     userName: '',
                     password: '',
-                    rememberMe: false,
+                    rememberMe: true,
                     captcha:'',
                 }}
                 validationSchema={validationSchema}
@@ -130,12 +130,11 @@ const SignInForm = (props) => {
                                 />
                             </FormItem>
                             <div className="flex justify-between mb-6">
-                                <Field
+                            <Field
                                     className="mb-0"
                                     name="rememberMe"
                                     component={Checkbox}
-                                    children=""
-                                    type = "hidden"
+                                    children="Remember Me"
                                 />
                                 <ActionLink to={forgotPasswordUrl}>
                                     Forgot Password?

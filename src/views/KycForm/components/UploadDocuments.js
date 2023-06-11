@@ -1,3 +1,4 @@
+
 import {
     Button,
     Upload,
@@ -12,41 +13,6 @@ import classNames from 'classnames'
 import { Field, Form, Formik } from 'formik'
 import useThemeClass from 'utils/hooks/useThemeClass'
 import {FiCheckCircle} from 'react-icons/fi'
-//import * as Yup from 'yup'
-
-// const validationSchema = Yup.object().shape({
-//     documentType: Yup.string().required('Please select your document type'),
-//     passportCover: Yup.string().when('documentType', {
-//         is: 'passport',
-//         then: Yup.string().required('Please upload passport cover'),
-//         otherwise: (schema) => schema,
-//     }),
-//     passportDataPage: Yup.string().when('documentType', {
-//         is: 'passport',
-//         then: Yup.string().required('Please upload passport data page'),
-//         otherwise: (schema) => schema,
-//     }),
-//     nationalIdFront: Yup.string().when('documentType', {
-//         is: 'nationalId',
-//         then: Yup.string().required('Please upload your front National ID'),
-//         otherwise: (schema) => schema,
-//     }),
-//     nationalIdBack: Yup.string().when('documentType', {
-//         is: 'nationalId',
-//         then: Yup.string().required('Please upload your back National ID'),
-//         otherwise: (schema) => schema,
-//     }),
-//     driversLicenseFront: Yup.string().when('documentType', {
-//         is: 'driversLicense',
-//         then: Yup.string().required('Please upload your front Drivers license'),
-//         otherwise: (schema) => schema,
-//     }),
-//     driversLicenseBack: Yup.string().when('documentType', {
-//         is: 'driversLicense',
-//         then: Yup.string().required('Please upload your back Drivers license'),
-//         otherwise: (schema) => schema,
-//     }),
-// })
 
 const documentTypes = [
     { value: 'passport', label: 'Passport', desc: '' },
@@ -139,7 +105,7 @@ const DocumentUploadField = (props) => {
     )
 }
 
-const KYCForm = ({
+const UploadDocuments = ({
     data = {
         documentType: 'passport',
         passportCover: '',
@@ -165,10 +131,11 @@ const KYCForm = ({
 
     return (
         <>
-        <div>KYCForm</div>
-
+           <div>
+           UploadDocuments
+           </div>
         </>
     )
 }
 
-export default KYCForm
+export default UploadDocuments

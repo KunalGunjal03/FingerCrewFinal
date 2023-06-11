@@ -1,42 +1,35 @@
-import React from 'react'
 import {
     Input,
+    InputGroup,
     Button,
-    Checkbox,
-    Select,
+    DatePicker,
+    //Select,
     FormItem,
     FormContainer,
+
 } from 'components/ui'
-import { Field, Form, Formik, getIn } from 'formik'
+import { Field, Form, Formik } from 'formik'
 import NumberFormat from 'react-number-format'
-import {
-    occupationOptions,
-    annualIncomeOptions,
-    sourceOfWealthOptions,
-    noTinReasonOption,
-} from '../constants'
-import { countryList } from 'constants/countries.constant'
-//import * as Yup from 'yup'
-import {FiCheckCircle} from 'react-icons/fi'
 import {  useDispatch ,useSelector} from 'react-redux'
 import { useEffect, useState } from 'react'
 //import { apiGetAccountFormData } from 'services/AccountServices'
 import { getForm } from '../store/dataSlice'
 import { useLocation, useParams } from 'react-router-dom'
-//import {getEducation} from '../store/dataSlice'
-import { getCertification } from '../store/dataSlice'
-const excludedOccupation = ['unemployed', 'student', 'retired']
+import { getSkills } from '../store/dataSlice'
+import {FiCheckCircle} from 'react-icons/fi'
 
-
-const CertificationDetails
+const Skills
     = ({
     data = {
-        certificate_name:'',
-        certification_year:''
+        skill_description:''
     },
     onNextChange,
     currentStepStatus,
 }) => {
+    
+
+     
+         
       
   //sakshi
     const location = useLocation()
@@ -56,14 +49,9 @@ const CertificationDetails
  const dispatch = useDispatch()
  const fetchData = (requestParam) => {
      try {
-        const Param = {
-            surveyor_master_id : requestParam.surveyor_master_id , 
-            token : token , 
-            tokenKey : tokenKey
-        }
          //const surveyor_master_id = { surveyor_master_id : requestParam.surveyor_master_id}
        //dispatch(getForm({ surveyor_master_id,token,tokenKey}));
-       dispatch(getCertification( requestParam));
+       dispatch(getSkills( requestParam));
        //console.log(surveyor_master_id)
        
      } catch (error) {
@@ -77,17 +65,18 @@ const CertificationDetails
 
     
     const onNext = (values, setSubmitting) => {
-        onNextChange?.(values, 'CertificationDetails', setSubmitting)
+        onNextChange?.(values, 'Skills', setSubmitting)
     }
 
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
-    console.log(data)
+        console.log(formData)
+        console.log(data)
     return (
         <>
             <div className="mb-8">
-                <h3 className="mb-2">Certification Details</h3>
+                <h3 className="mb-2">Skills</h3>
                 {/* <p>Basic information for an account opening</p> */}
             </div>
             <Formik
@@ -103,39 +92,31 @@ const CertificationDetails
             >
                 {({ values, touched, errors, isSubmitting }) => {
                     return (
-                        <>
+                        
                         <Form>
                             <FormContainer>
-                                
-                            {Array.isArray(data) && data.length!==0? (
-                                data.map((item) => (
+                                    <FormItem >
+                                    {/* <label>Skills</label> */}
+                                    
+                                    {Array.isArray(data) && data.length!== 0 ? (
+                                    data.map((items) => (
                                     <div>
-                                    <FormItem key={item}>
-                                    <label>Certificate</label>
-
                                     <Field
                                         type="text"
-                                        name="certificate_name"
+                                        name="skill_description"
                                         component={Input}
-                                        value={item.certificate_name}
+                                        value={items.skill_description}
                                         readOnly
+                                        key={items}
+                                        className = 'mt-4'
                                     />
-                                    <div className="mt-4"></div>
-                                    <Field
-                                        type="text"
-                                        name="certification_year"
-                                        component={Input}
-                                        value={item.certification_year}
-                                        readOnly
-                                    />
-                                    </FormItem>
-                                    <div className="flex justify-end gap-2">
-                                    <Button
+                                   <div className="flex justify-end gap-2 mt-4">
+                                     <Button
                                         loading={isSubmitting}
                                         size="md"
                                         className="ltr:mr-3 rtl:ml-3"
                                         // onClick={() => onDiscard?.()}
-                                        // icon = {<MdOutlineNavigateNext/>}
+                                        // icon = {<BiArrowBack/>}
                                         type="submit"
                                     >
                                         Next
@@ -148,17 +129,21 @@ const CertificationDetails
                                      >
                                     Verify
                                      </Button>
-                                </div>
+                                     </div>
                                     </div>
-                                ))
+                                 ))
+                                 
                                 ) : (
-                                <p>No data available.</p>
-                                )}                                    
-                                   
+                                    <p>No data available.</p>
+                                )} 
+                                
+                                     
+                               
+                                </FormItem>
+                               
                                 
                             </FormContainer>
                         </Form>
-                        </>
                     )
                 }}
             </Formik>
@@ -166,4 +151,5 @@ const CertificationDetails
     )
 }
 
-export default CertificationDetails
+export default Skills
+

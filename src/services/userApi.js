@@ -9,7 +9,7 @@ export const saveUserData = async (data) => {
     const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
 
     const response = await BaseService({
-      url: 'http://fingercrewapi.alphonsol.com/User/AddUser',
+      url: COMMANAPILINK+'User/AddUser',
       method: 'post',
       data: data,
       headers: {
