@@ -44,8 +44,6 @@ const SurveyTableTools = () => {
         <div className="md:flex items-center justify-between">
         <div className="md:flex items-center gap-4">
             <SurveyorTableSearch
-                ref={inputRef}
-                onInputChange={handleInputChange}
             />
         </div>
         <div className="ml-2">

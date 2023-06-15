@@ -26,3 +26,11 @@ export async function apiGetSurveByID(data) {
         data,
     })
 }
+export async function apiGetSurveByparam(data) {
+    console.log(data)
+    return ApiService.fetchData({
+        url: '',
+        method: 'post',
+        data,
+    })
+}

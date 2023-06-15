@@ -132,8 +132,11 @@ const UploadDocuments = ({
     return (
         <>
            <div>
-           UploadDocuments
-           </div>
+            
+            <h3 className="mb-2">Uploaded Documents </h3>
+    
+            <p>No data available.</p>
+            </div>
         </>
     )
 }

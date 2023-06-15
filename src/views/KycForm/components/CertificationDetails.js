@@ -2,30 +2,24 @@ import React from 'react'
 import {
     Input,
     Button,
-    Checkbox,
-    Select,
     FormItem,
     FormContainer,
+    Dialog,
+    Notification,
+    toast,
 } from 'components/ui'
-import { Field, Form, Formik, getIn } from 'formik'
-import NumberFormat from 'react-number-format'
-import {
-    occupationOptions,
-    annualIncomeOptions,
-    sourceOfWealthOptions,
-    noTinReasonOption,
-} from '../constants'
-import { countryList } from 'constants/countries.constant'
+import { Field, Form, Formik } from 'formik'
 //import * as Yup from 'yup'
 import {FiCheckCircle} from 'react-icons/fi'
 import {  useDispatch ,useSelector} from 'react-redux'
 import { useEffect, useState } from 'react'
 //import { apiGetAccountFormData } from 'services/AccountServices'
-import { getForm } from '../store/dataSlice'
-import { useLocation, useParams } from 'react-router-dom'
+
+import { useLocation } from 'react-router-dom'
 //import {getEducation} from '../store/dataSlice'
 import { getCertification } from '../store/dataSlice'
-const excludedOccupation = ['unemployed', 'student', 'retired']
+import { VerifyCertificateDetails } from 'services/VerificationServices'
+
 
 
 const CertificationDetails
@@ -56,15 +50,8 @@ const CertificationDetails
  const dispatch = useDispatch()
  const fetchData = (requestParam) => {
      try {
-        const Param = {
-            surveyor_master_id : requestParam.surveyor_master_id , 
-            token : token , 
-            tokenKey : tokenKey
-        }
-         //const surveyor_master_id = { surveyor_master_id : requestParam.surveyor_master_id}
-       //dispatch(getForm({ surveyor_master_id,token,tokenKey}));
+
        dispatch(getCertification( requestParam));
-       //console.log(surveyor_master_id)
        
      } catch (error) {
        console.error(error);
@@ -76,9 +63,64 @@ const CertificationDetails
 
 
     
-    const onNext = (values, setSubmitting) => {
-        onNextChange?.(values, 'CertificationDetails', setSubmitting)
+    
+   const [dialogIsOpen, setIsOpen] = useState(false)
+   // const [setSubmitting] = useState(true)
+   const openNotification = (type) => {
+       toast.push(
+           <Notification
+               title={type.charAt(0).toUpperCase() + type.slice(1)}
+               type={type}
+           >
+               Addres details is verified successfuly.
+           </Notification>
+       )
+   }
+   const openDialog = () => {
+       setIsOpen(true)
+   }
+   const onDialogClose = (e) => {
+      
+       setIsOpen(false)
+   }
+   let isVerified = false;
+   const onDialogOk = (e) => {
+       isVerified = true
+       openNotification('success')
+       setIsOpen(false)
+       
+       
+       // onDiscard(false)
+       // onNextChange?.(values, 'personalInformation', setSubmitting)
+   }
+
+
+    
+   const onNext = async(values, setSubmitting) => {
+    try{
+        const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
+        const response = await VerifyCertificateDetails(verified)
+        console.log(response)
+        openDialog()
+        console.log(isVerified)
+        // if(isVerified)
+        // {
+        //     console.log(isVerified)
+        //     onNextChange?.( values,'personalInformation', setSubmitting)
+       
+        
+        // }
+        setTimeout(() => {
+           onNextChange?.('personalInformation', setSubmitting)
+        }, 3000)
+        
     }
+    catch(error)
+    {
+        console.log(error)
+    }
+    
+}
 
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
@@ -129,32 +171,26 @@ const CertificationDetails
                                         readOnly
                                     />
                                     </FormItem>
-                                    <div className="flex justify-end gap-2">
-                                    <Button
-                                        loading={isSubmitting}
-                                        size="md"
-                                        className="ltr:mr-3 rtl:ml-3"
-                                        // onClick={() => onDiscard?.()}
-                                        // icon = {<MdOutlineNavigateNext/>}
-                                        type="submit"
-                                    >
-                                        Next
-                                    </Button>
-                                     <Button
-                                         loading={isSubmitting}
-                                         variant="solid"
-                                         type="submit"
-                                         icon={<FiCheckCircle />}
-                                     >
-                                    Verify
-                                     </Button>
+                                
                                 </div>
-                                    </div>
+                                
                                 ))
+                                
                                 ) : (
                                 <p>No data available.</p>
                                 )}                                    
-                                   
+                                {Array.isArray(data) && data.length !== 0 && (
+                                <div className="flex justify-end gap-2">
+                                    <Button
+                                    loading={isSubmitting}
+                                    variant="solid"
+                                    type="submit"
+                                    icon={<FiCheckCircle />}
+                                    >
+                                    Verify
+                                    </Button>
+                                </div>
+                                )}
                                 
                             </FormContainer>
                         </Form>
@@ -162,6 +198,30 @@ const CertificationDetails
                     )
                 }}
             </Formik>
+            <Dialog
+                isOpen={dialogIsOpen}
+                onClose={onDialogClose}
+                onRequestClose={onDialogClose}
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Confirm Verification</h5>
+                    <div className="max-h-96 overflow-y-auto">
+                            <p> Are you want to verify Address details!!</p>
+                    </div>
+                    <div className="text-right mt-6">
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2"
+                            // variant="plain"
+                            onClick={onDialogClose}
+                        >
+                            No
+                        </Button>
+                        <Button variant="solid" onClick={onDialogOk}>
+                            Yes
+                        </Button>
+                    </div>
+                </div>
+            </Dialog>
         </>
     )
 }

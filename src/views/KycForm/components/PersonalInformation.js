@@ -1,20 +1,18 @@
 import {
     Input,
-    InputGroup,
     Button,
-    DatePicker,
-    //Select,
     FormItem,
     FormContainer,
     toast,
     Notification,
-    Dialog
+    Dialog,
+
 } from 'components/ui'
 import { Field, Form, Formik } from 'formik'
-import NumberFormat from 'react-number-format'
+
 // import { countryList } from 'constants/countries.constant'
 // import { statusOptions } from '../constants'
-import { components } from 'react-select'
+
 //import {useSelector} from 'react'
 // import * as Yup from 'yup'
 import {  useDispatch,useSelector } from 'react-redux'
@@ -23,16 +21,20 @@ import { useEffect, useState } from 'react'
 import { getForm } from '../store/dataSlice'
 import { useLocation } from 'react-router-dom'
 import {FiCheckCircle} from 'react-icons/fi'
-import {GrFromNext} from 'react-icons/gr'
-import {MdOutlineNavigateNext} from 'react-icons/md'
 import { VerifyPersonalDetails } from 'services/VerificationServices'
-import { bool } from 'yup'
+
+
+import useAuth from 'utils/hooks/useAuth'
+import { CgEnter } from 'react-icons/cg'
+
 const PersonalInformation = ({
     data = {
         Surveyor_master_id: '',
         Surveyor_name: '',
         email_id: '',
         salutation:'',
+        SSN_no:'',
+        type_of_profession: '',
         // residentCountry: '',
         // nationality: '',
         // dialCode: '',
@@ -46,6 +48,7 @@ const PersonalInformation = ({
 }) => {
    
     const location = useLocation()
+    const [isvalid, setIsvalid] = useState(false);
     const {token,tokenKey} = useSelector((state) => state.auth.user)
     // const { type, initialData, onFormSubmit, onDiscard, onDelete } = props
      useEffect(() => {
@@ -77,31 +80,68 @@ const PersonalInformation = ({
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
-    console.log(formData)
+    console.log(data)
+    // const d =  useSelector(
+    //     (state) => state.accountDetailForm.data.getData
+    // )
+    // console.log(d)
+    // const {signOut} = useAuth()
+   
+    // if(formData === null )
+    // {
+    //     try{
+    //         dispatch(signOut)
+    //     }
+    //     catch(error)
+    //     {
+    //         console.log(error)
+    //     }
+    // }
     const [dialogIsOpen, setIsOpen] = useState(false)
     // const [setSubmitting] = useState(true)
-    const openNotification = (type) => {
+    const [RejectionRemarkVisible, setRejectionRemarkVisible] = useState(false)
+    const openNotification = (type,remarks) => {
         toast.push(
             <Notification
-                title={type.charAt(0).toUpperCase() + type.slice(1)}
+                title={remarks}
                 type={type}
-            >
-                Personal information is verified successfuly.
-            </Notification>
-        )
+                
+            />,{
+                placement: 'top-center'
+            })
+                
+           
+        
     }
-    const openDialog = () => {
+    const openDialog = (e) => {
+        console.log(e)
         setIsOpen(true)
+
     }
     const onDialogClose = (e) => {
-       
+       console.log(e)
+       setIsvalid(false)
         setIsOpen(false)
+        // setRejectionRemarkVisible(true)
     }
-    let isVerified = false;
-    const onDialogOk = (e) => {
-        isVerified = true
-        openNotification('success')
+    // let isVerified = false;
+    const onDialogOk = async(e) => {
+        console.log(e)
+        const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
+        const response = await VerifyPersonalDetails(verified)
+        console.log(response)
+        if(response.Status === "Success" )
+        {
+            openNotification('success',response.remarks)
+        }
+        else{
+            openNotification('warning',response.remarks)
+        }
         setIsOpen(false)
+        setTimeout(() => {
+            onNextChange?.('personalInformation')
+         }, 500)
+        setIsvalid(true)
         
         
         // onDiscard(false)
@@ -110,11 +150,13 @@ const PersonalInformation = ({
 
     const onNext = async(values, setSubmitting) => {
         try{
-            const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
-            const response = await VerifyPersonalDetails(verified)
-            console.log(response)
+            // const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
+            // const response = await VerifyPersonalDetails(verified)
+            // console.log(response)
             openDialog()
-            console.log(isVerified)
+            // IsVeriied = true
+            // // isVerified = true
+            // console.log(IsVeriied)
             // if(isVerified)
             // {
             //     console.log(isVerified)
@@ -122,9 +164,13 @@ const PersonalInformation = ({
            
             
             // }
-            setTimeout(() => {
-               onNextChange?.('personalInformation', setSubmitting)
-            }, 3000)
+            // console.log(isvalid)
+            // if(isvalid === true)
+            ///{
+            // setTimeout(() => {
+            //    onNextChange?.('personalInformation', setSubmitting)
+            // }, 3000)
+            //}
             
         }
         catch(error)
@@ -134,7 +180,34 @@ const PersonalInformation = ({
         
     }
 
+    // const RejectionRemark = () =>{
+    //     return(
+            
+                                    
+    //         <FormItem
+    //             label="Remark*"
+             
+    //         >
+    //             <Field name="remark" 
+    //              type="text"
+    //              component={Input} >
+    //             </Field>
+                    
+               
+    //         </FormItem>
+        
+    //     )   
+    // }
+    
+    // const onRejectClick = async  () =>{
 
+    //     console.log("Reject")
+    //     // setRejectionRemarkVisible(true)
+    // } 
+
+    
+//   console.log(IsVeriied)
+// console.log(RejectionRemarkVisible)
     return (
         <>
             <div className="mb-8">
@@ -147,10 +220,8 @@ const PersonalInformation = ({
                 // validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true)
-                    
-                        
                         onNext(values, setSubmitting)
-                    
+
                     
                 }}
             >
@@ -159,18 +230,24 @@ const PersonalInformation = ({
                         
                         <Form>
                             <FormContainer>
-                                   
-                            <FormItem>
-                                    <Field
-                                        type="hidden"
-                                        name="surveyor_master_id"
-                                        component={Input}
-                                        value = {data && data.surveyor_master_id
-                                        }
-                                    />
+                                {/* {Array.isArray(data) && data.length!== 0 ?( */}
+                                <div>
+                                <div className="md:grid grid-cols-2 gap-4">
+                                <FormItem
+                                        label="Salutation"
+                                       
+                                    >
+                                        <Field
+                                            type="text"
+                                            name="salutation"
+                                            component={Input}
+                                            value = {data && data.salutation} 
+                                            readOnly
+                                        />
                                 </FormItem>
+                                   
                                     <FormItem
-                                    label="Surveyor_Name"
+                                    label="Surveyor Name"
                                 >
                                     <Field
                                         type="text"
@@ -180,9 +257,9 @@ const PersonalInformation = ({
                                         value = {data && data.surveyor_name}
                                     />
                                 </FormItem>
-                                
+                                </div>
                                 <FormItem
-                                    label="Email-ID"
+                                    label="Email ID"
                                  
                                 >
                                     <Field
@@ -194,20 +271,9 @@ const PersonalInformation = ({
                                     />
                                 </FormItem>
                                 <div className="md:grid grid-cols-2 gap-4">
+                                   
                                     <FormItem
-                                        label="Salutation"
-                                       
-                                    >
-                                        <Field
-                                            type="text"
-                                            name="salutation"
-                                            component={Input}
-                                            value = {data && data.salutation} 
-                                            readOnly
-                                        />
-                                    </FormItem>
-                                    <FormItem
-                                        label="Mobile_Number"
+                                        label="Mobile Number"
                                       
                                     >
                                         <Field
@@ -218,11 +284,8 @@ const PersonalInformation = ({
                                             readOnly
                                            />
                                        
-                       </FormItem>
-                                </div>
-                                <div className="md:grid grid-cols-2 gap-4">
-                                    
-                                    <FormItem
+                                           </FormItem>
+                                             <FormItem
                                         label="Date of Birth"
                                      
                                     >
@@ -236,28 +299,60 @@ const PersonalInformation = ({
                                        
                                     </FormItem>
                                 </div>
-                                <div className="flex justify-end gap-2">
-                                {/* <Button
-                                        loading={isSubmitting}
-                                        size="md"
-                                        className="ltr:mr-3 rtl:ml-3"
-                                        // onClick={() => onDiscard?.()}
-                                        // icon = {<MdOutlineNavigateNext/>}
-                                        type="submit"
-                                        
+                                <div className="md:grid grid-cols-2 gap-4">
+                                <FormItem
+                                        label="SSN NO"
+                                      
                                     >
-                                        Next
-                                    </Button> */}
-                                     <Button
-                                         loading={isSubmitting}
-                                         variant="solid"
-                                         type="submit"
+                                        <Field
+                                            type="text"
+                                            name="SSN_no"
+                                            component={Input}
+                                            value = {data && data.SSN_no} 
+                                            readOnly
+                                           />
+                                       
+                                           </FormItem> 
+
+
+                                <FormItem
+                                        label="Type Of Profession"
+                                      
+                                    >
+                                        <Field
+                                            type="text"
+                                            name="type_of_profession"
+                                            component={Input}
+                                            value = {data && data.type_of_profession} 
+                                            readOnly
+                                           />
+                                       
+                                           </FormItem> 
                                          
-                                         icon={<FiCheckCircle />}
-                                     >
-                                    Verify
-                                     </Button>
+                                            
+                                       
+                                    
                                 </div>
+                                
+                                </div>
+                                
+                               
+                                
+                                {/* ) : (
+                                <p>No data available.</p>
+                                )}                                     */}
+                                {/* {Array.isArray(data) && data.length !== 0 && ( */}
+                                <div className="flex justify-end gap-2">
+                                    <Button
+                                    loading={isSubmitting}
+                                    variant="solid"
+                                    type="submit"
+                                    icon={<FiCheckCircle />}
+                                    >
+                                    Verify
+                                    </Button>
+                                </div>
+                                {/* )} */}
                             </FormContainer>
                         </Form>
                     )

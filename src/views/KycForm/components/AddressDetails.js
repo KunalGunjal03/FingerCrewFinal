@@ -6,17 +6,21 @@ import {
     Select,
     FormItem,
     FormContainer,
+    Dialog,
+    Notification,
+    toast,
 } from 'components/ui'
 import { Field, Form, Formik } from 'formik'
 import get from 'lodash/get'
 import { countryList } from 'constants/countries.constant'
 import {FiCheckCircle} from 'react-icons/fi'
 import {  useDispatch ,useSelector} from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect,useState } from 'react'
 //import { apiGetAccountFormData } from 'services/AccountServices'
 import { getForm } from '../store/dataSlice'
 import { getAddress } from '../store/dataSlice'
 import { useLocation } from 'react-router-dom'
+import { VerifyAddressDetails } from 'services/VerificationServices'
 //import * as Yup from 'yup'
 
 // const validationSchema = Yup.object().shape({
@@ -94,18 +98,68 @@ const AddressInfomation = ({
      }
    };
 
-
+   const [dialogIsOpen, setIsOpen] = useState(false)
+   // const [setSubmitting] = useState(true)
+   const openNotification = (type) => {
+       toast.push(
+           <Notification
+               title={type.charAt(0).toUpperCase() + type.slice(1)}
+               type={type}
+           >
+               Addres details is verified successfuly.
+           </Notification>
+       )
+   }
+   const openDialog = () => {
+       setIsOpen(true)
+   }
+   const onDialogClose = (e) => {
+      
+       setIsOpen(false)
+   }
+   let isVerified = false;
+   const onDialogOk = (e) => {
+       isVerified = true
+       openNotification('success')
+       setIsOpen(false)
+       
+       
+       // onDiscard(false)
+       // onNextChange?.(values, 'personalInformation', setSubmitting)
+   }
 
 
     
-    const onNext = (values, setSubmitting) => {
-        onNextChange?.(values, 'AddressDetails', setSubmitting)
+   const onNext = async(values, setSubmitting) => {
+    try{
+        const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
+        const response = await VerifyAddressDetails(verified)
+        console.log(response)
+        openDialog()
+        console.log(isVerified)
+        // if(isVerified)
+        // {
+        //     console.log(isVerified)
+        //     onNextChange?.( values,'personalInformation', setSubmitting)
+       
+        
+        // }
+        setTimeout(() => {
+           onNextChange?.('personalInformation', setSubmitting)
+        }, 3000)
+        
     }
-
+    catch(error)
+    {
+        console.log(error)
+    }
+    
+}
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
         console.log(formData)
+        console.log(data )
     return (
         <>
             <div className="mb-8">
@@ -128,128 +182,132 @@ const AddressInfomation = ({
                         
                         <Form>
                             <FormContainer>
-                            <div className="md:grid grid-cols-2 gap-4">
- 
-                                    <FormItem
-                                    label="Address1"
-                                >
-                                    <Field
-                                        type="text"
-                                        name="Address1"
-                                        component={Input}
-                                        value = {data && data.Address1}
-                                        readOnly
-                                    />
-                                    </FormItem>
-                                    <FormItem
-                                    label="Address2"
-                                >
-                                    <Field
-                                        type="text"
-                                        name="Address2"
-                                        component={Input}
-                                        value = {data && data.Address2}
-                                        readOnly
-                                    />
-                                    </FormItem>
-                                    <FormItem
-                                    label="Address3"
-                                >
-                                    <Field
-                                        type="text"
-                                        name="Address3"
-                                        component={Input}
-                                        value = {data && data.Address2}
-                                        readOnly
-                                    />
-                                    </FormItem>
+                            {Array.isArray(data)? (
+                                data.map((item) => (
+                                    <div>
                                 
-                                <FormItem
-                                    label="Landmark"
-                                >
-                                    <Field
-                                        type="text"
-                                        name="Landmark"
-                                        component={Input}
-                                        value = {data && data.Landmark}
-                                        readOnly
-                                    />
-                                </FormItem>
-                                <FormItem
-                                    label="city_name"
-                                 
-                                >
-                                    <Field
-                                        type="text"
-                                        name="city_name"
-                                        component={Input}
-                                        value = {data && data.city_name} 
-                                        readOnly
-                                    />
-                                </FormItem>
-                                {/* </div> */}
+                                <div className="md:grid grid-cols-2 gap-4">
+                            
+                            <FormItem
+                            label="Address1"
+                        >
+                            <Field
+                                type="text"
+                                name="Address1"
+                                component={Input}
+                                value = {item && item.Address1}
+                                readOnly
+                            />
+                            </FormItem>
+                            <FormItem
+                            label="Address2"
+                        >
+                            <Field
+                                type="text"
+                                name="Address2"
+                                component={Input}
+                                value = {item && item.Address2}
+                                readOnly
+                            />
+                            </FormItem>
+                            <FormItem
+                            label="Address3"
+                        >
+                            <Field
+                                type="text"
+                                name="Address3"
+                                component={Input}
+                                value = {item && item.Address2}
+                                readOnly
+                            />
+                            </FormItem>
+                        
+                        <FormItem
+                            label="Landmark"
+                        >
+                            <Field
+                                type="text"
+                                name="Landmark"
+                                component={Input}
+                                value = {item && item.Landmark}
+                                readOnly
+                            />
+                        </FormItem>
+                        <FormItem
+                            label="city_name"
+                         
+                        >
+                            <Field
+                                type="text"
+                                name="city_name"
+                                component={Input}
+                                value = {item && item.city_name} 
+                                readOnly
+                            />
+                        </FormItem>
+                        {/* </div> */}
+                        
+                        
+                        {/* <div className="md:grid grid-cols-2 gap-4"> */}
+                            <FormItem
+                                label="State_name"
+                               
+                            >
+                                <Field
+                                    type="text"
+                                    name="state_name"
+                                    component={Input}
+                                    value = {item && item.state_name}
+                                    readOnly 
+                                />
+                            </FormItem>
+                            <FormItem
+                                label="Zip_code"
+                              
+                            >
+                                <Field
+                                    type="text"
+                                    name="zip_code"
+                                    component={Input}
+                                    value = {item && item.zip_code}
+                                    readOnly 
+                                   />
+                               
+                        </FormItem>
+                        {/* </div>
+                        <div className="md:grid grid-cols-2 gap-4"> */}
+                            <FormItem
+                                label="Latitude"
+                             
+                            >
+                                <Field name="latitude" 
+                                 type="text"
+                                 component={Input}
+                                 value = {item && item.latitude}
+                                 readOnly
+                                 >
                                 
-                                
-                                {/* <div className="md:grid grid-cols-2 gap-4"> */}
-                                    <FormItem
-                                        label="State_name"
-                                       
-                                    >
-                                        <Field
-                                            type="text"
-                                            name="state_name"
-                                            component={Input}
-                                            value = {data && data.state_name}
-                                            readOnly 
-                                        />
-                                    </FormItem>
-                                    <FormItem
-                                        label="Zip_code"
-                                      
-                                    >
-                                        <Field
-                                            type="text"
-                                            name="zip_code"
-                                            component={Input}
-                                            value = {data && data.zip_code}
-                                            readOnly 
-                                           />
-                                       
-                                </FormItem>
-                                {/* </div>
-                                <div className="md:grid grid-cols-2 gap-4"> */}
-                                    <FormItem
-                                        label="Latitude"
-                                     
-                                    >
-                                        <Field name="latitude" 
-                                         type="text"
-                                         component={Input}
-                                         value = {data && data.latitude}
-                                         readOnly
-                                         >
-                                        
-                                        </Field>
-                                            
-                                       
-                                    </FormItem>
-                                    <FormItem
-                                        label=" Longitude"
-                                     
-                                    >
-                                        <Field name="longitude" 
-                                         type="text"
-                                         component={Input}
-                                         value = {data && data.longitude}
-                                         readOnly
-                                          >
-                                        </Field>
-                                            
-                                       
-                                    </FormItem>
-                                </div>
-                                <div className="flex justify-end gap-2">
-                                <Button
+                                </Field>
+                                    
+                               
+                            </FormItem>
+                            <FormItem
+                                label=" Longitude"
+                             
+                            >
+                                <Field name="longitude" 
+                                 type="text"
+                                 component={Input}
+                                 value = {item && item.longitude}
+                                 readOnly
+                                  >
+                                </Field>
+                                    
+                               
+                            </FormItem>
+                                        </div>
+                                        <div className="flex justify-end gap-2">
+                                {/* <Button
                                         loading={isSubmitting}
                                         size="md"
                                         className="ltr:mr-3 rtl:ml-3"
@@ -258,7 +316,7 @@ const AddressInfomation = ({
                                         type="submit"
                                     >
                                         Next
-                                    </Button>
+                                    </Button> */}
                                      <Button
                                          loading={isSubmitting}
                                          variant="solid"
@@ -268,11 +326,45 @@ const AddressInfomation = ({
                                     Verify
                                      </Button>
                                 </div>
+                                    </div>
+                                    
+                                
+                                ))
+                                ) : (
+                                <p>No data available.</p>
+                                
+                                )} 
+                          
+
                             </FormContainer>
                         </Form>
                     )
                 }}
             </Formik>
+            <Dialog
+                isOpen={dialogIsOpen}
+                onClose={onDialogClose}
+                onRequestClose={onDialogClose}
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Confirm Verification</h5>
+                    <div className="max-h-96 overflow-y-auto">
+                            <p> Are you want to verify Address details!!</p>
+                    </div>
+                    <div className="text-right mt-6">
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2"
+                            // variant="plain"
+                            onClick={onDialogClose}
+                        >
+                            No
+                        </Button>
+                        <Button variant="solid" onClick={onDialogOk}>
+                            Yes
+                        </Button>
+                    </div>
+                </div>
+            </Dialog>
         </>
     )
 }

@@ -7,7 +7,10 @@ import {
     //Select,
     FormItem,
     FormContainer,
-    Table
+    Table,
+    toast,
+    Notification,
+    Dialog
 
 } from 'components/ui'
 import { Field, Form, Formik } from 'formik'
@@ -30,6 +33,7 @@ import {
 import { useLocation } from 'react-router-dom'
 
 import {FiCheckCircle} from 'react-icons/fi'
+import { VerifyPreviousExp } from 'services/VerificationServices'
 const { Tr, Th, Td, THead, TBody, Sorter } = Table
 
 const columns = [
@@ -104,9 +108,9 @@ const PreviousExperienceDetails = ({
     }
   };
    
-    const onNext = (values, setSubmitting) => {
-        onNextChange?.(values, 'personalInformation', setSubmitting)
-    }
+    // const onNext = (values, setSubmitting) => {
+    //     onNextChange?.(values, 'personalInformation', setSubmitting)
+    // }
     console.log(data)
     const [sorting, setSorting] = React.useState([])
     const table = useReactTable({
@@ -119,6 +123,58 @@ const PreviousExperienceDetails = ({
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
     })
+    const [dialogIsOpen, setIsOpen] = useState(false)
+    // const [setSubmitting] = useState(true)
+    const openNotification = (type) => {
+        toast.push(
+            <Notification
+                title={type.charAt(0).toUpperCase() + type.slice(1)}
+                type={type}
+            >
+                Personal information is verified successfuly.
+            </Notification>
+        )
+    }
+    const openDialog = () => {
+        setIsOpen(true)
+    }
+    const onDialogClose = (e) => {
+       
+        setIsOpen(false)
+    }
+    // let isVerified = false;
+    const onDialogOk = (e) => {
+        
+        openNotification('success')
+        setIsOpen(false)
+        
+        
+        // onDiscard(false)
+        // onNextChange?.(values, 'personalInformation', setSubmitting)
+    }
+    const formData = useSelector(
+        (state) => state.accountDetailForm.data.formData.getData
+    )
+
+    const onNext = async(values, setSubmitting) => {
+        try{
+            const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
+            const response = await VerifyPreviousExp(verified)
+            console.log(response)
+            openDialog()
+            
+            setTimeout(() => {
+               onNextChange?.('personalInformation', setSubmitting)
+            }, 3000)
+            
+        }
+        catch(error)
+        {
+            console.log(error)
+        }
+        
+    }
+
     return (
         <>
             <div className="mb-8">
@@ -206,16 +262,7 @@ const PreviousExperienceDetails = ({
                                             </TBody>
                                         </Table>
                                         <div className="flex justify-end gap-2 mt-4">
-                                        <Button
-                                        loading={isSubmitting}
-                                        size="md"
-                                        className="ltr:mr-3 rtl:ml-3"
-                                        // onClick={() => onDiscard?.()}
-                                        // icon = {<MdOutlineNavigateNext/>}
-                                        type="button"
-                                    >
-                                        Next
-                                    </Button>
+                                        
                                      <Button
                                          loading={isSubmitting}
                                          variant="solid"

@@ -6,8 +6,9 @@ import { getForm, setStepStatus, setFormData } from './store/dataSlice'
 import { setCurrentStep } from './store/stateSlice'
 import reducer from './store'
 import { injectReducer } from 'store/index'
-import { Card } from 'components/ui'
-
+import { Card,Button } from 'components/ui'
+import {StickyFooter} from 'components/shared'
+import { FiCheckCircle } from 'react-icons/fi'
 injectReducer('accountDetailForm', reducer)
 
 const PersonalInformation = lazy(() =>
@@ -45,7 +46,7 @@ const DetailForm = () => {
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
-      
+    console.log(formData)
     useEffect(() => {
         // dispatch(getForm())
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -56,8 +57,8 @@ const DetailForm = () => {
         dispatch(setFormData({ [name]: values }))
         dispatch(
             setStepStatus({
-                [currentStep]: { status: 'complete' },
-                [nextStep]: { status: 'current' },
+                [currentStep]: { status: 'verify' },
+                [nextStep]: { status: 'verified' },
             })
         )
         dispatch(setCurrentStep(nextStep))
@@ -190,7 +191,40 @@ const DetailForm = () => {
                     </div>
                     
                 </div>
+                
             </AdaptableCard>
+            {currentStep === 10 && (
+                 <StickyFooter
+                                className="-mx-8 px-8 flex items-center justify-between py-4 mb-4"
+                                stickyClass="border-t bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+                            >
+                                <div>
+                                   
+                                </div>
+                                <div className="md:flex items-center">
+                                    {/* <Button
+                                        size="md"
+                                        className="ltr:mr-3 rtl:ml-3"
+                                        // onClick={() => onDiscard?.()}
+                                        // icon = {<BiArrowBack/>}
+                                        type="button"
+                                    >
+                                        Back
+                                    </Button> */}
+                                    <Button
+                                        size="md"
+                                        variant="solid"
+                                        // loading={isSubmitting}
+                                         icon={<FiCheckCircle />}
+                                        // onClick={() => openDialog()}
+                                        type="submit"
+                                    >
+                                        Final Verification
+                                    </Button>
+                                </div>
+                            </StickyFooter>
+            )}
+
         </Container>
     )
 }

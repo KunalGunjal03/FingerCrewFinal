@@ -13,6 +13,7 @@ export const getForm = createAsyncThunk(
     'accountDetailForm/data/getForm',
     async (data) => {
         const response = await apiGetAccountFormData(data)
+        console.log( response)
         return response.data
     }
 )

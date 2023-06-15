@@ -1,31 +1,63 @@
-import React, { forwardRef } from 'react'
-import { Input } from 'components/ui'
-import { HiOutlineSearch } from 'react-icons/hi'
-import debounce from 'lodash/debounce'
-import { FcSearch } from 'react-icons/fc'
-const SurveyorTableSearch = forwardRef((props, ref) => {
-    const { onInputChange } = props
+import React, { useRef, useState, useEffect } from 'react';
+import { Input } from 'components/ui';
+import { HiOutlineSearch } from 'react-icons/hi';
+import { useDispatch, useSelector } from 'react-redux';
+import debounce from 'lodash/debounce';
+import cloneDeep from 'lodash/cloneDeep';
+import { setTableData, getSurveyListByParam, setCustomerList } from '../store/dataSlice';
+import { OrgData } from 'constants/api.constant';
 
-    const debounceFn = debounce(handleDebounceFn, 500)
+const SurveyorTableSearch = () => {
+  const dispatch = useDispatch();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [originalData, setOriginalData] = useState([]);
+//   const searchInput = useRef();
+  const data = useSelector((state) => state.crmCustomers.data.SurveyList.getData);
 
-    function handleDebounceFn(val) {
-        onInputChange?.(val)
+  useEffect(() => {
+    setOriginalData(data);
+  }, [data]);
+
+  const onEdit = async (e) => {
+    setOriginalData(data);
+    const val = e.target.value;
+    setSearchTerm(val);
+
+    try {
+      if (val.length > 0) {
+        console.log(val)
+        
+        const filteredResults = data.filter(item =>
+          item.survey_id.includes(val)
+        );
+        setOriginalData(data);
+        console.log(originalData)
+        fetchData(filteredResults);
+      } 
+    else {
+      console.log(val.length) 
+        // fetchData(originalData);
+        console.log(originalData) 
+      }
+    } catch (error) {
+      console.error(error);
     }
+  };
 
-    const handleInputChange = (e) => {
-        debounceFn(e.target.value)
-    }
+  const fetchData = (data) => {
+    dispatch(setCustomerList(data));
+    // dispatch(getSurveyListByParam(data));
+  };
 
     return (
         <Input
-            ref={ref}
+            // ref={searchInput}
             className="max-w-md md:w-52 mb-4"
             size="sm"
             placeholder="Search"
-            prefix={<FcSearch className="text-lg" />}
-            onChange={handleInputChange}
+            prefix={<HiOutlineSearch className="text-lg" />}
+            onChange={onEdit}
         />
     )
-})
-
+}
 export default SurveyorTableSearch

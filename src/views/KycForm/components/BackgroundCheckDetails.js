@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react'
 import { getBackground } from '../store/dataSlice'
 import { useLocation, useParams } from 'react-router-dom'
 import {FiCheckCircle} from 'react-icons/fi'
-
+import { StickyFooter } from 'components/shared'
 
 
 
@@ -168,8 +168,11 @@ const BackgroundCheckDetails
                                     <p>No data available.</p>
                                 )}
                                 
+                           
+                                
                             </FormContainer>
                         </Form>
+                        
                         </>
                     )
                 }}

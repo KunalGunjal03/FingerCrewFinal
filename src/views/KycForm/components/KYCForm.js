@@ -165,7 +165,12 @@ const KYCForm = ({
 
     return (
         <>
-        <div>KYCForm</div>
+        <div>
+            
+        <h3 className="mb-2">KYC Details </h3>
+
+        <p>No data available.</p>
+        </div>
 
         </>
     )

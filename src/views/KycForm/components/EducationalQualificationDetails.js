@@ -6,16 +6,12 @@ import {
     Select,
     FormItem,
     FormContainer,
+    toast,
+    Notification,
+    Dialog
 } from 'components/ui'
 import { Field, Form, Formik, getIn } from 'formik'
-import NumberFormat from 'react-number-format'
-import {
-    occupationOptions,
-    annualIncomeOptions,
-    sourceOfWealthOptions,
-    noTinReasonOption,
-} from '../constants'
-import { countryList } from 'constants/countries.constant'
+
 //import * as Yup from 'yup'
 import {FiCheckCircle} from 'react-icons/fi'
 import {  useDispatch ,useSelector} from 'react-redux'
@@ -24,68 +20,9 @@ import { useEffect, useState } from 'react'
 import { getForm } from '../store/dataSlice'
 import { useLocation, useParams } from 'react-router-dom'
 import {getEducation} from '../store/dataSlice'
-const excludedOccupation = ['unemployed', 'student', 'retired']
+import { VerifyQualificationDetails } from 'services/VerificationServices'
 
 
-// const validationSchema = Yup.object().shape({
-//     taxResident: Yup.string().required(
-//         'Please select your country of tax resident'
-//     ),
-//     tin: Yup.string().when('noTin', {
-//         is: false,
-//         then: Yup.string().required(
-//             'Please enter your Taxpayer Identification number (TIN)'
-//         ),
-//         otherwise: (schema) => schema,
-//     }),
-//     noTinReason: Yup.string().when('noTin', {
-//         is: true,
-//         then: Yup.string().required('Please indicate your reason'),
-//         otherwise: (schema) => schema,
-//     }),
-//     noTin: Yup.bool(),
-//     occupation: Yup.string().required('Please choose your occupation'),
-//     annualIncome: Yup.string().required(
-//         'Please tell us your annual income range'
-//     ),
-//     sourceOfWealth: Yup.string().required(
-//         'Please tell us the source of funds use in this account'
-//     ),
-//     companyInformation: Yup.object().when('occupation', {
-//         is: (value) => value && !excludedOccupation.includes(value),
-//         then: Yup.object().shape({
-//             companyName: Yup.string().required(
-//                 'Please enter your company name'
-//             ),
-//             contactNumber: Yup.string().required(
-//                 'Please enter your company contact number'
-//             ),
-//             country: Yup.string().required('Please select country'),
-//             addressLine1: Yup.string().required('Please enter your address'),
-//             addressLine2: Yup.string(),
-//             city: Yup.string().required('Please enter your city'),
-//             state: Yup.string().required('Please enter your state'),
-//             zipCode: Yup.string().required('Please enter zip code'),
-//         }),
-//         otherwise: (schema) => schema,
-//     }),
-// })
-
-const NumberInput = (props) => {
-    return <Input {...props} value={props.field.value} />
-}
-
-const NumberFormatInput = ({ onValueChange, ...rest }) => {
-    return (
-        <NumberFormat
-            customInput={Input}
-            type="text"
-            onValueChange={onValueChange}
-            autoComplete="off"
-            {...rest}
-        />
-    )
-}
 
 const EducationalQualificationDetails
     = ({
@@ -135,14 +72,63 @@ const EducationalQualificationDetails
 
 
     
-    const onNext = (values, setSubmitting) => {
-        onNextChange?.(values, 'EducationalQualificationDetails', setSubmitting)
-    }
+    // const onNext = (values, setSubmitting) => {
+    //     onNextChange?.(values, 'EducationalQualificationDetails', setSubmitting)
+    // }
 
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
     console.log(data)
+    const [dialogIsOpen, setIsOpen] = useState(false)
+    // const [setSubmitting] = useState(true)
+    const openNotification = (type) => {
+        toast.push(
+            <Notification
+                title={type.charAt(0).toUpperCase() + type.slice(1)}
+                type={type}
+            >
+                Qualification details is verified successfuly.
+            </Notification>
+        )
+    }
+    const openDialog = () => {
+        setIsOpen(true)
+    }
+    const onDialogClose = (e) => {
+       
+        setIsOpen(false)
+    }
+    // let isVerified = false;
+    const onDialogOk = (e) => {
+        
+        openNotification('success')
+        setIsOpen(false)
+        
+        
+        // onDiscard(false)
+        // onNextChange?.(values, 'personalInformation', setSubmitting)
+    }
+
+    const onNext = async(values, setSubmitting) => {
+        try{
+            const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
+            const response = await VerifyQualificationDetails(verified)
+            console.log(response)
+            openDialog()
+            
+            setTimeout(() => {
+               onNextChange?.('personalInformation', setSubmitting)
+            }, 3000)
+            
+        }
+        catch(error)
+        {
+            console.log(error)
+        }
+        
+    }
+
     return (
         <>
             <div className="mb-8">
@@ -188,7 +174,8 @@ const EducationalQualificationDetails
                                         readOnly
                                     />
                                     </FormItem>
-                                    
+                                       
+ 
                                     </div>
                                     
                                 
@@ -196,36 +183,49 @@ const EducationalQualificationDetails
                                 ) : (
                                 <p>No data available.</p>
                                 
-                                )}                                    
+                                )} 
+                                 {Array.isArray(data) && data.length !== 0 && (
                                 <div className="flex justify-end gap-2">
                                     <Button
-                                        loading={isSubmitting}
-                                        size="md"
-                                        className="ltr:mr-3 rtl:ml-3"
-                                        // onClick={() => onDiscard?.()}
-                                        // icon = {<MdOutlineNavigateNext/>}
-                                        type="submit"
+                                    loading={isSubmitting}
+                                    variant="solid"
+                                    type="submit"
+                                    icon={<FiCheckCircle />}
                                     >
-                                        Next
-                                    </Button>
-                                     <Button
-                                         name= "verify"
-                                         loading={isSubmitting}
-                                         variant="solid"
-                                         type="submit"
-                                         icon={<FiCheckCircle />}
-                                     >
                                     Verify
-                                     </Button>
-                                </div>   
-                            
-                                
+                                    </Button>
+                                </div>
+                                )}
                             </FormContainer>
                         </Form>
                         </>
                     )
                 }}
             </Formik>
+            <Dialog
+                isOpen={dialogIsOpen}
+                onClose={onDialogClose}
+                onRequestClose={onDialogClose}
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Confirm Verification</h5>
+                    <div className="max-h-96 overflow-y-auto">
+                            <p> Are you want to verify Qualification details!!</p>
+                    </div>
+                    <div className="text-right mt-6">
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2"
+                            // variant="plain"
+                            onClick={onDialogClose}
+                        >
+                            No
+                        </Button>
+                        <Button variant="solid" onClick={onDialogOk}>
+                            Yes
+                        </Button>
+                    </div>
+                </div>
+            </Dialog>
         </>
     )
 }

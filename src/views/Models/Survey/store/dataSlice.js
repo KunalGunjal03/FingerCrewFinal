@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import {apiGetSurveList,apiGetSurveyStatistic,apiGetSurveByID} from 'services/SurveyService'
+import {apiGetSurveList,apiGetSurveyStatistic,apiGetSurveByID,apiGetSurveByparam} from 'services/SurveyService'
 
 export const getSurveyStatistic = createAsyncThunk(
     'crmCustomers/data/getSurveyStatistic',
@@ -40,7 +40,20 @@ export const getServeyListById = createAsyncThunk(
             return error
         }
         
-       
+    }
+)
+export const getServeyListByParam = createAsyncThunk(
+    'crmCustomers/data/getServeyList',
+    async (params) => {
+        try{
+            const response = await apiGetSurveByparam(params)
+            return response.data
+        }
+        catch(error)
+        {
+            console.error(error)
+            return error
+        }
         
     }
 )
@@ -57,12 +70,7 @@ export const initialTableData = {
         key: '',
     },
 }
-export const initialFilterData = {
-    name: '',
-    category: ['bags', 'cloths', 'devices', 'shoes', 'watches'],
-    status: [0, 1, 2],
-    productStatus: 0,
-}
+
 
 
 const dataSlice = createSlice({
@@ -72,7 +80,7 @@ const dataSlice = createSlice({
         SurveyList: [],
         statisticData: {},
         tableData: initialTableData,
-        filterData: initialFilterData,
+        filterData: [],
     },
     reducers: {
         setTableData: (state, action) => {
@@ -88,7 +96,7 @@ const dataSlice = createSlice({
     extraReducers: {
         [getServeyList.fulfilled]: (state, action) => {
             state.SurveyList = action.payload
-            state.tableData.total = action.payload.total
+            state.tableData.totalPages = action.payload.total
             state.loading = false
         },
         [getServeyList.pending]: (state) => {

@@ -110,33 +110,24 @@ const Skills
                                         key={items}
                                         className = 'mt-4'
                                     />
-                                   <div className="flex justify-end gap-2 mt-4">
-                                     <Button
-                                        loading={isSubmitting}
-                                        size="md"
-                                        className="ltr:mr-3 rtl:ml-3"
-                                        // onClick={() => onDiscard?.()}
-                                        // icon = {<BiArrowBack/>}
-                                        type="submit"
-                                    >
-                                        Next
-                                    </Button>
-                                     <Button
-                                         loading={isSubmitting}
-                                         variant="solid"
-                                         type="submit"
-                                         icon={<FiCheckCircle />}
-                                     >
-                                    Verify
-                                     </Button>
-                                     </div>
                                     </div>
                                  ))
                                  
                                 ) : (
                                     <p>No data available.</p>
                                 )} 
-                                
+                                {Array.isArray(data) && data.length !== 0 && (
+                                <div className="flex justify-end gap-2 mt-4">
+                                    <Button
+                                    loading={isSubmitting}
+                                    variant="solid"
+                                    type="submit"
+                                    icon={<FiCheckCircle />}
+                                    >
+                                    Verify
+                                    </Button>
+                                </div>
+                                )}
                                      
                                
                                 </FormItem>

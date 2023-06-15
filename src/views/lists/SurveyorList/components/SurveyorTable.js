@@ -122,8 +122,7 @@ const SurveyorTable = () => {
     )
 
     const {token,tokenKey} = useSelector((state) => state.auth.user)
-    // console.log(token)
-    // console.log(tokenKey)
+   
     const fetchData = () => {
         try{
         dispatch(getSurveyor({ pageIndex, pageSize, sort, query, filterData,token,tokenKey}))
@@ -133,15 +132,7 @@ const SurveyorTable = () => {
             return error;
         }
     }
-    
-    // const fetchData = async () => {
-    //     try {
-    //         const resp = await apiGetlistsSurveyor()
-    //         console.log(resp.data)
-    //     } catch (errors) {
-    //         console.log(errors)
-    //     }
-    // }
+
    
     const columns = useMemo(
         () => [

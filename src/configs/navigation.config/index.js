@@ -84,7 +84,7 @@ const navigationConfig = [
     key: "Dashboard",
     path: "/dashboard",
     title: "Dashboard",
-    translateKey: "nav.Dashboard",
+    translateKey: "Dashboard",
     icon: "singleMenu",
     type: "item",
     authority: [],
@@ -172,7 +172,7 @@ const navigationConfig = [
         {
           key: "surveyor",
           path: "/serveyorlist",
-          title: "Surveyor List",
+          title: "Registration request list",
           translateKey: "nav.surveyor",
           icon: "singleMenu",
           type: "collapse",
