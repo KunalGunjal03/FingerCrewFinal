@@ -134,9 +134,9 @@ const onDialogOk = async(status,values)=>{
                 openNotification('success',resp.remarks)
                 setIsOpen(false)
                 setIsOpen1(false)
-                setTimeout(() => {
-                    onNextChange?.('personalInformation')
-                 }, 500)
+                // setTimeout(() => {
+                //     onNextChange?.('personalInformation')
+                //  }, 500)
                
  
         // }
@@ -223,7 +223,7 @@ const onNext = async(values, setSubmitting) => {
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
-    console.log(Array.isArray(data))
+   
     return (
         <>
             <div className="mb-8">
@@ -322,7 +322,7 @@ const onNext = async(values, setSubmitting) => {
                 <div className="flex flex-col h-full justify-between">
                     <h5 className="mb-4">Confirm Verification</h5>
                     <div className="max-h-96 overflow-y-auto">
-                            <p> Are you want to verify personal information!!</p>
+                            <p> Are you want to validate Background details!!</p>
                     </div>
                     <div className="text-right mt-6">
                         <Button
@@ -345,7 +345,7 @@ const onNext = async(values, setSubmitting) => {
                 onRequestClose={onDialog1Close}
             >
                 <div className="flex flex-col h-full justify-between">
-                    <h5 className="mb-4">Personal Details Verification</h5>
+                    <h5 className="mb-4">Background details Verification</h5>
                     <div className="max-h-96 overflow-y-auto px-2 ">
                             {/* <p> Enter Rejection remarks</p> */}
                         <Formik

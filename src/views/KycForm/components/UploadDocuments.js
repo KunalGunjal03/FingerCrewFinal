@@ -22,7 +22,7 @@ import { useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getDocuments } from '../store/dataSlice'
 const documentTypes = [
-    { value: 'nationalId', label: 'National ID', desc: '' },
+    { value: 'ssn', label: 'SSN Certificate', desc: '' },
     { value: 'driversLicense', label: 'Drivers License', desc: '' },
 ]
 
@@ -30,9 +30,7 @@ const documentTypes = [
 
 const DocumentTypeIcon = ({ type }) => {
     switch (type) {
-        case 'passport':
-            return <PassportSvg />
-        case 'nationalId':
+        case 'ssn':
             return <NationalIdSvg />
         case 'driversLicense':
             return <DriversLicenseSvg />
@@ -42,37 +40,39 @@ const DocumentTypeIcon = ({ type }) => {
 }
 
 const DocumentUploadField = (props) => {
-    const { label, name, children, touched, errors } = props
-
+    const { label, name, children, touched, errors,data } = props
+    console.log(props)
+    console.log(data)
     // const onSetFormFile = (form, field, file) => {
     //     form.setFieldValue(field.name, URL.createObjectURL(file[0]))
     // }
 
     return (
-        <FormItem
-            label={label}
-            invalid={errors[name] && touched[name]}
-            errorMessage={errors[name]}
-        >
-            <Field name={name}
-            value = {name}
-            component = {Input}
-            >
+
+        <div>{label}</div>
+        // <FormItem
+        //     label={label}
+        //     invalid={errors[name] && touched[name]}
+        //     errorMessage={errors[name]}
+        // >
+        //     <Field name={name}
+        //     value = {name}
+        //     component = {Input}
+        //     >
                 
-            </Field>
-        </FormItem>
+        //     </Field>
+        // </FormItem>
     )
 }
 
 const UploadDocuments = ({
     data = {
-        documentType: 'passport',
-        passportCover: '',
-        passportDataPage: '',
-        nationalIdFront: '',
-        nationalIdBack: '',
-        driversLicenseFront: '',
-        driversLicenseBack: '',
+        documentType: '',
+        documents_id: '',
+        document_path: '',
+        document_name: '',
+        document_master_id: '',
+        document_extention: '',
     },
     onNextChange,
     onBackChange,
@@ -96,11 +96,6 @@ const UploadDocuments = ({
  const dispatch = useDispatch()
  const fetchData = (requestParam) => {
     try {
-       const Param = {
-           surveyor_master_id : requestParam.surveyor_master_id , 
-           token : token , 
-           tokenKey : tokenKey
-       }
         //const surveyor_master_id = { surveyor_master_id : requestParam.surveyor_master_id}
       //dispatch(getForm({ surveyor_master_id,token,tokenKey}));
       dispatch(getDocuments( requestParam));
@@ -115,6 +110,7 @@ const UploadDocuments = ({
     (state) => state.accountDetailForm.data.formData.getData
     )
     console.log(formData)
+    console.log(data)
 
     return (
         <>
@@ -123,7 +119,7 @@ const UploadDocuments = ({
             
             </div>
             <Formik
-                // initialValues={data}
+                initialValues={data}
                 // enableReinitialize
                 // validationSchema={validationSchema}
                 // onSubmit={(values, { setSubmitting }) => {
@@ -134,7 +130,7 @@ const UploadDocuments = ({
                 // }}
             >
             {({ values, touched, errors, isSubmitting }) => {
-                const validatedProps = { touched, errors }
+                const validatedProps = { touched, errors ,data}
                 return (
                     <Form>
                         <FormContainer>
@@ -225,17 +221,28 @@ const UploadDocuments = ({
                                     </Field>
                             </FormItem>
                             <div className="grid xl:grid-cols-1 gap-4">
-                                    
+                            {values.documentType === 'ssn' && (
                                         <>
                                             <DocumentUploadField
-                                                name="passportCover"
-                                                label="Passport Cover"
+                                                name="ssn"
+                                                label="SSN Certificate"
                                                 {...validatedProps}
                                             >
                                                
                                             </DocumentUploadField>
                                         </>
-                                   
+                            )}
+                             {values.documentType === 'driversLicense' && (
+                                        <>
+                                            <DocumentUploadField
+                                                name="driversLicense"
+                                                label="Driver License"
+                                                {...validatedProps}
+                                            >
+                                               
+                                            </DocumentUploadField>
+                                        </>
+                            )}
                                 </div>
 
                             

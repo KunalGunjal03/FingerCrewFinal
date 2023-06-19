@@ -71,10 +71,12 @@ export const protectedRoutes = [
     },
 
     {
+
         key: 'editUser',
-        path: '/editUser',
-        component: React.lazy(() => import('views/Models/Users/editUser')),
+        path: '/editUser/:Id',
+        component: React.lazy(() => import('views/Models/userEdit')),
         authority: [],
+
     },
     
 ]

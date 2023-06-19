@@ -69,11 +69,11 @@ const PersonalInformation = ({
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
-    console.log(data)
-    const responseData = useSelector(
-        (state) => state.accountDetailForm.data.formData.responseData
-    )
-    console.log(responseData)
+ 
+    // const responseData = useSelector(
+    //     (state) => state.accountDetailForm.data.formData.responseData
+    // )
+
     // const d =  useSelector(
     //     (state) => state.accountDetailForm.data.getData
     // )
@@ -254,7 +254,9 @@ const PersonalInformation = ({
                         
                         <Form>
                             <FormContainer>
+                                
                                 {/* {Array.isArray(data) && data.length!== 0 ?( */}
+                                { data ? (
                                 <div>
                                 <div className="md:grid grid-cols-2 gap-4">
                                 <FormItem
@@ -357,15 +359,6 @@ const PersonalInformation = ({
                                        
                                     
                                 </div>
-                                
-                                </div>
-                                
-                               
-                                
-                                {/* ) : (
-                                <p>No data available.</p>
-                                )}                                     */}
-                                {/* {Array.isArray(data) && data.length !== 0 && ( */}
                                 <div className="flex justify-end gap-2">
                                     <Button
                                     // loading={isSubmitting}
@@ -376,6 +369,18 @@ const PersonalInformation = ({
                                     Validate
                                     </Button>
                                 </div>
+                                </div>
+                                
+                                ) : (
+                                    <p>No data available.</p>
+                                    )} 
+                               
+                                
+                                {/* ) : (
+                                <p>No data available.</p>
+                                )}                                     */}
+                                {/* {Array.isArray(data) && data.length !== 0 && ( */}
+                               
                                 {/* )} */}
                             </FormContainer>
                         </Form>

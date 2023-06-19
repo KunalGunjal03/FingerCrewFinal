@@ -28,7 +28,7 @@ const FormStep = ({ currentStep, currentStepStatus, stepStatus }) => {
 
     const onStepChange = (step) => {
         const selectedStepStatus = stepStatus[step].status
-        console.log(selectedStepStatus)
+
         dispatch(setStepStatus('complete'))
         dispatch(setCurrentStep(step))
         // if (

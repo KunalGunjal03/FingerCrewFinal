@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, lazy, Suspense } from 'react'
+import React, { useEffect, useMemo, lazy,useState, Suspense } from 'react'
 import { Container, AdaptableCard } from 'components/shared'
 import FormStep from './components/FormStep'
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,9 +6,11 @@ import { getForm, setStepStatus, setFormData } from './store/dataSlice'
 import { setCurrentStep } from './store/stateSlice'
 import reducer from './store'
 import { injectReducer } from 'store/index'
-import { Card,Button } from 'components/ui'
+import { Card,Button,Dialog,toast,Notification } from 'components/ui'
 import {StickyFooter} from 'components/shared'
 import { FiCheckCircle } from 'react-icons/fi'
+import { getVerificationDetails } from './store/dataSlice'
+import { useLocation ,useNavigate} from 'react-router-dom'
 injectReducer('accountDetailForm', reducer)
 
 const PersonalInformation = lazy(() =>
@@ -33,20 +35,41 @@ const BankDetails = lazy(() =>
  )
  const BackgroundCheckDetails = lazy (()=> import('./components/BackgroundCheckDetails') )
  const InsuranceDetails = lazy(()=> import ('./components/InsuranceDetails'))
+ 
 const DetailForm = () => {
+    const [SurveyorID, setSurveyorID] = useState(false)
     const dispatch = useDispatch()
+    const location = useLocation()
+    const navigate = useNavigate()
     const stepStatus = useSelector(
         (state) => state.accountDetailForm.data.stepStatus
     )
-    
+    const [dialogIsOpen, setIsOpen] = useState(false)
+    const openNotification = (type,msg) => {
+        toast.push(
+            <Notification
+                title={msg}
+                type={type}
+                
+            />,{
+                placement: 'top-end'
+            })
+                
+           
+        
+    }
     const currentStep = useSelector(
         (state) => state.accountDetailForm.state.currentStep
     )
-    
+
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
-    console.log(formData)
+   
+    const response = useSelector(
+        (state) => state.accountDetailForm.data.formData
+    )
+    console.log(response)
     useEffect(() => {
         // dispatch(getForm())
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,7 +84,7 @@ const DetailForm = () => {
                 [nextStep]: { status: 'verified' },
             })
         )
-        
+
         dispatch(setCurrentStep(nextStep))
     }
 
@@ -74,7 +97,90 @@ const DetailForm = () => {
         () => stepStatus[currentStep].status,
         [stepStatus, currentStep]
     )
-    console.log(currentStepStatus)
+    const openDialog = (e) => {
+
+        setIsOpen(true)
+
+    }
+    const onDialogClose = (e) => {
+        console.log(e)
+     //    OpenRejectionDialog()
+
+         setIsOpen(false)
+         // setRejectionRemarkVisible(true)
+     }
+     const OpenRejectionDialog = (e)=>{
+        setIsOpen(false)
+    }
+    useEffect(() => {
+        const path = location.pathname.substring(
+            location.pathname.lastIndexOf('/') + 1
+        )
+        
+       
+        const rquestParam = { surveyor_master_id : path }
+        setSurveyorID(rquestParam)
+        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.pathname])
+    const onDialogOk = async(status,values)=>{
+
+        var verified = {}
+      //   setIsOpen(true)
+      //   setIsOpen1(true)
+        //   console.log('OK')
+          try
+          {
+              // if(status === "Reject")
+              // {
+                //   verified = {surveyor_master_id : formData.surveyor_master_id}
+                //   console.log(verified)
+                console.log(SurveyorID)
+                 const  response = await dispatch(getVerificationDetails ( SurveyorID));
+              
+            //   //     // const response =  VerifyPersonalDetails(verified)
+             
+                  const resp = response.payload
+                  console.log(resp)
+            //   //     // if(response)
+            //   //     // {
+            //           openNotification('success',resp.remarks)
+            //           setIsOpen(false)
+            //           setIsOpen1(false)
+            //           setTimeout(() => {
+            //               onNextChange?.('personalInformation')
+            //            }, 500)
+
+
+              // }
+              // else if(status === "Accept")
+              // {
+              //     verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+              //     console.log(verified)
+              //     dispatch(verifyPersonalDetails( verified));
+
+              //     // const response =  VerifyPersonalDetails(verified)
+              //     // console.log(response)
+                  if(resp)
+                  {
+                      openNotification('success',resp.remarks)
+                      setIsOpen(false)
+                      
+                      setTimeout(() => {
+                        navigate('/serveyorlist')
+                       }, 500)
+                      
+                    }
+              //           // }
+          }
+          catch(error)
+          {
+              console.error(error)
+              return error;
+          }
+            // onNextChange?.(values, 'personalInformation', setSubmitting)
+      }
+
     return (
         <Container className="h-full">
             <AdaptableCard className="h-full" bodyClass="h-full">
@@ -87,8 +193,8 @@ const DetailForm = () => {
                                 stepStatus={stepStatus}
                             />
                         </div>
-                    )} 
-                    
+                    )}
+
                     <div
                         className={
                             currentStep !== 11
@@ -144,7 +250,7 @@ const DetailForm = () => {
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
                                 />
-                            )} 
+                            )}
                             {currentStep === 6 && (
                                 <Skills
                                     data={formData}
@@ -152,7 +258,7 @@ const DetailForm = () => {
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
                                 />
-                            )} 
+                            )}
                              {currentStep === 7 && (
                                 <BankDetails
                                     data={formData}
@@ -160,8 +266,8 @@ const DetailForm = () => {
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
                                 />
-                            )} 
-                             
+                            )}
+
                              {currentStep === 8 && (
                                 <UploadDocuments
                                     data={formData}
@@ -169,7 +275,7 @@ const DetailForm = () => {
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
                                 />
-                            )} 
+                            )}
                               {currentStep === 9 && (
                                 <InsuranceDetails
                                     data={formData}
@@ -177,7 +283,7 @@ const DetailForm = () => {
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
                                 />
-                            )} 
+                            )}
                               {currentStep === 10 && (
                                 <BackgroundCheckDetails
                                     data={formData}
@@ -185,14 +291,14 @@ const DetailForm = () => {
                                     onBackChange={handleBackChange}
                                     currentStepStatus={currentStepStatus}
                                 />
-                            )} 
-                        
+                            )}
+
                         </Suspense>
                         </Card>
                     </div>
-                    
+
                 </div>
-                
+
             </AdaptableCard>
             {currentStep === 10 && (
                  <StickyFooter
@@ -200,24 +306,16 @@ const DetailForm = () => {
                                 stickyClass="border-t bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
                             >
                                 <div>
-                                   
+
                                 </div>
                                 <div className="md:flex items-center">
-                                    {/* <Button
-                                        size="md"
-                                        className="ltr:mr-3 rtl:ml-3"
-                                        // onClick={() => onDiscard?.()}
-                                        // icon = {<BiArrowBack/>}
-                                        type="button"
-                                    >
-                                        Back
-                                    </Button> */}
+
                                     <Button
                                         size="md"
                                         variant="solid"
                                         // loading={isSubmitting}
                                          icon={<FiCheckCircle />}
-                                        // onClick={() => openDialog()}
+                                        onClick={() => openDialog()}
                                         type="submit"
                                     >
                                         Final Verification
@@ -225,7 +323,34 @@ const DetailForm = () => {
                                 </div>
                             </StickyFooter>
             )}
+            <Dialog
+                isOpen={dialogIsOpen}
+                onClose={onDialogClose}
+                onRequestClose={onDialogClose}
 
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Confirm Verification</h5>
+                    <div className="max-h-96 overflow-y-auto">
+                            <p> Are you want to verify all details!!</p>
+                    </div>
+                    <div className="text-right mt-6">
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2"
+                            // variant="plain"
+                            onClick={OpenRejectionDialog}
+                        >
+                            No
+                        </Button>
+                        <Button variant="solid"
+                         onClick = {onDialogOk}
+                          >
+                            Yes
+                        </Button>
+                    </div>
+                </div>
+
+            </Dialog>
         </Container>
     )
 }

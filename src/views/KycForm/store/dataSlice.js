@@ -10,12 +10,12 @@ import { apiGetInsuredDetails } from 'services/AccountServices'
 import { apiGetKYCDetails } from 'services/AccountServices'
 import { apiGetBackgroundDetails,apiGetUploadedDocuments } from 'services/AccountServices'
 import { VerifyPersonalDetails,VerifyAddressDetails ,VerifyQualificationDetails,VerifyCertificateDetails,VerifyExperienceDetails,VerifySkillsDetails,VerifyBankDetails
-,VerifyInsuranceDetails
+,VerifyInsuranceDetails ,getVerificationTabs,VerifyKYCDetails,VerifyBgCheckDetails
 } from 'services/VerificationServices'
 export const getForm = createAsyncThunk(
     'accountDetailForm/data/getForm',
     async (data) => {
-        console.log(data)
+
         const response = await apiGetAccountFormData(data)
         console.log( response)
         return response.data
@@ -170,7 +170,24 @@ export const verifyInsuranceDetails = createAsyncThunk(
 export const verifyBgCheckDetails = createAsyncThunk(
     'accountDetailForm/data/getStatus',
     async (data) => {
-        const response = await VerifyInsuranceDetails(data)
+        const response = await VerifyBgCheckDetails(data)
+        console.log( response)
+        return response
+    }
+)
+
+export const getVerificationDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await getVerificationTabs(data)
+        console.log( response)
+        return response
+    }
+)
+export const verifyKYCDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifyKYCDetails(data)
         console.log( response)
         return response
     }
@@ -186,7 +203,8 @@ const dataSlice = createSlice({
             mobile_no: '',           
             dob: ''
         
-          }
+          },
+        
         },
         stepStatus: {
             0: { status: 'pending' },
@@ -202,37 +220,42 @@ const dataSlice = createSlice({
             10: { status: 'pending' },
            
         },
-        response:{
+        resp:
+        {    
             status:'',
-            remarks: ''
-
+            remarks:''
         }
     },
     reducers: {
         setFormData: (state, action) => {
             state.formData.getData = { ...state.formData, ...action.payload }
+
         },
         setStepStatus: (state) => {
             state.stepStatus = { ...state.stepStatus}
         },
+        // setResponse:(state,action) => {
+        //     state.formData.response = {... state.formData, ...action.payload}
+        // }
     },
     extraReducers: {
         [getForm.fulfilled]: (state, action) => {
             state.formData.getData = action.payload.getData
-            state.stepStatus = state.stepStatus
+            // state.stepStatus = state.stepStatus
+            state.resp = action.payload.status
         },
         [getAddress.fulfilled]:(state,action) =>{
             state.formData.getData = action.payload.getData
-            state.stepStatus = state.stepStatus
+            // state.stepStatus = state.stepStatus
         }
         ,
-        [verifyPersonalDetails.fulfilled]:(state,action) =>{
-            state.formData.response = action.payload
-        }
+        // [verifyPersonalDetails.fulfilled]:(state,action) =>{
+        //     state.formData.response = action.payload
+        // }
 
     },
 })
 
-export const { setFormData, setStepStatus } = dataSlice.actions
+export const { setFormData, setStepStatus} = dataSlice.actions
 
 export default dataSlice.reducer

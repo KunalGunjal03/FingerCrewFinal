@@ -1,179 +1,483 @@
 import {
+    Input,
+    InputGroup,
     Button,
-    Upload,
-    Badge,
-    Segment,
+    DatePicker,
+    //Select,
     FormItem,
     FormContainer,
+    toast,
+    Notification
+
 } from 'components/ui'
-import { SvgIcon, DoubleSidedImage, SegmentItemOption } from 'components/shared'
-import { DriversLicenseSvg, PassportSvg, NationalIdSvg } from 'assets/svg'
-import classNames from 'classnames'
 import { Field, Form, Formik } from 'formik'
-import useThemeClass from 'utils/hooks/useThemeClass'
+import NumberFormat from 'react-number-format'
+// import { countryList } from 'constants/countries.constant'
+// import { statusOptions } from '../constants'
+import { components } from 'react-select'
+//import {useSelector} from 'react'
+// import * as Yup from 'yup'
+import {  useDispatch,useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
+//import { apiGetAccountFormData } from 'services/AccountServices'
+import { getKYC } from '../store/dataSlice'
+import { useLocation } from 'react-router-dom'
+import { COMMANPATH } from 'constants/api.constant'
 import {FiCheckCircle} from 'react-icons/fi'
-//import * as Yup from 'yup'
+import { HiEye, HiTrash } from 'react-icons/hi'
+import { Dialog, Upload } from 'components/ui'
+import * as Yup from 'yup'
+import { text } from 'd3-fetch'
+import { verifyKYCDetails } from '../store/dataSlice'
+//import DefaultImg from "../../../../public/img/default.png"
+//const { SingleValue } = components
 
-// const validationSchema = Yup.object().shape({
-//     documentType: Yup.string().required('Please select your document type'),
-//     passportCover: Yup.string().when('documentType', {
-//         is: 'passport',
-//         then: Yup.string().required('Please upload passport cover'),
-//         otherwise: (schema) => schema,
-//     }),
-//     passportDataPage: Yup.string().when('documentType', {
-//         is: 'passport',
-//         then: Yup.string().required('Please upload passport data page'),
-//         otherwise: (schema) => schema,
-//     }),
-//     nationalIdFront: Yup.string().when('documentType', {
-//         is: 'nationalId',
-//         then: Yup.string().required('Please upload your front National ID'),
-//         otherwise: (schema) => schema,
-//     }),
-//     nationalIdBack: Yup.string().when('documentType', {
-//         is: 'nationalId',
-//         then: Yup.string().required('Please upload your back National ID'),
-//         otherwise: (schema) => schema,
-//     }),
-//     driversLicenseFront: Yup.string().when('documentType', {
-//         is: 'driversLicense',
-//         then: Yup.string().required('Please upload your front Drivers license'),
-//         otherwise: (schema) => schema,
-//     }),
-//     driversLicenseBack: Yup.string().when('documentType', {
-//         is: 'driversLicense',
-//         then: Yup.string().required('Please upload your back Drivers license'),
-//         otherwise: (schema) => schema,
-//     }),
-// })
+// const genderOptions = [
+//     { label: 'Male', value: 'M' },
+//     { label: 'Female', value: 'F' },
+//     { label: 'Others', value: 'O' },
+// ]
 
-const documentTypes = [
-    { value: 'passport', label: 'Passport', desc: '' },
-    { value: 'nationalId', label: 'National ID', desc: '' },
-    { value: 'driversLicense', label: 'Drivers License', desc: '' },
-]
-
-const documentUploadDescription = {
-    passport: [
-        'Uploaded passport image must be clearly visible & complete',
-        'Passport must in valid period',
-        'Provided passport data page must included your full name, date of birth & your photo',
-    ],
-    nationalId: [
-        'Uploaded ID image must be clearly visible',
-        'ID image must in valid period',
-        'Provided ID must included your full name, date of birth & your photo',
-    ],
-    driversLicense: [
-        'Uploaded driver license image must be clearly visible',
-        'Driver license must in valid period',
-        'Uploaded driver license image must be clearly visible',
-    ],
+const NumberInput = (props) => {
+    return <Input {...props} value={props.field.value} />
 }
 
-const DocumentTypeIcon = ({ type }) => {
-    switch (type) {
-        case 'passport':
-            return <PassportSvg />
-        case 'nationalId':
-            return <NationalIdSvg />
-        case 'driversLicense':
-            return <DriversLicenseSvg />
-        default:
-            return null
-    }
-}
-
-const DocumentUploadField = (props) => {
-    const { label, name, children, touched, errors } = props
-
-    const onSetFormFile = (form, field, file) => {
-        form.setFieldValue(field.name, URL.createObjectURL(file[0]))
-    }
-
+const NumberFormatInput = ({ onValueChange, ...rest }) => {
     return (
-        <FormItem
-            label={label}
-            invalid={errors[name] && touched[name]}
-            errorMessage={errors[name]}
-        >
-            <Field name={name}>
-                {({ field, form }) => (
-                    <Upload
-                        draggable
-                        className="cursor-pointer h-[300px]"
-                        onChange={(files) => onSetFormFile(form, field, files)}
-                        onFileRemove={(files) =>
-                            onSetFormFile(form, field, files)
-                        }
-                        showList={false}
-                        uploadLimit={1}
-                    >
-                        {field.value ? (
-                            <img
-                                className="p-3 max-h-[300px]"
-                                src={field.value}
-                                alt=""
-                            />
-                        ) : (
-                            <div className="text-center">
-                                {children}
-                                <p className="font-semibold">
-                                    <span className="text-gray-800 dark:text-white">
-                                        Drop your image here, or{' '}
-                                    </span>
-                                    <span className="text-blue-500">
-                                        browse
-                                    </span>
-                                </p>
-                                <p className="mt-1 opacity-60 dark:text-white">
-                                    Support: jpeg, png
-                                </p>
-                            </div>
-                        )}
-                    </Upload>
-                )}
-            </Field>
-        </FormItem>
+        <NumberFormat
+            customInput={Input}
+            type="text"
+            onValueChange={onValueChange}
+            autoComplete="off"
+            {...rest}
+        />
     )
 }
+
+
+
+// const PhoneSelectOption = ({ innerProps, data, isSelected }) => {
+//     return (
+//         <div
+//             className={`cursor-pointer flex items-center justify-between p-2 ${
+//                 isSelected
+//                     ? 'bg-gray-100 dark:bg-gray-500'
+//                     : 'hover:bg-gray-50 dark:hover:bg-gray-600'
+//             }`}
+//             {...innerProps}
+//         >
+//             <div className="flex items-center gap-2">
+//                 <span>
+//                     ({data.value}) {data.dialCode}
+//                 </span>
+//             </div>
+//         </div>
+//     )
+// }
+
+// const PhoneControl = ({ children, ...props }) => {
+//     const selected = props.getValue()[0]
+//     return (
+//         <SingleValue {...props}>
+//             {selected && <span>{selected.dialCode}</span>}
+//         </SingleValue>
+//     )
+// }
+
+// const validationSchema = Yup.object().shape({
+//     Surveyor_master_id: Yup.string().required('Surveyor Master ID'),
+//     Surveyor_name: Yup.string().required('Surveyor Name'),
+//     email_id: Yup.string().email('Invalid email').required('Email Required'),
+//     // nationality: Yup.string().required('Please select your nationality'),
+//     mobile_no: Yup.string().required('Please enter your mobile number'),
+//     dob: Yup.string().required('Please enter your date of birth'),
+//     // gender: Yup.string().required('Please enter your gender'),
+// //     maritalStatus: Yup.string().required('Please enter your marital status'),
+// //     dialCode: Yup.string().required('Please select dial code'),
+//  })
+
+//  const {token,tokenKey} = useSelector((state) => state.auth.user)
+// useEffect(() => {
+//     fetchData()
+// },[])
+
 
 const KYCForm = ({
     data = {
-        documentType: 'passport',
-        passportCover: '',
-        passportDataPage: '',
-        nationalIdFront: '',
-        nationalIdBack: '',
-        driversLicenseFront: '',
-        driversLicenseBack: '',
+        surveyor_profile_photo_path:'',
+        surveyor_profile_photo_name:'',
+        surveyor_profile_photo_file_extension:''
+
     },
     onNextChange,
-    onBackChange,
     currentStepStatus,
 }) => {
-    const { textTheme, bgTheme } = useThemeClass()
 
-    const onNext = (values, setSubmitting) => {
-        onNextChange?.(values, 'identification', setSubmitting)
+    const location = useLocation()
+    const {token,tokenKey} = useSelector((state) => state.auth.user)
+    const [imageUrl, setImageUrl] = useState('');
+
+     useEffect(() => {
+         const path = location.pathname.substring(
+         location.pathname.lastIndexOf('/') + 1
+     )
+     const requestParam = {surveyor_master_id : path ,
+        token : token ,
+        tokenKey : tokenKey
     }
 
-    const onBack = () => {
-        onBackChange?.()
-    }
 
-    return (
-        <>
-        <div>
+     fetchData(requestParam);
+ }, []);
+ const dispatch = useDispatch()
+//  const fetchData = (requestParam) => {
+//     try {
+//         dispatch(getKYC(requestParam)).then((response) => {
+//             const imageFilePath = response?.data?.surveyor_profile_photo_path ;
+//             if (imageFilePath) {
+//                 setImageUrl(imageFilePath);
+//        }
+        
+//     });
+const fetchData = async (requestParam) => {
+    try {
+    console.log(requestParam)
+      const response = await dispatch(getKYC(requestParam));
+      const imageFileName = COMMANPATH ;
+      console.log(response.payload.getData)
+      const data = response.payload.getData
+      console.log(data)
+      const imageFilePath = data.surveyor_profile_photo_path;
+      const imagefile = data.surveyor_profile_photo_name;
+      const imagefileextension = data.surveyor_profile_photo_file_extension;
+
+       const finalfilepath= imageFileName + imageFilePath + imagefile  + imagefileextension;
+       console.log(finalfilepath)
+       setImageUrl(finalfilepath)
+     console.log(finalfilepath)
+    //   if (imageFilePath) {
+    //     fetchImageFromServer(imageFilePath);
+    //   }
+    } catch (error) {
+      console.error(error);
+      // Handle error
+    }
+  };
+  
+//   const fetchImageFromServer = async (imagePath) => {
+//     try {
+//       const url = COMMANPATH + imageFilePath; // Construct the complete URL by concatenating the common path and the image path
+//       const response = await axios.get(url, {
+//         responseType: 'blob'
+//       });
+  
+//       const imageUrl = URL.createObjectURL(response.data);
+//       setImageUrl(imageUrl);
+//     } catch (error) {
+//       console.error(error);
+//       // Handle error
+//     }
+//   };
+//     } catch (error) {
+//       console.error(error);
+//       return error;
+//     }
+//   };
+const [dialogIsOpen, setIsOpen] = useState(false)
+const [dialog1IsOpen,setIsOpen1] = useState(false)
+const openNotification = (type,msg) => {
+    toast.push(
+        <Notification
+            title={msg}
+            type={type}
             
-        <h3 className="mb-2">KYC Details </h3>
+        />,{
+            placement: 'top-end'
+        })
+            
+       
+    
+}
+const openDialog = (e) => {
+    setIsOpen(true)
 
-        <p>No data available.</p>
+}
+const OpenRejectionDialog = (e)=>{
+    setIsOpen1(true)
+}
+const onDialogClose = (e) => {
+   console.log(e)
+//    OpenRejectionDialog()
+   
+    setIsOpen(false)
+    // setRejectionRemarkVisible(true)
+}
+const onDialog1Close = (e) => {
+    setIsOpen(true)
+     setIsOpen1(false)
+     // setRejectionRemarkVisible(true)
+ }
+// let isVerified = false;
+const onDialogOk = async(status,values)=>{
+
+  var verified = {}
+//   setIsOpen(true)
+//   setIsOpen1(true)
+    
+    try
+    {
+        // if(status === "Reject")
+        // {
+            verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+            console.log(verified)
+           const  response = await dispatch(verifyKYCDetails( verified));
+            
+        //     // const response =  VerifyPersonalDetails(verified)
+            console.log(response.payload)
+            const resp = response.payload
+        //     // if(response)
+        //     // {
+                openNotification('success',resp.remarks)
+                setIsOpen(false)
+                setIsOpen1(false)
+                setTimeout(() => {
+                    onNextChange?.('personalInformation')
+                 }, 500)
+               
+ 
+        // }
+        // else if(status === "Accept")
+        // {
+        //     verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+        //     console.log(verified)
+        //     dispatch(verifyPersonalDetails( verified));
+            
+        //     // const response =  VerifyPersonalDetails(verified)
+        //     // console.log(response)
+        //     // if(response)
+        //     // {
+        //         openNotification('success')
+        //         setIsOpen(false)
+        //         setIsOpen1(false)
+        //         setTimeout(() => {
+        //             onNextChange?.('personalInformation')
+        //          }, 500)
+        //         setIsvalid(true)
+        // }
+        //           // }
+    }
+    catch(error)
+    {
+        console.error(error)
+        return error;
+    }
+      // onNextChange?.(values, 'personalInformation', setSubmitting)
+}
+
+const onDialogReject = async(status,values)=>{
+   try
+   {
+    console.log(status)
+    console.log(values)
+   const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "0",rejection_remarks: values.remark}
+    console.log(verified)
+   const  response = await dispatch(verifyKYCDetails( verified));
+    
+//     // const response =  VerifyPersonalDetails(verified)
+    console.log(response.payload)
+    const resp = response.payload
+//     // if(response)
+//     // {
+        openNotification('success',resp.remarks)
+        setIsOpen(false)
+        setIsOpen1(false)
+        setTimeout(() => {
+            onNextChange?.('addressInformation')
+         }, 500)
+        
+   }
+   catch(error)
+   {
+    console.error(error)
+    return error
+   }
+   
+   
+    
+    
+    
+}
+const onNext = async(values, setSubmitting) => {
+    try{
+    
+      
+        openDialog()
+      
+        
+    }
+    catch(error)
+    {
+        console.log(error)
+    }
+    
+}
+const formData = useSelector(
+    (state) => state.accountDetailForm.data.formData.getData
+)
+const validationSchema = Yup.object().shape({
+    remark: Yup.string().required('Please enter your rejection remark')
+    .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
+})
+return (
+    <>
+        <div className="mb-8">
+            <h3 className="mb-2">KYC Details</h3>
+            {/* <p>Basic information for an account opening</p> */}
         </div>
+        <Formik
+            initialValues={data}
+            //enableReinitialize={true}
+            // validationSchema={validationSchema}
+            onSubmit={(values, { setSubmitting }) => {
+                setSubmitting(true)
+                setTimeout(() => {
+                    onNext(values, setSubmitting)
+                }, 1000)
+            }}
+        >
+            {({ values, touched, errors, isSubmitting }) => {
+                return (
+                    
+                    <Form>
+                        <FormContainer>
+                                
+                               
+                                {/* <FormItem
+                                //label="surveyor_profile_photo_path"
+                            >
+                                
+                                     { <Field
+                                            type="text"
+                                            name="imageUrl"
+                                            component={Input}
+                                             value ={imageUrl }
+                                             readOnly
+                                         /> }
+                                   </FormItem>
+                            
+                            */}
+                            { data ? (
+                                <div>
+                              <img
+                               //className="w-75"
+                               style={{width:"60%"}}
+                               src={imageUrl}
+                               //src={'https://www.pngitem.com/pimgs/m/20-203432_profile-icon-png-image-free-download-searchpng-ville.png'}
+                               alt={''}
+                             />
+                               
+                               <div className="flex justify-end gap-2">
+                                    <Button
+                                    // loading={isSubmitting}
+                                    variant="solid"
+                                    type="submit"
+                                    icon={<FiCheckCircle />}
+                                    >
+                                    Validate
+                                    </Button>
+                                </div>
+                            </div>
+                         ) : (
+                            <p>No data available.</p>
+                     )}
+                        </FormContainer>
+                    </Form>
+                )
+            }}
+        </Formik>
+        <Dialog
+                isOpen={dialogIsOpen}
+                onClose={onDialogClose}
+                onRequestClose={onDialogClose}
+                
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Confirm Verification</h5>
+                    <div className="max-h-96 overflow-y-auto">
+                            <p> Are you want to validate KYC details!!</p>
+                    </div>
+                    <div className="text-right mt-6">
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2"
+                            // variant="plain"
+                            onClick={OpenRejectionDialog}
+                        >
+                            No
+                        </Button>
+                        <Button variant="solid" onClick = {onDialogOk} >
+                            Yes
+                        </Button>
+                    </div>
+                </div>
 
-        </>
-    )
+            </Dialog>
+            <Dialog
+                isOpen={dialog1IsOpen}
+                onClose={onDialog1Close}
+                onRequestClose={onDialog1Close}
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">KYC Details Verification</h5>
+                    <div className="max-h-96 overflow-y-auto px-2 ">
+                            {/* <p> Enter Rejection remarks</p> */}
+                        <Formik
+                        initialValues={{
+                            remark: ''
+                            
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={(values) => {
+                            onDialogReject('Reject',values)
+                        }}
+                        >
+                        {({ touched, errors }) => (
+                            <Form>
+                                <FormContainer>
+                                    <FormItem
+                                     label="Rejection remark"
+                                     invalid={errors.remark && touched.remark}
+                                     errorMessage={errors.remark}
+                                    >
+                                         <Field
+                                            name = "remark"
+                                            component = {Input}
+                                            type = {text}
+                                            placeholder = "Enter rejection remarks here"
+                                        />
+                                    </FormItem>
+                                    <div className="text-right mt-2">
+                                    <Button
+                                        className="ltr:mr-2 rtl:ml-2"
+                                        // variant="plain"
+                                        onClick={onDialog1Close}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button variant="solid" type="submit" onClick={onDialogReject}>
+                                    Yes
+                                    </Button>
+                                </div>
+                                </FormContainer>
+                            </Form>
+                        )}
+                        </Formik>
+                           
+                    </div>
+                    
+                </div>
+            </Dialog>
+    </>
+)
 }
 
 export default KYCForm

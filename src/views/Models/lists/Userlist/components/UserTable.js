@@ -13,7 +13,7 @@ const ActionColumn = ({ row }) => {
     const navigate = useNavigate()
 
     const onEdit = () => {
-        navigate(`/EditServeyor/${row.user_id}`)
+        navigate(`/editUser/${row.user_id}`)
     }
     return (
         <div className="flex justify-end text-lg">

@@ -75,9 +75,10 @@ const SurveyorColumn = ({ row }) => {
 const SurveyorTable = () => {
     const {signOut} = useAuth()
     const tableRef = useRef(null)
-
+    const dispatch = useDispatch()
     var  d = useSelector((state) => state.listsSurveyorList.data.surveyorList.status)
     console.log(d)
+
     if(d ==="Failed")
     {
         try{
@@ -89,7 +90,7 @@ const SurveyorTable = () => {
         }
       
     }
-    const dispatch = useDispatch()
+  
 
     const { pageIndex, pageSize, sort, query, total } = useSelector(
         (state) => state.listsSurveyorList.data.tableData
@@ -169,7 +170,9 @@ const SurveyorTable = () => {
                 accessorKey: 'dob',
                 cell: (props) => {
                     const row = props.row.original
-                    return <span className="capitalize">{row.dob}</span>
+                    const originalDate = new Date(row.dob);
+                    const formattedDate = originalDate.toLocaleDateString('en-US').replace(/\//g, '-');
+                    return <span className="capitalize">{formattedDate}</span>
                 },
             },
             {
