@@ -61,6 +61,7 @@ const DetailForm = () => {
                 [nextStep]: { status: 'verified' },
             })
         )
+        
         dispatch(setCurrentStep(nextStep))
     }
 
@@ -73,7 +74,7 @@ const DetailForm = () => {
         () => stepStatus[currentStep].status,
         [stepStatus, currentStep]
     )
-
+    console.log(currentStepStatus)
     return (
         <Container className="h-full">
             <AdaptableCard className="h-full" bodyClass="h-full">

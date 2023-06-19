@@ -6,6 +6,10 @@ import {
     Segment,
     FormItem,
     FormContainer,
+    Input
+    
+
+    
 } from 'components/ui'
 import { SvgIcon, DoubleSidedImage, SegmentItemOption } from 'components/shared'
 import { DriversLicenseSvg, PassportSvg, NationalIdSvg } from 'assets/svg'
@@ -13,30 +17,16 @@ import classNames from 'classnames'
 import { Field, Form, Formik } from 'formik'
 import useThemeClass from 'utils/hooks/useThemeClass'
 import {FiCheckCircle} from 'react-icons/fi'
-
+import {  useDispatch,useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
+import { getDocuments } from '../store/dataSlice'
 const documentTypes = [
-    { value: 'passport', label: 'Passport', desc: '' },
     { value: 'nationalId', label: 'National ID', desc: '' },
     { value: 'driversLicense', label: 'Drivers License', desc: '' },
 ]
 
-const documentUploadDescription = {
-    passport: [
-        'Uploaded passport image must be clearly visible & complete',
-        'Passport must in valid period',
-        'Provided passport data page must included your full name, date of birth & your photo',
-    ],
-    nationalId: [
-        'Uploaded ID image must be clearly visible',
-        'ID image must in valid period',
-        'Provided ID must included your full name, date of birth & your photo',
-    ],
-    driversLicense: [
-        'Uploaded driver license image must be clearly visible',
-        'Driver license must in valid period',
-        'Uploaded driver license image must be clearly visible',
-    ],
-}
+
 
 const DocumentTypeIcon = ({ type }) => {
     switch (type) {
@@ -54,9 +44,9 @@ const DocumentTypeIcon = ({ type }) => {
 const DocumentUploadField = (props) => {
     const { label, name, children, touched, errors } = props
 
-    const onSetFormFile = (form, field, file) => {
-        form.setFieldValue(field.name, URL.createObjectURL(file[0]))
-    }
+    // const onSetFormFile = (form, field, file) => {
+    //     form.setFieldValue(field.name, URL.createObjectURL(file[0]))
+    // }
 
     return (
         <FormItem
@@ -64,42 +54,11 @@ const DocumentUploadField = (props) => {
             invalid={errors[name] && touched[name]}
             errorMessage={errors[name]}
         >
-            <Field name={name}>
-                {({ field, form }) => (
-                    <Upload
-                        draggable
-                        className="cursor-pointer h-[300px]"
-                        onChange={(files) => onSetFormFile(form, field, files)}
-                        onFileRemove={(files) =>
-                            onSetFormFile(form, field, files)
-                        }
-                        showList={false}
-                        uploadLimit={1}
-                    >
-                        {field.value ? (
-                            <img
-                                className="p-3 max-h-[300px]"
-                                src={field.value}
-                                alt=""
-                            />
-                        ) : (
-                            <div className="text-center">
-                                {children}
-                                <p className="font-semibold">
-                                    <span className="text-gray-800 dark:text-white">
-                                        Drop your image here, or{' '}
-                                    </span>
-                                    <span className="text-blue-500">
-                                        browse
-                                    </span>
-                                </p>
-                                <p className="mt-1 opacity-60 dark:text-white">
-                                    Support: jpeg, png
-                                </p>
-                            </div>
-                        )}
-                    </Upload>
-                )}
+            <Field name={name}
+            value = {name}
+            component = {Input}
+            >
+                
             </Field>
         </FormItem>
     )
@@ -120,23 +79,173 @@ const UploadDocuments = ({
     currentStepStatus,
 }) => {
     const { textTheme, bgTheme } = useThemeClass()
-
-    const onNext = (values, setSubmitting) => {
-        onNextChange?.(values, 'identification', setSubmitting)
+    const location = useLocation()
+    const {token,tokenKey} = useSelector((state) => state.auth.user)
+     useEffect(() => {
+         const path = location.pathname.substring(
+         location.pathname.lastIndexOf('/') + 1
+     )
+     const requestParam = {surveyor_master_id : path , 
+        token : token , 
+        tokenKey : tokenKey
     }
-
-    const onBack = () => {
-        onBackChange?.()
+        
+ 
+     fetchData(requestParam);
+ }, []);
+ const dispatch = useDispatch()
+ const fetchData = (requestParam) => {
+    try {
+       const Param = {
+           surveyor_master_id : requestParam.surveyor_master_id , 
+           token : token , 
+           tokenKey : tokenKey
+       }
+        //const surveyor_master_id = { surveyor_master_id : requestParam.surveyor_master_id}
+      //dispatch(getForm({ surveyor_master_id,token,tokenKey}));
+      dispatch(getDocuments( requestParam));
+      //console.log(surveyor_master_id)
+      
+    } catch (error) {
+      console.error(error);
+      return error;
     }
+  };
+  const formData = useSelector(
+    (state) => state.accountDetailForm.data.formData.getData
+    )
+    console.log(formData)
 
     return (
         <>
-           <div>
+            <div className="mb-8">
+                <h3 className="mb-2">Uploaded documents</h3>
             
-            <h3 className="mb-2">Uploaded Documents </h3>
-    
-            <p>No data available.</p>
             </div>
+            <Formik
+                // initialValues={data}
+                // enableReinitialize
+                // validationSchema={validationSchema}
+                // onSubmit={(values, { setSubmitting }) => {
+                //     setSubmitting(true)
+                //     setTimeout(() => {
+                //         onNext(values, setSubmitting)
+                //     }, 1000)
+                // }}
+            >
+            {({ values, touched, errors, isSubmitting }) => {
+                const validatedProps = { touched, errors }
+                return (
+                    <Form>
+                        <FormContainer>
+                            <FormItem 
+                            // label="Select your document type"
+                            // invalid={
+                            //     errors.documentType &&
+                            //     touched.documentType
+                            // }
+                            // errorMessage={errors.documentType}
+                            >
+                            <Field name="documentType">
+                                        {({ field, form }) => (
+                                            <Segment
+                                                className="flex xl:items-center flex-col xl:flex-row gap-4"
+                                                value={[field.value]}
+                                                onChange={(val) =>
+                                                    form.setFieldValue(
+                                                        field.name,
+                                                        val[0]
+                                                    )
+                                                }
+                                            >
+                                                <>
+                                                    {documentTypes.map(
+                                                        (item, index) => (
+                                                            <Segment.Item
+                                                                value={
+                                                                    item.value
+                                                                }
+                                                                key={item.value}
+                                                                disabled={
+                                                                    item.disabled
+                                                                }
+                                                            >
+                                                                {({
+                                                                    ref,
+                                                                    active,
+                                                                    value,
+                                                                    onSegmentItemClick,
+                                                                    disabled,
+                                                                }) => {
+                                                                    return (
+                                                                        <SegmentItemOption
+                                                                            ref={
+                                                                                ref
+                                                                            }
+                                                                            active={
+                                                                                active
+                                                                            }
+                                                                            disabled={
+                                                                                disabled
+                                                                            }
+                                                                            className="w-full xl:w-[260px]"
+                                                                            onSegmentItemClick={
+                                                                                onSegmentItemClick
+                                                                            }
+                                                                        >
+                                                                            <div className="flex items-center">
+                                                                                <SvgIcon
+                                                                                    className={classNames(
+                                                                                        'text-4xl ltr:mr-3 rtl:ml-3',
+                                                                                        active &&
+                                                                                            textTheme
+                                                                                    )}
+                                                                                >
+                                                                                    <DocumentTypeIcon
+                                                                                        type={
+                                                                                            value
+                                                                                        }
+                                                                                    />
+                                                                                </SvgIcon>
+                                                                                <h6>
+                                                                                    {
+                                                                                        item.label
+                                                                                    }
+                                                                                </h6>
+                                                                            </div>
+                                                                        </SegmentItemOption>
+                                                                    )
+                                                                }}
+                                                            </Segment.Item>
+                                                        )
+                                                    )}
+                                                </>
+                                            </Segment>
+                                        )}
+                                    </Field>
+                            </FormItem>
+                            <div className="grid xl:grid-cols-1 gap-4">
+                                    
+                                        <>
+                                            <DocumentUploadField
+                                                name="passportCover"
+                                                label="Passport Cover"
+                                                {...validatedProps}
+                                            >
+                                               
+                                            </DocumentUploadField>
+                                        </>
+                                   
+                                </div>
+
+                            
+                        </FormContainer>
+                    </Form>
+                )
+
+            }}
+
+            </Formik>
         </>
     )
 }

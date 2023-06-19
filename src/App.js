@@ -12,7 +12,7 @@ function App() {
     return (
         <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-            <BrowserRouter history={null}>
+            <BrowserRouter>
                 <Theme>
                     <Layout />
                 </Theme>

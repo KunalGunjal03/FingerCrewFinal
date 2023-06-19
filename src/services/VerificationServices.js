@@ -140,3 +140,143 @@ try {
   throw new Error(error.response?.data || 'An error occurred');
 }
 };
+
+export const VerifyExperienceDetails = async (data) => {
+  console.log(data)
+try {
+  const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
+  const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
+
+  const response = await BaseService({
+    url: COMMANAPILINK+'Surveyor/VerifyExperiencedet',
+    method: 'post',
+    data: data,
+    headers: {
+      Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,
+      [TOKEN_KEY]: tokenKey || undefined,
+    },
+    
+  });
+
+  if (response && response.data) {
+    return response.data;
+  } else {
+    throw new Error('Invalid response');
+  }
+} catch (error) {
+  console.error(error);
+  throw new Error(error.response?.data || 'An error occurred');
+}
+};
+
+export const VerifySkillsDetails = async (data) => {
+  console.log(data)
+try {
+  const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
+  const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
+
+  const response = await BaseService({
+    url: COMMANAPILINK+'Surveyor/VerifySkillsdet',
+    method: 'post',
+    data: data,
+    headers: {
+      Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,
+      [TOKEN_KEY]: tokenKey || undefined,
+    },
+    
+  });
+
+  if (response && response.data) {
+    return response.data;
+  } else {
+    throw new Error('Invalid response');
+  }
+} catch (error) {
+  console.error(error);
+  throw new Error(error.response?.data || 'An error occurred');
+}
+};
+
+export const VerifyBankDetails = async (data) => {
+  console.log(data)
+try {
+  const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
+  const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
+
+  const response = await BaseService({
+    url: COMMANAPILINK+'Surveyor/VerifyBankdet',
+    method: 'post',
+    data: data,
+    headers: {
+      Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,
+      [TOKEN_KEY]: tokenKey || undefined,
+    },
+    
+  });
+
+  if (response && response.data) {
+    return response.data;
+  } else {
+    throw new Error('Invalid response');
+  }
+} catch (error) {
+  console.error(error);
+  throw new Error(error.response?.data || 'An error occurred');
+}
+};
+
+export const VerifyInsuranceDetails = async (data) => {
+  console.log(data)
+try {
+  const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
+  const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
+
+  const response = await BaseService({
+    url: COMMANAPILINK+'Surveyor/VerifyInsurancedet',
+    method: 'post',
+    data: data,
+    headers: {
+      Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,
+      [TOKEN_KEY]: tokenKey || undefined,
+    },
+    
+  });
+
+  if (response && response.data) {
+    return response.data;
+  } else {
+    throw new Error('Invalid response');
+  }
+} catch (error) {
+  console.error(error);
+  throw new Error(error.response?.data || 'An error occurred');
+}
+};
+
+export const VerifyBgCheckDetails = async (data) => {
+  console.log(data)
+try {
+  const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
+  const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
+
+  const response = await BaseService({
+    url: COMMANAPILINK+'Surveyor/Verifybgcheck',
+    method: 'post',
+    data: data,
+    headers: {
+      Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,
+      [TOKEN_KEY]: tokenKey || undefined,
+    },
+    
+  });
+
+  if (response && response.data) {
+    return response.data;
+  } else {
+    throw new Error('Invalid response');
+  }
+} catch (error) {
+  console.error(error);
+  throw new Error(error.response?.data || 'An error occurred');
+}
+};

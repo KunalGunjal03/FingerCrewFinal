@@ -19,7 +19,9 @@ import { useLocation } from 'react-router-dom'
 //import {getEducation} from '../store/dataSlice'
 import { getCertification } from '../store/dataSlice'
 import { VerifyCertificateDetails } from 'services/VerificationServices'
-
+import * as Yup from 'yup'
+import { text } from 'd3-fetch'
+import { verifyCertificationDetails } from '../store/dataSlice'
 
 
 const CertificationDetails
@@ -64,55 +66,136 @@ const CertificationDetails
 
     
     
-   const [dialogIsOpen, setIsOpen] = useState(false)
-   // const [setSubmitting] = useState(true)
-   const openNotification = (type) => {
-       toast.push(
-           <Notification
-               title={type.charAt(0).toUpperCase() + type.slice(1)}
-               type={type}
-           >
-               Addres details is verified successfuly.
-           </Notification>
-       )
-   }
-   const openDialog = () => {
-       setIsOpen(true)
-   }
-   const onDialogClose = (e) => {
-      
-       setIsOpen(false)
-   }
-   let isVerified = false;
-   const onDialogOk = (e) => {
-       isVerified = true
-       openNotification('success')
-       setIsOpen(false)
+const [dialogIsOpen, setIsOpen] = useState(false)
+const [dialog1IsOpen,setIsOpen1] = useState(false)
+const openNotification = (type,msg) => {
+    toast.push(
+        <Notification
+            title={msg}
+            type={type}
+            
+        />,{
+            placement: 'top-end'
+        })
+            
        
-       
-       // onDiscard(false)
-       // onNextChange?.(values, 'personalInformation', setSubmitting)
-   }
-
-
     
-   const onNext = async(values, setSubmitting) => {
-    try{
-        const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
-        const response = await VerifyCertificateDetails(verified)
-        console.log(response)
-        openDialog()
-        console.log(isVerified)
-        // if(isVerified)
+}
+const openDialog = (e) => {
+    setIsOpen(true)
+
+}
+const OpenRejectionDialog = (e)=>{
+    setIsOpen1(true)
+}
+const onDialogClose = (e) => {
+   console.log(e)
+//    OpenRejectionDialog()
+   
+    setIsOpen(false)
+    // setRejectionRemarkVisible(true)
+}
+const onDialog1Close = (e) => {
+    setIsOpen(true)
+     setIsOpen1(false)
+     // setRejectionRemarkVisible(true)
+ }
+// let isVerified = false;
+const onDialogOk = async(status,values)=>{
+
+  var verified = {}
+//   setIsOpen(true)
+//   setIsOpen1(true)
+    
+    try
+    {
+        // if(status === "Reject")
         // {
-        //     console.log(isVerified)
-        //     onNextChange?.( values,'personalInformation', setSubmitting)
-       
-        
+            verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+            console.log(verified)
+           const  response = await dispatch(verifyCertificationDetails( verified));
+            
+        //     // const response =  VerifyPersonalDetails(verified)
+            console.log(response.payload)
+            const resp = response.payload
+        //     // if(response)
+        //     // {
+                openNotification('success',resp.remarks)
+                setIsOpen(false)
+                setIsOpen1(false)
+                setTimeout(() => {
+                    onNextChange?.('personalInformation')
+                 }, 500)
+               
+ 
         // }
+        // else if(status === "Accept")
+        // {
+        //     verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+        //     console.log(verified)
+        //     dispatch(verifyPersonalDetails( verified));
+            
+        //     // const response =  VerifyPersonalDetails(verified)
+        //     // console.log(response)
+        //     // if(response)
+        //     // {
+        //         openNotification('success')
+        //         setIsOpen(false)
+        //         setIsOpen1(false)
+        //         setTimeout(() => {
+        //             onNextChange?.('personalInformation')
+        //          }, 500)
+        //         setIsvalid(true)
+        // }
+        //           // }
+    }
+    catch(error)
+    {
+        console.error(error)
+        return error;
+    }
+      // onNextChange?.(values, 'personalInformation', setSubmitting)
+}
+
+const onDialogReject = async(status,values)=>{
+   try
+   {
+    console.log(status)
+    console.log(values)
+   const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "0",rejection_remarks: values.remark}
+    console.log(verified)
+   const  response = await dispatch(verifyCertificationDetails( verified));
+    
+//     // const response =  VerifyPersonalDetails(verified)
+    console.log(response.payload)
+    const resp = response.payload
+//     // if(response)
+//     // {
+        openNotification('success',resp.remarks)
+        setIsOpen(false)
+        setIsOpen1(false)
         setTimeout(() => {
-           onNextChange?.('personalInformation', setSubmitting)
-        }, 3000)
+            onNextChange?.('personalInformation')
+         }, 500)
+        
+   }
+   catch(error)
+   {
+    console.error(error)
+    return error
+   }
+   
+   
+    
+    
+    
+}
+const onNext = async(values, setSubmitting) => {
+    try{
+    
+      
+        openDialog()
+      
         
     }
     catch(error)
@@ -121,6 +204,10 @@ const CertificationDetails
     }
     
 }
+    const validationSchema = Yup.object().shape({
+        remark: Yup.string().required('Please enter your rejection remark')
+        .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
+    })
 
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
@@ -182,12 +269,12 @@ const CertificationDetails
                                 {Array.isArray(data) && data.length !== 0 && (
                                 <div className="flex justify-end gap-2">
                                     <Button
-                                    loading={isSubmitting}
+                                    // loading={isSubmitting}
                                     variant="solid"
                                     type="submit"
                                     icon={<FiCheckCircle />}
                                     >
-                                    Verify
+                                    Validate
                                     </Button>
                                 </div>
                                 )}
@@ -202,26 +289,83 @@ const CertificationDetails
                 isOpen={dialogIsOpen}
                 onClose={onDialogClose}
                 onRequestClose={onDialogClose}
+                
             >
                 <div className="flex flex-col h-full justify-between">
                     <h5 className="mb-4">Confirm Verification</h5>
                     <div className="max-h-96 overflow-y-auto">
-                            <p> Are you want to verify Address details!!</p>
+                            <p> Are you want to validate Certification details!!</p>
                     </div>
                     <div className="text-right mt-6">
                         <Button
                             className="ltr:mr-2 rtl:ml-2"
                             // variant="plain"
-                            onClick={onDialogClose}
+                            onClick={OpenRejectionDialog}
                         >
                             No
                         </Button>
-                        <Button variant="solid" onClick={onDialogOk}>
+                        <Button variant="solid" onClick = {onDialogOk} >
                             Yes
                         </Button>
                     </div>
                 </div>
+
             </Dialog>
+            <Dialog
+                isOpen={dialog1IsOpen}
+                onClose={onDialog1Close}
+                onRequestClose={onDialog1Close}
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Certification Details Verification</h5>
+                    <div className="max-h-96 overflow-y-auto px-2 ">
+                            {/* <p> Enter Rejection remarks</p> */}
+                        <Formik
+                        initialValues={{
+                            remark: ''
+                            
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={(values) => {
+                            onDialogReject('Reject',values)
+                        }}
+                        >
+                        {({ touched, errors }) => (
+                            <Form>
+                                <FormContainer>
+                                    <FormItem
+                                     label="Rejection remark"
+                                     invalid={errors.remark && touched.remark}
+                                     errorMessage={errors.remark}
+                                    >
+                                         <Field
+                                            name = "remark"
+                                            component = {Input}
+                                            type = {text}
+                                            placeholder = "Enter rejection remarks here"
+                                        />
+                                    </FormItem>
+                                    <div className="text-right mt-2">
+                                    <Button
+                                        className="ltr:mr-2 rtl:ml-2"
+                                        // variant="plain"
+                                        onClick={onDialog1Close}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button variant="solid" type="submit" onClick={onDialogReject}>
+                                    Yes
+                                    </Button>
+                                </div>
+                                </FormContainer>
+                            </Form>
+                        )}
+                        </Formik>
+                           
+                    </div>
+                    
+                </div>
+            </Dialog>      
         </>
     )
 }

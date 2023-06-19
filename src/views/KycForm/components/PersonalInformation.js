@@ -8,24 +8,18 @@ import {
     Dialog,
 
 } from 'components/ui'
-import { Field, Form, Formik } from 'formik'
-
-// import { countryList } from 'constants/countries.constant'
-// import { statusOptions } from '../constants'
-
-//import {useSelector} from 'react'
-// import * as Yup from 'yup'
+import { Field, Form, Formik, FormikConsumer } from 'formik'
 import {  useDispatch,useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-//import { apiGetAccountFormData } from 'services/AccountServices'
+
 import { getForm } from '../store/dataSlice'
 import { useLocation } from 'react-router-dom'
 import {FiCheckCircle} from 'react-icons/fi'
-import { VerifyPersonalDetails } from 'services/VerificationServices'
 
+import * as Yup from 'yup'
+import { verifyPersonalDetails } from '../store/dataSlice'
 
-import useAuth from 'utils/hooks/useAuth'
-import { CgEnter } from 'react-icons/cg'
+import { text } from 'd3-fetch'
 
 const PersonalInformation = ({
     data = {
@@ -35,13 +29,8 @@ const PersonalInformation = ({
         salutation:'',
         SSN_no:'',
         type_of_profession: '',
-        // residentCountry: '',
-        // nationality: '',
-        // dialCode: '',
         mobile_no: '',
         dob: '',
-        // gender: '',
-        // maritalStatus: '',
     },
     onNextChange,
     currentStepStatus
@@ -50,7 +39,7 @@ const PersonalInformation = ({
     const location = useLocation()
     const [isvalid, setIsvalid] = useState(false);
     const {token,tokenKey} = useSelector((state) => state.auth.user)
-    // const { type, initialData, onFormSubmit, onDiscard, onDelete } = props
+
      useEffect(() => {
          const path = location.pathname.substring(
          location.pathname.lastIndexOf('/') + 1
@@ -76,11 +65,15 @@ const PersonalInformation = ({
     }
   };
    
-    // var IsVeriied = "false";
+  
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
     console.log(data)
+    const responseData = useSelector(
+        (state) => state.accountDetailForm.data.formData.responseData
+    )
+    console.log(responseData)
     // const d =  useSelector(
     //     (state) => state.accountDetailForm.data.getData
     // )
@@ -98,79 +91,135 @@ const PersonalInformation = ({
     //     }
     // }
     const [dialogIsOpen, setIsOpen] = useState(false)
-    // const [setSubmitting] = useState(true)
-    const [RejectionRemarkVisible, setRejectionRemarkVisible] = useState(false)
-    const openNotification = (type,remarks) => {
+    const [dialog1IsOpen,setIsOpen1] = useState(false)
+    const openNotification = (type,msg) => {
         toast.push(
             <Notification
-                title={remarks}
+                title={msg}
                 type={type}
                 
             />,{
-                placement: 'top-center'
+                placement: 'top-end'
             })
                 
            
         
     }
     const openDialog = (e) => {
-        console.log(e)
         setIsOpen(true)
 
     }
+    const OpenRejectionDialog = (e)=>{
+        setIsOpen1(true)
+    }
     const onDialogClose = (e) => {
        console.log(e)
+    //    OpenRejectionDialog()
        setIsvalid(false)
         setIsOpen(false)
         // setRejectionRemarkVisible(true)
     }
+    const onDialog1Close = (e) => {
+        setIsOpen(true)
+         setIsOpen1(false)
+         // setRejectionRemarkVisible(true)
+     }
     // let isVerified = false;
-    const onDialogOk = async(e) => {
-        console.log(e)
-        const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
-        const response = await VerifyPersonalDetails(verified)
-        console.log(response)
-        if(response.Status === "Success" )
+    const onDialogOk = async(status,values)=>{
+    
+      var verified = {}
+    //   setIsOpen(true)
+    //   setIsOpen1(true)
+        
+        try
         {
-            openNotification('success',response.remarks)
+            // if(status === "Reject")
+            // {
+                verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+                console.log(verified)
+               const  response = await dispatch(verifyPersonalDetails( verified));
+                
+            //     // const response =  VerifyPersonalDetails(verified)
+                console.log(response.payload)
+                const resp = response.payload
+            //     // if(response)
+            //     // {
+                    openNotification('success',resp.remarks)
+                    setIsOpen(false)
+                    setIsOpen1(false)
+                    setTimeout(() => {
+                        onNextChange?.('personalInformation')
+                     }, 500)
+                    setIsvalid(true)
+     
+            // }
+            // else if(status === "Accept")
+            // {
+            //     verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+            //     console.log(verified)
+            //     dispatch(verifyPersonalDetails( verified));
+                
+            //     // const response =  VerifyPersonalDetails(verified)
+            //     // console.log(response)
+            //     // if(response)
+            //     // {
+            //         openNotification('success')
+            //         setIsOpen(false)
+            //         setIsOpen1(false)
+            //         setTimeout(() => {
+            //             onNextChange?.('personalInformation')
+            //          }, 500)
+            //         setIsvalid(true)
+            // }
+            //           // }
         }
-        else{
-            openNotification('warning',response.remarks)
+        catch(error)
+        {
+            console.error(error)
+            return error;
         }
-        setIsOpen(false)
-        setTimeout(() => {
-            onNextChange?.('personalInformation')
-         }, 500)
-        setIsvalid(true)
-        
-        
-        // onDiscard(false)
-        // onNextChange?.(values, 'personalInformation', setSubmitting)
+          // onNextChange?.(values, 'personalInformation', setSubmitting)
     }
 
+    const onDialogReject = async(status,values)=>{
+       try
+       {
+        console.log(status)
+        console.log(values)
+       const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "0",rejection_remarks: values.remark}
+        console.log(verified)
+       const  response = await dispatch(verifyPersonalDetails( verified));
+        
+    //     // const response =  VerifyPersonalDetails(verified)
+        console.log(response.payload)
+        const resp = response.payload
+    //     // if(response)
+    //     // {
+            openNotification('success',resp.remarks)
+            setIsOpen(false)
+            setIsOpen1(false)
+            setTimeout(() => {
+                onNextChange?.('personalInformation')
+             }, 500)
+            setIsvalid(true)
+       }
+       catch(error)
+       {
+        console.error(error)
+        return error
+       }
+       
+       
+        
+        
+        
+    }
     const onNext = async(values, setSubmitting) => {
         try{
-            // const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
-            // const response = await VerifyPersonalDetails(verified)
-            // console.log(response)
+        
+          
             openDialog()
-            // IsVeriied = true
-            // // isVerified = true
-            // console.log(IsVeriied)
-            // if(isVerified)
-            // {
-            //     console.log(isVerified)
-            //     onNextChange?.( values,'personalInformation', setSubmitting)
-           
-            
-            // }
-            // console.log(isvalid)
-            // if(isvalid === true)
-            ///{
-            // setTimeout(() => {
-            //    onNextChange?.('personalInformation', setSubmitting)
-            // }, 3000)
-            //}
+          
             
         }
         catch(error)
@@ -179,35 +228,10 @@ const PersonalInformation = ({
         }
         
     }
-
-    // const RejectionRemark = () =>{
-    //     return(
-            
-                                    
-    //         <FormItem
-    //             label="Remark*"
-             
-    //         >
-    //             <Field name="remark" 
-    //              type="text"
-    //              component={Input} >
-    //             </Field>
-                    
-               
-    //         </FormItem>
-        
-    //     )   
-    // }
-    
-    // const onRejectClick = async  () =>{
-
-    //     console.log("Reject")
-    //     // setRejectionRemarkVisible(true)
-    // } 
-
-    
-//   console.log(IsVeriied)
-// console.log(RejectionRemarkVisible)
+    const validationSchema = Yup.object().shape({
+        remark: Yup.string().required('Please enter your rejection remark')
+        .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
+    })
     return (
         <>
             <div className="mb-8">
@@ -344,12 +368,12 @@ const PersonalInformation = ({
                                 {/* {Array.isArray(data) && data.length !== 0 && ( */}
                                 <div className="flex justify-end gap-2">
                                     <Button
-                                    loading={isSubmitting}
+                                    // loading={isSubmitting}
                                     variant="solid"
                                     type="submit"
                                     icon={<FiCheckCircle />}
                                     >
-                                    Verify
+                                    Validate
                                     </Button>
                                 </div>
                                 {/* )} */}
@@ -362,24 +386,81 @@ const PersonalInformation = ({
                 isOpen={dialogIsOpen}
                 onClose={onDialogClose}
                 onRequestClose={onDialogClose}
+                
             >
                 <div className="flex flex-col h-full justify-between">
                     <h5 className="mb-4">Confirm Verification</h5>
                     <div className="max-h-96 overflow-y-auto">
-                            <p> Are you want to verify personal information!!</p>
+                            <p> Are you want to validate personal information!!</p>
                     </div>
                     <div className="text-right mt-6">
                         <Button
                             className="ltr:mr-2 rtl:ml-2"
                             // variant="plain"
-                            onClick={onDialogClose}
+                            onClick={OpenRejectionDialog}
                         >
                             No
                         </Button>
-                        <Button variant="solid" onClick={onDialogOk}>
+                        <Button variant="solid" onClick = {onDialogOk} >
                             Yes
                         </Button>
                     </div>
+                </div>
+
+            </Dialog>
+            <Dialog
+                isOpen={dialog1IsOpen}
+                onClose={onDialog1Close}
+                onRequestClose={onDialog1Close}
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Personal Details Verification</h5>
+                    <div className="max-h-96 overflow-y-auto px-2 ">
+                            {/* <p> Enter Rejection remarks</p> */}
+                        <Formik
+                        initialValues={{
+                            remark: ''
+                            
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={(values) => {
+                            onDialogReject('Reject',values)
+                        }}
+                        >
+                        {({ touched, errors }) => (
+                            <Form>
+                                <FormContainer>
+                                    <FormItem
+                                     label="Rejection remark"
+                                     invalid={errors.remark && touched.remark}
+                                     errorMessage={errors.remark}
+                                    >
+                                         <Field
+                                            name = "remark"
+                                            component = {Input}
+                                            type = {text}
+                                            placeholder = "Enter rejection remarks here"
+                                        />
+                                    </FormItem>
+                                    <div className="text-right mt-2">
+                                    <Button
+                                        className="ltr:mr-2 rtl:ml-2"
+                                        // variant="plain"
+                                        onClick={onDialog1Close}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button variant="solid" type="submit" onClick={onDialogReject}>
+                                    Yes
+                                    </Button>
+                                </div>
+                                </FormContainer>
+                            </Form>
+                        )}
+                        </Formik>
+                           
+                    </div>
+                    
                 </div>
             </Dialog>
         </>

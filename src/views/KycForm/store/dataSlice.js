@@ -8,10 +8,14 @@ import {apiGetCertificationDetails} from 'services/AccountServices'
 import { apiGetBankDetails } from 'services/AccountServices'
 import { apiGetInsuredDetails } from 'services/AccountServices'
 import { apiGetKYCDetails } from 'services/AccountServices'
-import { apiGetBackgroundDetails } from 'services/AccountServices'
+import { apiGetBackgroundDetails,apiGetUploadedDocuments } from 'services/AccountServices'
+import { VerifyPersonalDetails,VerifyAddressDetails ,VerifyQualificationDetails,VerifyCertificateDetails,VerifyExperienceDetails,VerifySkillsDetails,VerifyBankDetails
+,VerifyInsuranceDetails
+} from 'services/VerificationServices'
 export const getForm = createAsyncThunk(
     'accountDetailForm/data/getForm',
     async (data) => {
+        console.log(data)
         const response = await apiGetAccountFormData(data)
         console.log( response)
         return response.data
@@ -20,7 +24,9 @@ export const getForm = createAsyncThunk(
 export const getAddress = createAsyncThunk(
     'accountDetailForm/data/getForm',
     async (data) => {
+        console.log(data)
         const response = await apiGetAddressDetails(data)
+        console.log(response.data)
         return response.data
     }
 )
@@ -86,6 +92,89 @@ export const getBackground = createAsyncThunk(
         return response.data
     }
 )
+export const getDocuments = createAsyncThunk(
+    'accountDetailForm/data/getForm',
+    async (data) => {
+        const response = await apiGetUploadedDocuments(data)
+        console.log(response)
+        return response.data
+    }
+)
+export const verifyPersonalDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifyPersonalDetails(data)
+        console.log( response)
+        return response
+    }
+)
+export const verifyAddressDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifyAddressDetails(data)
+        console.log( response)
+        return response
+    }
+)
+export const verifyQualificationDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifyQualificationDetails(data)
+        console.log( response)
+        return response
+    }
+)
+export const verifyCertificationDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifyCertificateDetails(data)
+        console.log( response)
+        return response
+    }
+)
+export const verifyExperienceDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifyExperienceDetails(data)
+        console.log( response)
+        return response
+    }
+)
+export const verifySkillsDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifySkillsDetails(data)
+        console.log( response)
+        return response
+    }
+)
+
+export const verifyBankDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifyBankDetails(data)
+        console.log( response)
+        return response
+    }
+)
+
+export const verifyInsuranceDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifyInsuranceDetails(data)
+        console.log( response)
+        return response
+    }
+)
+
+export const verifyBgCheckDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifyInsuranceDetails(data)
+        console.log( response)
+        return response
+    }
+)
 const dataSlice = createSlice({
     name: 'accountDetailForm/data',
     initialState: {
@@ -96,32 +185,7 @@ const dataSlice = createSlice({
             salutation:'',            
             mobile_no: '',           
             dob: ''
-            // documentType: 'passport',
-            // passportCover: '',
-            // passportDataPage: '',
-            // nationalIdFront: '',
-            // nationalIdBack: '',
-            // driversLicenseFront: '',
-            // driversLicenseBack: '',
-            // Address1: '',
-            // Landmark: '',
-            // city_name: '',
-            // state_name: '',
-            // zipCode: '',
-            // latitude: '',
-            // longitude: '',
-            // qualification_name:'',
-            // qualification_year:'',
-            // certification_year:'',
-            // certificate_name:'',
-            // company_name:'',
-            // job_role:'',
-            // yearFrom:'',
-            // yearTo:'',
-            // skill_description:'',
-            // bank_name:'',
-            // routing_no:'',
-            // account_no:''
+        
           }
         },
         stepStatus: {
@@ -138,6 +202,11 @@ const dataSlice = createSlice({
             10: { status: 'pending' },
            
         },
+        response:{
+            status:'',
+            remarks: ''
+
+        }
     },
     reducers: {
         setFormData: (state, action) => {
@@ -156,6 +225,11 @@ const dataSlice = createSlice({
             state.formData.getData = action.payload.getData
             state.stepStatus = state.stepStatus
         }
+        ,
+        [verifyPersonalDetails.fulfilled]:(state,action) =>{
+            state.formData.response = action.payload
+        }
+
     },
 })
 

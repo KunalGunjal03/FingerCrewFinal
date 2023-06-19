@@ -20,30 +20,10 @@ import { useEffect,useState } from 'react'
 import { getForm } from '../store/dataSlice'
 import { getAddress } from '../store/dataSlice'
 import { useLocation } from 'react-router-dom'
-import { VerifyAddressDetails } from 'services/VerificationServices'
-//import * as Yup from 'yup'
+import { verifyAddressDetails } from '../store/dataSlice'
+import * as Yup from 'yup'
+import { text } from 'd3-fetch'
 
-// const validationSchema = Yup.object().shape({
-//     country: Yup.string().required('Please select country'),
-//     addressLine1: Yup.string().required('Please enter your address'),
-//     addressLine2: Yup.string(),
-//     city: Yup.string().required('Please enter your city'),
-//     state: Yup.string().required('Please enter your state'),
-//     zipCode: Yup.string().required('Please enter zip code'),
-//     sameCorrespondenceAddress: Yup.bool(),
-//     correspondenceAddress: Yup.object().when('sameCorrespondenceAddress', {
-//         is: false,
-//         then: Yup.object().shape({
-//             country: Yup.string().required('Please select country'),
-//             addressLine1: Yup.string().required('Please enter your address'),
-//             addressLine2: Yup.string(),
-//             city: Yup.string().required('Please enter your city'),
-//             state: Yup.string().required('Please enter your state'),
-//             zipCode: Yup.string().required('Please enter zip code'),
-//         }),
-//         otherwise: (schema) => schema,
-//     }),
-// })
 
 const AddressInfomation = ({
     data = {
@@ -53,15 +33,10 @@ const AddressInfomation = ({
         Address3: '',
         Landmark: '',
         city_name:'',
-        // residentCountry: '',
-        // nationality: '',
-        // dialCode: '',
         state_name: '',
         zip_code: '',
         latitude:'',
         longitude:''
-        // gender: '',
-        // maritalStatus: '',
     },
     onNextChange,
     currentStepStatus,
@@ -87,8 +62,6 @@ const AddressInfomation = ({
  const dispatch = useDispatch()
  const fetchData = (requestParam) => {
      try {
-         //const surveyor_master_id = { surveyor_master_id : requestParam.surveyor_master_id}
-       //dispatch(getForm({ surveyor_master_id,token,tokenKey}));
        dispatch(getAddress( requestParam));
        //console.log(surveyor_master_id)
        
@@ -96,57 +69,161 @@ const AddressInfomation = ({
        console.error(error);
        return error;
      }
-   };
+};
+   const formData = useSelector(
+    (state) => state.accountDetailForm.data.formData.getData
+)
+console.log(data)
+const responseData = useSelector(
+    (state) => state.accountDetailForm.data.formData.responseData
+)
+console.log(responseData)
+// const d =  useSelector(
+//     (state) => state.accountDetailForm.data.getData
+// )
+// console.log(d)
+// const {signOut} = useAuth()
 
-   const [dialogIsOpen, setIsOpen] = useState(false)
-   // const [setSubmitting] = useState(true)
-   const openNotification = (type) => {
-       toast.push(
-           <Notification
-               title={type.charAt(0).toUpperCase() + type.slice(1)}
-               type={type}
-           >
-               Addres details is verified successfuly.
-           </Notification>
-       )
-   }
-   const openDialog = () => {
-       setIsOpen(true)
-   }
-   const onDialogClose = (e) => {
-      
-       setIsOpen(false)
-   }
-   let isVerified = false;
-   const onDialogOk = (e) => {
-       isVerified = true
-       openNotification('success')
-       setIsOpen(false)
+// if(formData === null )
+// {
+//     try{
+//         dispatch(signOut)
+//     }
+//     catch(error)
+//     {
+//         console.log(error)
+//     }
+// }
+const [dialogIsOpen, setIsOpen] = useState(false)
+const [dialog1IsOpen,setIsOpen1] = useState(false)
+const openNotification = (type,msg) => {
+    toast.push(
+        <Notification
+            title={msg}
+            type={type}
+            
+        />,{
+            placement: 'top-end'
+        })
+            
        
-       
-       // onDiscard(false)
-       // onNextChange?.(values, 'personalInformation', setSubmitting)
-   }
-
-
     
-   const onNext = async(values, setSubmitting) => {
-    try{
-        const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
-        const response = await VerifyAddressDetails(verified)
-        console.log(response)
-        openDialog()
-        console.log(isVerified)
-        // if(isVerified)
+}
+const openDialog = (e) => {
+    setIsOpen(true)
+
+}
+const OpenRejectionDialog = (e)=>{
+    setIsOpen1(true)
+}
+const onDialogClose = (e) => {
+   console.log(e)
+//    OpenRejectionDialog()
+   
+    setIsOpen(false)
+    // setRejectionRemarkVisible(true)
+}
+const onDialog1Close = (e) => {
+    setIsOpen(true)
+     setIsOpen1(false)
+     // setRejectionRemarkVisible(true)
+ }
+// let isVerified = false;
+const onDialogOk = async(status,values)=>{
+
+  var verified = {}
+//   setIsOpen(true)
+//   setIsOpen1(true)
+    
+    try
+    {
+        // if(status === "Reject")
         // {
-        //     console.log(isVerified)
-        //     onNextChange?.( values,'personalInformation', setSubmitting)
-       
-        
+            verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+            console.log(verified)
+           const  response = await dispatch(verifyAddressDetails( verified));
+            
+        //     // const response =  VerifyPersonalDetails(verified)
+            console.log(response.payload)
+            const resp = response.payload
+        //     // if(response)
+        //     // {
+                openNotification('success',resp.remarks)
+                setIsOpen(false)
+                setIsOpen1(false)
+                setTimeout(() => {
+                    onNextChange?.('personalInformation')
+                 }, 500)
+               
+ 
         // }
+        // else if(status === "Accept")
+        // {
+        //     verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+        //     console.log(verified)
+        //     dispatch(verifyPersonalDetails( verified));
+            
+        //     // const response =  VerifyPersonalDetails(verified)
+        //     // console.log(response)
+        //     // if(response)
+        //     // {
+        //         openNotification('success')
+        //         setIsOpen(false)
+        //         setIsOpen1(false)
+        //         setTimeout(() => {
+        //             onNextChange?.('personalInformation')
+        //          }, 500)
+        //         setIsvalid(true)
+        // }
+        //           // }
+    }
+    catch(error)
+    {
+        console.error(error)
+        return error;
+    }
+      // onNextChange?.(values, 'personalInformation', setSubmitting)
+}
+
+const onDialogReject = async(status,values)=>{
+   try
+   {
+    console.log(status)
+    console.log(values)
+   const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "0",rejection_remarks: values.remark}
+    console.log(verified)
+   const  response = await dispatch(verifyAddressDetails( verified));
+    
+//     // const response =  VerifyPersonalDetails(verified)
+    console.log(response.payload)
+    const resp = response.payload
+//     // if(response)
+//     // {
+        openNotification('success',resp.remarks)
+        setIsOpen(false)
+        setIsOpen1(false)
         setTimeout(() => {
-           onNextChange?.('personalInformation', setSubmitting)
-        }, 3000)
+            onNextChange?.('addressInformation')
+         }, 500)
+        
+   }
+   catch(error)
+   {
+    console.error(error)
+    return error
+   }
+   
+   
+    
+    
+    
+}
+const onNext = async(values, setSubmitting) => {
+    try{
+    
+      
+        openDialog()
+      
         
     }
     catch(error)
@@ -155,11 +232,10 @@ const AddressInfomation = ({
     }
     
 }
-    const formData = useSelector(
-        (state) => state.accountDetailForm.data.formData.getData
-    )
-        console.log(formData)
-        console.log(data )
+    const validationSchema = Yup.object().shape({
+        remark: Yup.string().required('Please enter your rejection remark')
+        .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
+    })
     return (
         <>
             <div className="mb-8">
@@ -172,9 +248,9 @@ const AddressInfomation = ({
                 // validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true)
-                    setTimeout(() => {
+                    
                         onNext(values, setSubmitting)
-                    }, 1000)
+                    
                 }}
             >
                 {({ values, touched, errors, isSubmitting }) => {
@@ -182,8 +258,8 @@ const AddressInfomation = ({
                         
                         <Form>
                             <FormContainer>
-                            {Array.isArray(data)? (
-                                data.map((item) => (
+                          
+                            { data ? (
                                     <div>
                                 
                                 <div className="md:grid grid-cols-2 gap-4">
@@ -195,7 +271,7 @@ const AddressInfomation = ({
                                 type="text"
                                 name="Address1"
                                 component={Input}
-                                value = {item && item.Address1}
+                                value = {data && data.Address1}
                                 readOnly
                             />
                             </FormItem>
@@ -204,24 +280,12 @@ const AddressInfomation = ({
                         >
                             <Field
                                 type="text"
-                                name="Address2"
+                                name="Street"
                                 component={Input}
-                                value = {item && item.Address2}
+                                value = {data && data.Street}
                                 readOnly
                             />
                             </FormItem>
-                            <FormItem
-                            label="Address3"
-                        >
-                            <Field
-                                type="text"
-                                name="Address3"
-                                component={Input}
-                                value = {item && item.Address2}
-                                readOnly
-                            />
-                            </FormItem>
-                        
                         <FormItem
                             label="Landmark"
                         >
@@ -229,7 +293,7 @@ const AddressInfomation = ({
                                 type="text"
                                 name="Landmark"
                                 component={Input}
-                                value = {item && item.Landmark}
+                                value = {data && data.Landmark}
                                 readOnly
                             />
                         </FormItem>
@@ -241,7 +305,7 @@ const AddressInfomation = ({
                                 type="text"
                                 name="city_name"
                                 component={Input}
-                                value = {item && item.city_name} 
+                                value = {data && data.city_name} 
                                 readOnly
                             />
                         </FormItem>
@@ -257,7 +321,7 @@ const AddressInfomation = ({
                                     type="text"
                                     name="state_name"
                                     component={Input}
-                                    value = {item && item.state_name}
+                                    value = {data && data.state_name}
                                     readOnly 
                                 />
                             </FormItem>
@@ -269,7 +333,7 @@ const AddressInfomation = ({
                                     type="text"
                                     name="zip_code"
                                     component={Input}
-                                    value = {item && item.zip_code}
+                                    value = {data && data.zip_code}
                                     readOnly 
                                    />
                                
@@ -283,7 +347,7 @@ const AddressInfomation = ({
                                 <Field name="latitude" 
                                  type="text"
                                  component={Input}
-                                 value = {item && item.latitude}
+                                 value = {data && data.latitude}
                                  readOnly
                                  >
                                 
@@ -298,7 +362,7 @@ const AddressInfomation = ({
                                 <Field name="longitude" 
                                  type="text"
                                  component={Input}
-                                 value = {item && item.longitude}
+                                 value = {data && data.longitude}
                                  readOnly
                                   >
                                 </Field>
@@ -318,23 +382,21 @@ const AddressInfomation = ({
                                         Next
                                     </Button> */}
                                      <Button
-                                         loading={isSubmitting}
+                                        //  loading={isSubmitting}
                                          variant="solid"
                                          type="submit"
                                          icon={<FiCheckCircle />}
                                      >
-                                    Verify
+                                    Validate
                                      </Button>
                                 </div>
                                     </div>
                                     
                                 
-                                ))
-                                ) : (
-                                <p>No data available.</p>
-                                
-                                )} 
-                          
+                               
+                                    ) : (
+                                        <p>No data available.</p>
+                                 )} 
 
                             </FormContainer>
                         </Form>
@@ -345,24 +407,81 @@ const AddressInfomation = ({
                 isOpen={dialogIsOpen}
                 onClose={onDialogClose}
                 onRequestClose={onDialogClose}
+                
             >
                 <div className="flex flex-col h-full justify-between">
                     <h5 className="mb-4">Confirm Verification</h5>
                     <div className="max-h-96 overflow-y-auto">
-                            <p> Are you want to verify Address details!!</p>
+                            <p> Are you want to validate Address details!!</p>
                     </div>
                     <div className="text-right mt-6">
                         <Button
                             className="ltr:mr-2 rtl:ml-2"
                             // variant="plain"
-                            onClick={onDialogClose}
+                            onClick={OpenRejectionDialog}
                         >
                             No
                         </Button>
-                        <Button variant="solid" onClick={onDialogOk}>
+                        <Button variant="solid" onClick = {onDialogOk} >
                             Yes
                         </Button>
                     </div>
+                </div>
+
+            </Dialog>
+            <Dialog
+                isOpen={dialog1IsOpen}
+                onClose={onDialog1Close}
+                onRequestClose={onDialog1Close}
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Address Details Verification</h5>
+                    <div className="max-h-96 overflow-y-auto px-2 ">
+                            {/* <p> Enter Rejection remarks</p> */}
+                        <Formik
+                        initialValues={{
+                            remark: ''
+                            
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={(values) => {
+                            onDialogReject('Reject',values)
+                        }}
+                        >
+                        {({ touched, errors }) => (
+                            <Form>
+                                <FormContainer>
+                                    <FormItem
+                                     label="Rejection remark"
+                                     invalid={errors.remark && touched.remark}
+                                     errorMessage={errors.remark}
+                                    >
+                                         <Field
+                                            name = "remark"
+                                            component = {Input}
+                                            type = {text}
+                                            placeholder = "Enter rejection remarks here"
+                                        />
+                                    </FormItem>
+                                    <div className="text-right mt-2">
+                                    <Button
+                                        className="ltr:mr-2 rtl:ml-2"
+                                        // variant="plain"
+                                        onClick={onDialog1Close}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button variant="solid" type="submit" onClick={onDialogReject}>
+                                    Yes
+                                    </Button>
+                                </div>
+                                </FormContainer>
+                            </Form>
+                        )}
+                        </Formik>
+                           
+                    </div>
+                    
                 </div>
             </Dialog>
         </>

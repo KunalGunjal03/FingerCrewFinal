@@ -130,6 +130,13 @@ export async function apiGetCertificationDetails(data) {
         data,
     })
 }
+export async function apiGetUploadedDocuments(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'SurveyorDisplayAllDetails/getSurveyorDocumentDetails',
+        method: 'post',
+        data,
+    })
+}
   
 export async function apiGetSurveyorSkills(data) {
     return ApiService.fetchData({
