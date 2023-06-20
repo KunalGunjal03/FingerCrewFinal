@@ -38,6 +38,7 @@ const PersonalInformation = ({
    
     const location = useLocation()
     const [isvalid, setIsvalid] = useState(false);
+    // const [disable,setDisable] = useState(false);
     const {token,tokenKey} = useSelector((state) => state.auth.user)
 
      useEffect(() => {
@@ -147,6 +148,7 @@ const PersonalInformation = ({
                     openNotification('success',resp.remarks)
                     setIsOpen(false)
                     setIsOpen1(false)
+                    // setDisable(true)
                     setTimeout(() => {
                         onNextChange?.('personalInformation')
                      }, 500)
@@ -195,7 +197,7 @@ const PersonalInformation = ({
         const resp = response.payload
     //     // if(response)
     //     // {
-            openNotification('success',resp.remarks)
+            openNotification('danger',resp.remarks)
             setIsOpen(false)
             setIsOpen1(false)
             setTimeout(() => {
@@ -232,6 +234,7 @@ const PersonalInformation = ({
         remark: Yup.string().required('Please enter your rejection remark')
         .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
     })
+    // console.log(disable)
     return (
         <>
             <div className="mb-8">
@@ -365,6 +368,7 @@ const PersonalInformation = ({
                                     variant="solid"
                                     type="submit"
                                     icon={<FiCheckCircle />}
+                                    // disable = { disable }
                                     >
                                     Validate
                                     </Button>

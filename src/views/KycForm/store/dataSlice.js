@@ -10,7 +10,7 @@ import { apiGetInsuredDetails } from 'services/AccountServices'
 import { apiGetKYCDetails } from 'services/AccountServices'
 import { apiGetBackgroundDetails,apiGetUploadedDocuments } from 'services/AccountServices'
 import { VerifyPersonalDetails,VerifyAddressDetails ,VerifyQualificationDetails,VerifyCertificateDetails,VerifyExperienceDetails,VerifySkillsDetails,VerifyBankDetails
-,VerifyInsuranceDetails ,getVerificationTabs,VerifyKYCDetails,VerifyBgCheckDetails
+,VerifyInsuranceDetails ,getVerificationTabs,VerifyKYCDetails,VerifyBgCheckDetails,VerifyDocumentsDetails
 } from 'services/VerificationServices'
 export const getForm = createAsyncThunk(
     'accountDetailForm/data/getForm',
@@ -188,6 +188,14 @@ export const verifyKYCDetails = createAsyncThunk(
     'accountDetailForm/data/getStatus',
     async (data) => {
         const response = await VerifyKYCDetails(data)
+        console.log( response)
+        return response
+    }
+)
+export const verifyDocumentsDetails = createAsyncThunk(
+    'accountDetailForm/data/getStatus',
+    async (data) => {
+        const response = await VerifyDocumentsDetails(data)
         console.log( response)
         return response
     }

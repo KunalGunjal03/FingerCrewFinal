@@ -199,7 +199,7 @@ const onDialogReject = async(status,values)=>{
     const resp = response.payload
 //     // if(response)
 //     // {
-        openNotification('success',resp.remarks)
+        openNotification('danger',resp.remarks)
         setIsOpen(false)
         setIsOpen1(false)
         setTimeout(() => {
@@ -260,9 +260,9 @@ const onNext = async(values, setSubmitting) => {
                             <FormContainer>
                           
                             { data ? (
-                                    <div>
+                            <div>
                                 
-                                <div className="md:grid grid-cols-2 gap-4">
+                            <div className="md:grid grid-cols-2 gap-4">
                             
                             <FormItem
                             label="Address1"
@@ -390,7 +390,7 @@ const onNext = async(values, setSubmitting) => {
                                     Validate
                                      </Button>
                                 </div>
-                                    </div>
+                                </div>
                                     
                                 
                                

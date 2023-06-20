@@ -39,6 +39,7 @@ const InsuranceDetails = ({
    
     const location = useLocation()
     const {token,tokenKey} = useSelector((state) => state.auth.user)
+    const[SurveyorId,setSurveyorID] = useState([''])
      useEffect(() => {
          const path = location.pathname.substring(
          location.pathname.lastIndexOf('/') + 1
@@ -54,7 +55,8 @@ const InsuranceDetails = ({
  const dispatch = useDispatch()
  const fetchData = (requestParam) => {
     try {
-    
+        const SurveyorID = {surveyor_master_id:requestParam.surveyor_master_id}
+        setSurveyorID(SurveyorID)
       dispatch(getInsured( requestParam));
       
     } catch (error) {
@@ -108,7 +110,7 @@ const InsuranceDetails = ({
       {
           // if(status === "Reject")
           // {
-              verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+              verified = {surveyor_master_id : SurveyorId.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
               console.log(verified)
              const  response = await dispatch(verifyInsuranceDetails( verified));
               
@@ -159,7 +161,7 @@ const InsuranceDetails = ({
      {
       console.log(status)
       console.log(values)
-     const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "0",rejection_remarks: values.remark}
+     const verified = {surveyor_master_id : SurveyorId.surveyor_master_id,is_verified : "0",rejection_remarks: values.remark}
       console.log(verified)
      const  response = await dispatch(verifyInsuranceDetails( verified));
       
@@ -168,7 +170,7 @@ const InsuranceDetails = ({
       const resp = response.payload
   //     // if(response)
   //     // {
-          openNotification('success',resp.remarks)
+          openNotification('danger',resp.remarks)
           setIsOpen(false)
           setIsOpen1(false)
           setTimeout(() => {
@@ -224,9 +226,9 @@ console.log(data)
                 // validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true)
-                    setTimeout(() => {
+                    // setTimeout(() => {
                         onNext(values, setSubmitting)
-                    }, 1000)
+                    // }, 1000)
                 }}
             >
                 {({ values, touched, errors, isSubmitting }) => {

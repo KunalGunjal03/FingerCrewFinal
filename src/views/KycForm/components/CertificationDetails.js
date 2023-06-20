@@ -29,6 +29,9 @@ import { useLocation, useParams } from 'react-router-dom'
 //import {getEducation} from '../store/dataSlice'
 import { getCertification } from '../store/dataSlice'
 import { COMMANPATH } from 'constants/api.constant'
+import * as Yup from 'yup'
+import { text } from 'd3-fetch'
+import { verifyCertificationDetails } from '../store/dataSlice'
 const excludedOccupation = ['unemployed', 'student', 'retired']
 
 
@@ -76,8 +79,9 @@ const CertificationDetails
       
     const location = useLocation()
     const {token,tokenKey} = useSelector((state) => state.auth.user)
+    const[SurveyorId,setSurveyorID] = useState([''])
     const [imageUrl, setImageUrl] = useState('');
-
+    const [dialog1IsOpen,setIsOpen1] = useState(false)
      useEffect(() => {
          const path = location.pathname.substring(
          location.pathname.lastIndexOf('/') + 1
@@ -94,6 +98,8 @@ const CertificationDetails
  const fetchData = async (requestParam) => {
     try {
     console.log(requestParam)
+    const SurveyorID = {surveyor_master_id:requestParam.surveyor_master_id}
+    setSurveyorID(SurveyorID)
       const response = await dispatch(getCertification(requestParam));
       const imageFileName = COMMANPATH ;
       console.log(response.payload.getData)
@@ -124,30 +130,86 @@ const CertificationDetails
 console.log(formData)
 const [dialogIsOpen, setIsOpen] = useState(false)
 // const [setSubmitting] = useState(true)
-const openNotification = (type) => {
+const openNotification = (type,msg) => {
     toast.push(
         <Notification
-            title={type.charAt(0).toUpperCase() + type.slice(1)}
+            title={msg}
             type={type}
-        >
-            certification information is verified successfuly.
-        </Notification>
-    )
+            
+        />,{
+            placement: 'top-end'
+        })
+            
+       
+    
 }
 const openDialog = () => {
     setIsOpen(true)
 }
-const onDialogClose = (e) => {
-    console.log('onDialogClose', e)
-    setIsOpen(false)
+const OpenRejectionDialog = (e)=>{
+    setIsOpen1(true)
 }
+const onDialog1Close = (e) => {
+    setIsOpen(true)
+     setIsOpen1(false)
+     // setRejectionRemarkVisible(true)
+ }
 
-const onDialogOk = (e) => {
-    openNotification('success')
-    setIsOpen(false)
-    // onDiscard(false)
-    // onNextChange?.(values, 'personalInformation', setSubmitting)
-}
+ const onDialogOk = async(status,values)=>{
+
+    var verified = {}
+  //   setIsOpen(true)
+  //   setIsOpen1(true)
+      
+      try
+      {
+          // if(status === "Reject")
+          // {
+              verified = {surveyor_master_id : SurveyorId.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+              console.log(verified)
+             const  response = await dispatch(verifyCertificationDetails( verified));
+              
+          //     // const response =  VerifyPersonalDetails(verified)
+              console.log(response.payload)
+              const resp = response.payload
+          //     // if(response)
+          //     // {
+                  openNotification('success',resp.remarks)
+                  setIsOpen(false)
+                  setIsOpen1(false)
+                  setTimeout(() => {
+                      onNextChange?.('personalInformation')
+                   }, 500)
+                 
+   
+          // }
+          // else if(status === "Accept")
+          // {
+          //     verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+          //     console.log(verified)
+          //     dispatch(verifyPersonalDetails( verified));
+              
+          //     // const response =  VerifyPersonalDetails(verified)
+          //     // console.log(response)
+          //     // if(response)
+          //     // {
+          //         openNotification('success')
+          //         setIsOpen(false)
+          //         setIsOpen1(false)
+          //         setTimeout(() => {
+          //             onNextChange?.('personalInformation')
+          //          }, 500)
+          //         setIsvalid(true)
+          // }
+          //           // }
+      }
+      catch(error)
+      {
+          console.error(error)
+          return error;
+      }
+        // onNextChange?.(values, 'personalInformation', setSubmitting)
+  }
 // const onDiscard=(setSubmitting)=>{
 //      onNextChange?.(values, 'personalInformation', setSubmitting)
 // }
@@ -157,7 +219,7 @@ const onNext = async(values, setSubmitting) => {
         // const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks:""}
         // const response = await VerifyCertificationDetails(verified)
     //     // console.log(response)
-    //     openDialog()
+        openDialog()
     //    setTimeout(() => {
     //        onNextChange?.('CertificationDetails', setSubmitting)
     //     }, 3000)
@@ -175,6 +237,50 @@ const handleView = (item) => {
     console.log(item)
     setSelectedCertificate(item);
 };
+const validationSchema = Yup.object().shape({
+    remark: Yup.string().required('Please enter your rejection remark')
+    .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
+})
+const onDialogClose = (e) => {
+    console.log(e)
+ //    OpenRejectionDialog()
+    
+     setIsOpen(false)
+     // setRejectionRemarkVisible(true)
+ }
+const onDialogReject = async(status,values)=>{
+    try
+    {
+     console.log(status)
+     console.log(values)
+    const verified = {surveyor_master_id : SurveyorId.surveyor_master_id,is_verified : "0",rejection_remarks: values.remark}
+     console.log(verified)
+    const  response = await dispatch(verifyCertificationDetails( verified));
+     
+ //     // const response =  VerifyPersonalDetails(verified)
+     console.log(response.payload)
+     const resp = response.payload
+ //     // if(response)
+ //     // {
+         openNotification('danger',resp.remarks)
+         setIsOpen(false)
+         setIsOpen1(false)
+         setTimeout(() => {
+             onNextChange?.('addressInformation')
+          }, 500)
+         
+    }
+    catch(error)
+    {
+     console.error(error)
+     return error
+    }
+    
+    
+     
+     
+     
+ }
     return (
         <>
             <div className="mb-8">
@@ -187,9 +293,9 @@ const handleView = (item) => {
                 // validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true)
-                    setTimeout(() => {
+                    // setTimeout(() => {
                         onNext(values, setSubmitting)
-                    }, 1000)
+                    // }, 1000)
                 }}
             >
                 {({ values, touched, errors, isSubmitting }) => {
@@ -292,7 +398,7 @@ const handleView = (item) => {
                         <Button
                             className="ltr:mr-2 rtl:ml-2"
                             // variant="plain"
-                            onClick={onDialogClose}
+                            onClick={OpenRejectionDialog}
                         >
                             No
                         </Button>
@@ -300,6 +406,61 @@ const handleView = (item) => {
                             Yes
                         </Button>
                     </div>
+                </div>
+            </Dialog>
+            <Dialog
+                isOpen={dialog1IsOpen}
+                onClose={onDialog1Close}
+                onRequestClose={onDialog1Close}
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Certification Details Verification</h5>
+                    <div className="max-h-96 overflow-y-auto px-2 ">
+                            {/* <p> Enter Rejection remarks</p> */}
+                        <Formik
+                        initialValues={{
+                            remark: ''
+                            
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={(values) => {
+                            onDialogReject('Reject',values)
+                        }}
+                        >
+                        {({ touched, errors }) => (
+                            <Form>
+                                <FormContainer>
+                                    <FormItem
+                                     label="Rejection remark"
+                                     invalid={errors.remark && touched.remark}
+                                     errorMessage={errors.remark}
+                                    >
+                                         <Field
+                                            name = "remark"
+                                            component = {Input}
+                                            type = {text}
+                                            placeholder = "Enter rejection remarks here"
+                                        />
+                                    </FormItem>
+                                    <div className="text-right mt-2">
+                                    <Button
+                                        className="ltr:mr-2 rtl:ml-2"
+                                        // variant="plain"
+                                        onClick={onDialog1Close}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button variant="solid" type="submit" onClick={onDialogReject}>
+                                    Yes
+                                    </Button>
+                                </div>
+                                </FormContainer>
+                            </Form>
+                        )}
+                        </Formik>
+                           
+                    </div>
+                    
                 </div>
             </Dialog>
         </>

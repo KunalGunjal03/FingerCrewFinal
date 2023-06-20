@@ -288,7 +288,7 @@ const onDialogReject = async(status,values)=>{
     const resp = response.payload
 //     // if(response)
 //     // {
-        openNotification('success',resp.remarks)
+        openNotification('danger',resp.remarks)
         setIsOpen(false)
         setIsOpen1(false)
         setTimeout(() => {
@@ -340,9 +340,9 @@ return (
             // validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true)
-                setTimeout(() => {
+                // setTimeout(() => {
                     onNext(values, setSubmitting)
-                }, 1000)
+                // }, 1000)
             }}
         >
             {({ values, touched, errors, isSubmitting }) => {

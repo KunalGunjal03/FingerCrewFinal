@@ -35,7 +35,7 @@ const BankDetails = lazy(() =>
  )
  const BackgroundCheckDetails = lazy (()=> import('./components/BackgroundCheckDetails') )
  const InsuranceDetails = lazy(()=> import ('./components/InsuranceDetails'))
- 
+
 const DetailForm = () => {
     const [SurveyorID, setSurveyorID] = useState(false)
     const dispatch = useDispatch()
@@ -50,13 +50,13 @@ const DetailForm = () => {
             <Notification
                 title={msg}
                 type={type}
-                
+
             />,{
                 placement: 'top-end'
             })
-                
-           
-        
+
+
+
     }
     const currentStep = useSelector(
         (state) => state.accountDetailForm.state.currentStep
@@ -65,7 +65,7 @@ const DetailForm = () => {
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
-   
+
     const response = useSelector(
         (state) => state.accountDetailForm.data.formData
     )
@@ -116,11 +116,11 @@ const DetailForm = () => {
         const path = location.pathname.substring(
             location.pathname.lastIndexOf('/') + 1
         )
-        
-       
+
+
         const rquestParam = { surveyor_master_id : path }
         setSurveyorID(rquestParam)
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
     const onDialogOk = async(status,values)=>{
@@ -137,9 +137,9 @@ const DetailForm = () => {
                 //   console.log(verified)
                 console.log(SurveyorID)
                  const  response = await dispatch(getVerificationDetails ( SurveyorID));
-              
+
             //   //     // const response =  VerifyPersonalDetails(verified)
-             
+
                   const resp = response.payload
                   console.log(resp)
             //   //     // if(response)
@@ -163,13 +163,24 @@ const DetailForm = () => {
               //     // console.log(response)
                   if(resp)
                   {
-                      openNotification('success',resp.remarks)
+                    if(resp.status === "Failed")
+                    {
+                      openNotification('warning',resp.remarks)
                       setIsOpen(false)
-                      
-                      setTimeout(() => {
-                        navigate('/serveyorlist')
-                       }, 500)
-                      
+                    }
+                    else if(resp.status === "Success")
+                    {
+                        openNotification('success',resp.remarks)
+                        setIsOpen(false)
+                        setTimeout(() => {
+                            navigate('/serveyorlist')
+                           }, 500)
+                    }
+
+
+
+                   
+
                     }
               //           // }
           }

@@ -288,7 +288,7 @@ try {
   const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
 
   const response = await BaseService({
-    url: COMMANAPILINK+'StatusVerification/getVerificationStatus',
+    url: COMMANAPILINK+'Surveyor/finalstatus',
     method: 'post',
     data: data,
     headers: {
@@ -317,6 +317,34 @@ try {
 
   const response = await BaseService({
     url: COMMANAPILINK+'Surveyor/VerifyKYCDet',
+    method: 'post',
+    data: data,
+    headers: {
+      Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,
+      [TOKEN_KEY]: tokenKey || undefined,
+    },
+    
+  });
+
+  if (response && response.data) {
+    return response.data;
+  } else {
+    throw new Error('Invalid response');
+  }
+} catch (error) {
+  console.error(error);
+  throw new Error(error.response?.data || 'An error occurred');
+}
+};
+
+export const VerifyDocumentsDetails = async (data) => {
+  console.log(data)
+try {
+  const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
+  const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
+
+  const response = await BaseService({
+    url: COMMANAPILINK+'Surveyor/VerifyUploadDocument',
     method: 'post',
     data: data,
     headers: {

@@ -82,6 +82,7 @@ const SurveyorTable = () => {
     if(d ==="Failed")
     {
         try{
+            
             dispatch(signOut)
         }
         catch(error)

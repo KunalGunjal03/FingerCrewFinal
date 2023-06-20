@@ -6,8 +6,10 @@ import {
     Segment,
     FormItem,
     FormContainer,
-    Input
-    
+    Input,
+    toast,
+    Notification,
+    Dialog
 
     
 } from 'components/ui'
@@ -19,20 +21,25 @@ import useThemeClass from 'utils/hooks/useThemeClass'
 import {FiCheckCircle} from 'react-icons/fi'
 import {  useDispatch,useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect ,useState} from 'react'
 import { getDocuments } from '../store/dataSlice'
-const documentTypes = [
-    { value: 'ssn', label: 'SSN Certificate', desc: '' },
-    { value: 'driversLicense', label: 'Drivers License', desc: '' },
-]
+import { COMMANPATH } from 'constants/api.constant'
+import * as Yup from 'yup'
+import { text } from 'd3-fetch'
+import { verifyDocumentsDetails } from '../store/dataSlice'
+
+// const documentTypes = [
+//     { value: 'ssn', label: 'SSN Certificate', desc: '' },
+//     { value: 'driversLicense', label: 'Drivers License', desc: '' },
+// ]
 
 
 
 const DocumentTypeIcon = ({ type }) => {
     switch (type) {
-        case 'ssn':
+        case '2':
             return <NationalIdSvg />
-        case 'driversLicense':
+        case '3':
             return <DriversLicenseSvg />
         default:
             return null
@@ -40,16 +47,23 @@ const DocumentTypeIcon = ({ type }) => {
 }
 
 const DocumentUploadField = (props) => {
-    const { label, name, children, touched, errors,data } = props
+    const { label, name, children, touched, errors, path ,exe } = props
     console.log(props)
-    console.log(data)
+
     // const onSetFormFile = (form, field, file) => {
     //     form.setFieldValue(field.name, URL.createObjectURL(file[0]))
     // }
-
+    const FinalPath = COMMANPATH + path + name + exe
+    console.log(FinalPath)
     return (
 
-        <div>{label}</div>
+        <div className="group relative rounded border p-2 flex">
+             <img
+                        className="rounded max-h-[140px] max-w-full"
+                        src={FinalPath}
+                        alt={label}
+                    />
+        </div>
         // <FormItem
         //     label={label}
         //     invalid={errors[name] && touched[name]}
@@ -64,7 +78,18 @@ const DocumentUploadField = (props) => {
         // </FormItem>
     )
 }
-
+const documentMapping = {
+    
+    2: 'Driving Licence',
+    3: 'SSN Certificate'
+    // Add more document IDs and names as needed
+  };
+  const DocumentName = ({ id }) => {
+    // Lookup the document name based on the ID
+    const documentName = documentMapping[id];
+  
+    return <span>{documentName}</span>;
+  };
 const UploadDocuments = ({
     data = {
         documentType: '',
@@ -81,6 +106,7 @@ const UploadDocuments = ({
     const { textTheme, bgTheme } = useThemeClass()
     const location = useLocation()
     const {token,tokenKey} = useSelector((state) => state.auth.user)
+    const[SurveyorId,setSurveyorID] = useState([''])
      useEffect(() => {
          const path = location.pathname.substring(
          location.pathname.lastIndexOf('/') + 1
@@ -96,6 +122,8 @@ const UploadDocuments = ({
  const dispatch = useDispatch()
  const fetchData = (requestParam) => {
     try {
+        const SurveyorID = {surveyor_master_id:requestParam.surveyor_master_id}
+        setSurveyorID(SurveyorID)
         //const surveyor_master_id = { surveyor_master_id : requestParam.surveyor_master_id}
       //dispatch(getForm({ surveyor_master_id,token,tokenKey}));
       dispatch(getDocuments( requestParam));
@@ -106,10 +134,133 @@ const UploadDocuments = ({
       return error;
     }
   };
-  const formData = useSelector(
-    (state) => state.accountDetailForm.data.formData.getData
-    )
-    console.log(formData)
+  const [dialogIsOpen, setIsOpen] = useState(false)
+  const [dialog1IsOpen,setIsOpen1] = useState(false)
+  const openNotification = (type,msg) => {
+    toast.push(
+        <Notification
+            title={msg}
+            type={type}
+            
+        />,{
+            placement: 'top-end'
+        })
+            
+       
+    
+}
+  const openDialog = (e) => {
+    setIsOpen(true)
+
+}
+const OpenRejectionDialog = (e)=>{
+    setIsOpen1(true)
+}
+const onDialogClose = (e) => {
+   console.log(e)
+//    OpenRejectionDialog()
+   
+    setIsOpen(false)
+    // setRejectionRemarkVisible(true)
+}
+const onDialog1Close = (e) => {
+    setIsOpen(true)
+     setIsOpen1(false)
+     // setRejectionRemarkVisible(true)
+ }
+// let isVerified = false;
+const onDialogOk = async(status,values)=>{
+
+  var verified = {}
+//   setIsOpen(true)
+//   setIsOpen1(true)
+    
+    try
+    {
+        // if(status === "Reject")
+        // {
+            verified = {surveyor_master_id : SurveyorId.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+            console.log(verified)
+           const  response = await dispatch(verifyDocumentsDetails( verified));
+            
+        //     // const response =  VerifyPersonalDetails(verified)
+            console.log(response.payload)
+            const resp = response.payload
+        //     // if(response)
+        //     // {
+                openNotification('success',resp.remarks)
+                setIsOpen(false)
+                setIsOpen1(false)
+                setTimeout(() => {
+                    onNextChange?.('personalInformation')
+                 }, 500)
+               
+ 
+             // }
+    }
+    catch(error)
+    {
+        console.error(error)
+        return error;
+    }
+      // onNextChange?.(values, 'personalInformation', setSubmitting)
+}
+
+const onDialogReject = async(status,values)=>{
+   try
+   {
+    console.log(status)
+    console.log(values)
+   const verified = {surveyor_master_id : SurveyorId.surveyor_master_id,is_verified : "0",rejection_remarks: values.remark}
+    console.log(verified)
+   const  response = await dispatch(verifyDocumentsDetails( verified));
+    
+//     // const response =  VerifyPersonalDetails(verified)
+    console.log(response.payload)
+    const resp = response.payload
+//     // if(response)
+//     // {
+        openNotification('danger',resp.remarks)
+        setIsOpen(false)
+        setIsOpen1(false)
+        setTimeout(() => {
+            onNextChange?.('personalInformation')
+         }, 500)
+        
+   }
+   catch(error)
+   {
+    console.error(error)
+    return error
+   }
+   
+   
+    
+    
+    
+}
+  const onNext = async(values, setSubmitting) => {
+    try{
+    
+      
+        openDialog()
+      
+        
+    }
+    catch(error)
+    {
+        console.log(error)
+    }
+    
+}
+const validationSchema = Yup.object().shape({
+    remark: Yup.string().required('Please enter your rejection remark')
+    .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
+})
+//   const formData = useSelector(
+//     (state) => state.accountDetailForm.data.formData.getData
+//     )
+    // console.log(formData)
     console.log(data)
 
     return (
@@ -122,20 +273,23 @@ const UploadDocuments = ({
                 initialValues={data}
                 // enableReinitialize
                 // validationSchema={validationSchema}
-                // onSubmit={(values, { setSubmitting }) => {
-                //     setSubmitting(true)
-                //     setTimeout(() => {
-                //         onNext(values, setSubmitting)
-                //     }, 1000)
-                // }}
+                onSubmit={(values, { setSubmitting }) => {
+                    setSubmitting(true)
+                    // setTimeout(() => {
+                        onNext(values, setSubmitting)
+                    // }, 1000)
+                }}
+                
             >
             {({ values, touched, errors, isSubmitting }) => {
-                const validatedProps = { touched, errors ,data}
+                const validatedProps = {touched, errors}
                 return (
                     <Form>
                         <FormContainer>
+                        {Array.isArray(data) && data.length!== 0 ? (
+                            <div>
                             <FormItem 
-                            // label="Select your document type"
+                             label="View uploaded documents"
                             // invalid={
                             //     errors.documentType &&
                             //     touched.documentType
@@ -155,13 +309,13 @@ const UploadDocuments = ({
                                                 }
                                             >
                                                 <>
-                                                    {documentTypes.map(
+                                                    {Array.isArray(data) &&  data.map(
                                                         (item, index) => (
                                                             <Segment.Item
                                                                 value={
-                                                                    item.value
+                                                                    item.document_master_id
                                                                 }
-                                                                key={item.value}
+                                                                key={item.document_master_id}
                                                                 disabled={
                                                                     item.disabled
                                                                 }
@@ -205,7 +359,8 @@ const UploadDocuments = ({
                                                                                 </SvgIcon>
                                                                                 <h6>
                                                                                     {
-                                                                                        item.label
+                                                                                        <DocumentName id={item.document_master_id} />
+                                                                                        // item.document_master_id === 2 && <label>'Driving Licence'</label>
                                                                                     }
                                                                                 </h6>
                                                                             </div>
@@ -214,29 +369,35 @@ const UploadDocuments = ({
                                                                 }}
                                                             </Segment.Item>
                                                         )
-                                                    )}
+
+                                                    )
+                                                    }
                                                 </>
                                             </Segment>
                                         )}
                                     </Field>
                             </FormItem>
                             <div className="grid xl:grid-cols-1 gap-4">
-                            {values.documentType === 'ssn' && (
+                            {values.documentType === '3' && (
                                         <>
                                             <DocumentUploadField
-                                                name="ssn"
+                                                name={data[0].document_name}
                                                 label="SSN Certificate"
+                                                path = {data[0].document_path}
+                                                exe = {data[0].document_extention}
                                                 {...validatedProps}
                                             >
                                                
                                             </DocumentUploadField>
                                         </>
                             )}
-                             {values.documentType === 'driversLicense' && (
+                             {values.documentType === '2' && (
                                         <>
                                             <DocumentUploadField
-                                                name="driversLicense"
+                                                name={data[1].document_name}
                                                 label="Driver License"
+                                                path = {data[1].document_path}
+                                                exe = {data[1].document_extention}
                                                 {...validatedProps}
                                             >
                                                
@@ -244,8 +405,21 @@ const UploadDocuments = ({
                                         </>
                             )}
                                 </div>
-
-                            
+                                <div className="flex justify-end gap-2 mt-6">
+                               
+                                     <Button
+                                        //  loading={isSubmitting}
+                                         variant="solid"
+                                         type="submit"
+                                         icon={<FiCheckCircle />}
+                                     >
+                                    Validate
+                                     </Button>
+                                </div>
+                                </div>
+                         ) : (
+                            <p>No data available.</p>
+                         )} 
                         </FormContainer>
                     </Form>
                 )
@@ -253,6 +427,87 @@ const UploadDocuments = ({
             }}
 
             </Formik>
+            <Dialog
+                isOpen={dialogIsOpen}
+                onClose={onDialogClose}
+                onRequestClose={onDialogClose}
+                
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Confirm Verification</h5>
+                    <div className="max-h-96 overflow-y-auto">
+                            <p> Are you want to validate uploaded documents!!</p>
+                    </div>
+                    <div className="text-right mt-6">
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2"
+                            // variant="plain"
+                            onClick={OpenRejectionDialog}
+                        >
+                            No
+                        </Button>
+                        <Button variant="solid" onClick = {onDialogOk} >
+                            Yes
+                        </Button>
+                    </div>
+                </div>
+
+            </Dialog>
+            <Dialog
+                isOpen={dialog1IsOpen}
+                onClose={onDialog1Close}
+                onRequestClose={onDialog1Close}
+            >
+                <div className="flex flex-col h-full justify-between">
+                    <h5 className="mb-4">Documents  Verification</h5>
+                    <div className="max-h-96 overflow-y-auto px-2 ">
+                            {/* <p> Enter Rejection remarks</p> */}
+                        <Formik
+                        initialValues={{
+                            remark: ''
+                            
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={(values) => {
+                            onDialogReject('Reject',values)
+                        }}
+                        >
+                        {({ touched, errors }) => (
+                            <Form>
+                                <FormContainer>
+                                    <FormItem
+                                     label="Rejection remark"
+                                     invalid={errors.remark && touched.remark}
+                                     errorMessage={errors.remark}
+                                    >
+                                         <Field
+                                            name = "remark"
+                                            component = {Input}
+                                            type = {text}
+                                            placeholder = "Enter rejection remarks here"
+                                        />
+                                    </FormItem>
+                                    <div className="text-right mt-2">
+                                    <Button
+                                        className="ltr:mr-2 rtl:ml-2"
+                                        // variant="plain"
+                                        onClick={onDialog1Close}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button variant="solid" type="submit" onClick={onDialogReject}>
+                                    Yes
+                                    </Button>
+                                </div>
+                                </FormContainer>
+                            </Form>
+                        )}
+                        </Formik>
+                           
+                    </div>
+                    
+                </div>
+            </Dialog>
         </>
     )
 }
