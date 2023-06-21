@@ -245,66 +245,56 @@ const onNext = async(values, setSubmitting) => {
                         <>
                         <Form>
                             <FormContainer>
-                            { data && data.length !==0 ? (
+                            {Array.isArray(data) && data.length!== 0 ? (
+                                data.map((items) => (
                                     
-                                    <div>
+                                    <div className='mt-2'>
                                     <FormItem
-                                    label="Question 1"
-                                 
+                                    label="Question"
+                                    className = "mb-4"
                                 >
                                     <Field
                                         type="text"
                                         name="bg_quest"
                                          component={Input}
-                                         value = {data && data.bg_quest}
+                                         value = {items && items.bg_quest}
                                          readOnly
                                     />
                                 </FormItem>
                                 <FormItem
                                     label="Answer"
-                                 
+                                    
                                 >
                                      <Field
                                         type="text"
                                         name="bg_check_ans"
                                         component={Input}
-                                        value = {data && data.bg_check_ans ? 'Yes' : 'No'} 
+                                        value = {items && items.bg_check_ans ? 'Yes' : 'No'} 
                                         readOnly
                                     />
                                 </FormItem>
-                                <FormItem
-                                    label="Remark"
-                                 
-                                >
-                                    <Field
-                                        type="text"
-                                        name="remarks"
-                                        component={Input}
-                                        value = {data && data.remarks}
-                                        readOnly
-                                    />
-                                </FormItem>
-                            
-                                <div className="flex justify-end gap-2">
-                               
-                                     <Button
-                                        //  loading={isSubmitting}
-                                         variant="solid"
-                                         type="submit"
-                                         icon={<FiCheckCircle />}
-                                     >
-                                    Validate
-                                     </Button>
-                                </div>
                                     </div>
                                  
+                                 ))
                                  
-                                ) : (
-                                    <p>No data available.</p>
-                                )}
-                                
-                           
-                                
+                                 ) : (
+                                       <p>No data available.</p>
+                                  )} 
+                           {Array.isArray(data) && data.length!== 0 ? (
+                           <div className="flex justify-end gap-2">
+                               
+                               <Button
+                                  //  loading={isSubmitting}
+                                   variant="solid"
+                                   type="submit"
+                                   icon={<FiCheckCircle />}
+                               >
+                              Validate
+                               </Button>
+                          </div>
+                            ) : (
+                                <p>No data available.</p>
+                           )} 
                             </FormContainer>
                         </Form>
                         

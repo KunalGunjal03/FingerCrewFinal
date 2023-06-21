@@ -104,7 +104,7 @@ const SurveyorTable = () => {
     const loading = useSelector((state) => state.listsSurveyorList.data.loading)
     
     const data= useSelector((state) => state.listsSurveyorList.data.surveyorList.getData)
-  
+   
     useEffect(() => {
         fetchData()
         //getSurveyor()
