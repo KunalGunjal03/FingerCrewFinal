@@ -12,6 +12,7 @@ import useThemeClass from 'utils/hooks/useThemeClass'
 import { useNavigate } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
 import useAuth from 'utils/hooks/useAuth'
+import { Badge } from 'components/ui'
 //import { apiGetlistsSurveyor }  from 'services/SalesService'
 
 
@@ -143,7 +144,12 @@ const SurveyorTable = () => {
             return error;
         }
     }
-   
+    const statusColor = {
+       
+        
+        False: 'bg-yellow-300',
+        True: 'bg-sky-500',
+    }
    
     const columns = useMemo(
         () => [
@@ -202,11 +208,26 @@ const SurveyorTable = () => {
                 },
             },
             {
-                header: 'Action',
-                id: 'action',
-                cell: (props) => <ActionColumn row={props.row.original} />
-                
+                header: 'Status',
+                accessorKey: 'registration_status',
+                cell: (props) => {
+                    const row = props.row.original
+                    return (
+                        <div className="flex items-center">
+                            <Badge className={statusColor[row.Status]} />
+                            <span className="ml-2 rtl:mr-2 capitalize">
+                                {row.Status ? 'Verified':'pending'}
+                            </span>
+                        </div>
+                    )
+                },
             },
+            // {
+            //     header: 'Action',
+            //     id: 'action',
+            //     cell: (props) => <ActionColumn row={props.row.original} />
+                
+            // },
         ],
         []
     )

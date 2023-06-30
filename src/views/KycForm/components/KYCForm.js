@@ -147,11 +147,20 @@ const fetchData = async (requestParam) => {
       console.log(response.payload.getData)
       const data = response.payload.getData
       console.log(data)
-      const imageFilePath = data.surveyor_profile_photo_path;
-      const imagefile = data.surveyor_profile_photo_name;
-      const imagefileextension = data.surveyor_profile_photo_file_extension;
-
-       const finalfilepath= imageFileName + imageFilePath + imagefile  + imagefileextension;
+      var finalfilepath = ''
+      if(data)
+      {
+        const imageFilePath = data.surveyor_profile_photo_path;
+        const imagefile = data.surveyor_profile_photo_name;
+        const imagefileextension = data.surveyor_profile_photo_file_extension;
+  
+        finalfilepath= imageFileName + imageFilePath + imagefile  + imagefileextension;
+      }
+      else
+      {
+        finalfilepath = ''
+      }
+      
        console.log(finalfilepath)
        setImageUrl(finalfilepath)
      console.log(finalfilepath)
@@ -392,7 +401,7 @@ return (
                                     <img
                                                 className="rounded max-h-full max-w-full"
                                                 src={imageUrl}
-                                                alt={''}
+                                                alt={'Not Found'}
                                     />
                                     <div className="absolute inset-2 bg-gray-900/[.7] group-hover:flex hidden text-xl items-center justify-center">
                                                 <span
@@ -481,7 +490,7 @@ return (
                                          <Field
                                             name = "remark"
                                             component = {Input}
-                                            type = {text}
+                                            type = "text"
                                             placeholder = "Enter rejection remarks here"
                                         />
                                     </FormItem>

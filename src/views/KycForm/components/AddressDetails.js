@@ -459,7 +459,7 @@ const onNext = async(values, setSubmitting) => {
                                          <Field
                                             name = "remark"
                                             component = {Input}
-                                            type = {text}
+                                            type = "text"
                                             placeholder = "Enter rejection remarks here"
                                         />
                                     </FormItem>

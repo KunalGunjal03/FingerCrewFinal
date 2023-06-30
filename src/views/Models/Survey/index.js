@@ -10,9 +10,11 @@ injectReducer('crmCustomers', reducer)
 const Survey = () => {
     return (
         <>
+         <h3 className="mb-4">Survey List </h3>
             <SurveyStatistic />
             <AdaptableCard className="h-full" bodyClass="h-full">
             <div className="lg:flex items-center justify-between mb-4">
+           
                 <SurveyTableTools />
             </div>
                 <SurveyTable />

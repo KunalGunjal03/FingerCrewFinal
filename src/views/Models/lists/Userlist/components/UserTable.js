@@ -8,10 +8,9 @@ import { useNavigate } from 'react-router-dom'
 import cloneDeep from 'lodash/cloneDeep'
 
 const ActionColumn = ({ row }) => {
-    const dispatch = useDispatch()
+    //const dispatch = useDispatch()
     const { textTheme } = useThemeClass()
     const navigate = useNavigate()
-
     const onEdit = () => {
         navigate(`/editUser/${row.user_id}`)
     }
@@ -36,7 +35,6 @@ const ActionColumn = ({ row }) => {
 const SurveyorColumn = ({ row }) => {
     return (    
         <div className="flex items-center">
-            {/* {avatar} */}
             {row.user_id}
             <span className={`ml-2 rtl:mr-2 font-semibold`}>{row.name}</span>
         </div>
@@ -44,11 +42,8 @@ const SurveyorColumn = ({ row }) => {
 }
 
 const UserTable = () => {
-
     const tableRef = useRef(null)
-
     const dispatch = useDispatch()
-
     const { pageIndex, pageSize, sort, query, total } = useSelector(
         (state) => state.listsSurveyorList.data.tableData
     )
@@ -58,10 +53,8 @@ const UserTable = () => {
     )
 
     const loading = useSelector((state) => state.listsSurveyorList.data.loading)
-    
     const data= useSelector((state) => state.listsSurveyorList.data.surveyorList.getData)
     console.log(data)
-
     useEffect(() => {
         fetchData()
         
@@ -73,16 +66,25 @@ const UserTable = () => {
     )
 
     const {token,tokenKey} = useSelector((state) => state.auth.user)
+    // const fetchData = () => {
+    //     try{
+    //     dispatch(getSurveyor({ pageIndex, pageSize, sort, query, filterData,token,tokenKey}))
+    //     }catch(error)
+    //     {
+    //         console.error(error)
+    //         return error;
+    //     }
+    // }
+
     const fetchData = () => {
-        try{
-        dispatch(getSurveyor({ pageIndex, pageSize, sort, query, filterData,token,tokenKey}))
-        }catch(error)
-        {
-            console.error(error)
-            return error;
+        try {
+          dispatch(getSurveyor({ pageIndex, pageSize, sort, query, filterData, token, tokenKey }));
+        } catch (error) {
+          console.error(error);
+          return error;
         }
-    }
-   
+      };
+         
     const columns = useMemo(
         () => [
             {
@@ -173,22 +175,19 @@ const UserTable = () => {
     return (
         <>
             <DataTable
-                ref={tableRef}
-                columns={columns}
-                data={data}
-               // skeletonAvatarColumns={[0]}
-                skeletonAvatarProps={{ className: 'rounded-md' }}
-                loading={loading}
-                pagingData={tableData}
-                onPaginationChange={onPaginationChange}
-                onSelectChange={onSelectChange}
-                onSort={onSort}
+            ref={tableRef}
+            columns={columns}
+            data={data}
+            skeletonAvatarProps={{ className: 'rounded-md' }}
+            loading={loading}
+            pagingData={tableData}
+            onPaginationChange={onPaginationChange}
+            onSelectChange={onSelectChange}
+            onSort={onSort}
             />
+
            
         </>
     )
 }
-
 export default UserTable
-
-

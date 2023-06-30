@@ -42,10 +42,10 @@ const SurveyTableTools = () => {
 
     return (
         <div className="md:flex items-center justify-between">
-        <div className="md:flex items-center gap-4">
+        {/* <div className="md:flex items-center gap-4">
             <SurveyorTableSearch
             />
-        </div>
+        </div> */}
         <div className="ml-2">
         <SurveyorTableFilter/>
         </div>

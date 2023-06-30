@@ -138,7 +138,7 @@ const navigationConfig = [
       {
         key: "survey",
         path: "/Survey",
-        title: "Survey List",
+        title: "Survey Queue",
         translateKey: "nav.survey",
         icon: "singleMenu",
         type: "collapse",
@@ -146,21 +146,21 @@ const navigationConfig = [
         visible: "true",
         subMenu: []
       },
-      // {
-      //   key: "SurveyView",
-      //   path: "/SurveyView/:text",
-      //   title: "SurveyView",
-      //   translateKey: "nav.SurveyView",
-      //   icon: "singleMenu",
-      //   type: "item",
-      //   authority: [],
-      //   visible: "false",
-      //   subMenu: []
-      // },
+      {
+        key: "Bookinglist",
+        path: "/BookingList",
+        title: "Booking List",
+        translateKey: "nav.Bookinglist",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
     ]
   },
   {
-    key: "surveyor",
+    key: "registrationlist",
     path: "",
     title: "Surveyor",
     translateKey: "nav.surveyor",
@@ -169,17 +169,17 @@ const navigationConfig = [
     authority: [],
     visible: "true",
     subMenu: [
-        {
-          key: "surveyor",
-          path: "/serveyorlist",
-          title: "Surveyor List",
-          translateKey: "nav.surveyor",
-          icon: "singleMenu",
-          type: "collapse",
-          authority: [],
-          visible: "true",
-          subMenu: []
-        },
+        // {
+        //   key: "surveyor",
+        //   path: "/serveyorlist",
+        //   title: "Surveyor List",
+        //   translateKey: "nav.surveyor",
+        //   icon: "singleMenu",
+        //   type: "collapse",
+        //   authority: [],
+        //   visible: "true",
+        //   subMenu: []
+        // },
         {
           key: "registrationlist",
           path: "/registrationlist",
@@ -203,7 +203,167 @@ const navigationConfig = [
         //   subMenu: []
         // },
     ]
-  }
+  },
+  {
+    key: "installer",
+    path: "",
+    title: "Installer",
+    translateKey: "nav.installer",
+    icon: "singleMenu",
+    type: "collapse",
+    authority: [],
+    visible: "true",
+    subMenu: [
+      {
+        key: "installerlist",
+        path: "/installerlist",
+        title: " Installer Registration List",
+        translateKey: "nav.installer",
+        icon: "singleMenu",
+        type: "collapse",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      }
+    ]
+  },
+  {
+    key: "Role Master",
+    path: "",
+    title: "Roles Master",
+    translateKey: "nav.Role",
+    icon: "singleMenu",
+    type: "collapse",
+    authority: [],
+    visible: "true",
+    subMenu: [
+      {
+        key: "addRoles",
+        path: "/addRoles",
+        title: "add Roles",
+        translateKey: "nav.addRoles",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "viewRoles",
+        path: "/viewRoles",
+        title: "Role list",
+        translateKey: "nav.viewRoles",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+
+    ]
+  },
+  {
+    key: "Assign Role",
+    path: "",
+    title: "AssignRole",
+    translateKey: "nav.AssignRole",
+    icon: "singleMenu",
+    type: "collapse",
+    authority: [],
+    visible: "true",
+    subMenu: [
+      {
+        key: "assignRole",
+        path: "/assignRole",
+        title: "Assign Role",
+        translateKey: "nav.assignRole",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "viewAssignRoles",
+        path: "/viewAssignRoles",
+        title: "View Assign Roles",
+        translateKey: "nav.viewAssignRoles",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      }
+    ]
+  },
+  {
+    key: "Assign Rights",
+    path: "",
+    title: "AssignRights",
+    translateKey: "nav.AssignRights",
+    icon: "singleMenu",
+    type: "collapse",
+    authority: [],
+    visible: "true",
+    subMenu: [
+      {
+        key: "addRights",
+        path: "/addRights",
+        title: "addRights",
+        translateKey: "nav.addRights",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "viewRights",
+        path: "/viewRights",
+        title: "View Rights",
+        translateKey: "nav.viewRights",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      }
+    ]
+  },
+  {
+    key: "Masters",
+    path: "",
+    title: "Masters",
+    translateKey: "nav.Masters",
+    icon: "singleMenu",
+    type: "collapse",
+    authority: [],
+    visible: "true",
+    subMenu: [
+      {
+        key: "addPackage",
+        path: "/addPackage",
+        title: "add Package",
+        translateKey: "nav.addPackage",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "viewPackage",
+        path: "/viewPackage",
+        title: "Package list",
+        translateKey: "nav.viewPackage",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+    ]
+  },
   // {
   //   key: "Surveyor",
   //   path: "",

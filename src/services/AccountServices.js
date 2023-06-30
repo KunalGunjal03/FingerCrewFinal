@@ -154,3 +154,21 @@ export async function apiGetSurveyorSkills(data) {
     })
   
   }
+  export async function apiGetpersonalData(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'Installer/GetInstaller',
+        method: 'post',
+        data,
+        
+    })
+  
+  }
+  export async function apiGetInstallerKYCDetails(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'Installer/GetInstallerKYCdet',
+        method: 'post',
+        data,
+        
+    })
+  
+  }

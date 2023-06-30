@@ -212,7 +212,8 @@ const dataSlice = createSlice({
             dob: ''
         
           },
-        
+          status:'',
+          remarks:''
         },
         stepStatus: {
             0: { status: 'pending' },
@@ -229,14 +230,13 @@ const dataSlice = createSlice({
            
         },
           
-        status:'',
-         remarks:''
+        
     
     },
     reducers: {
         setFormData: (state, action) => {
             state.formData.getData = { ...state.formData, ...action.payload }
-
+            // state.formData.status = {...state.formData, ...action.payload }
         },
         setStepStatus: (state) => {
             state.stepStatus = { ...state.stepStatus}
@@ -249,7 +249,7 @@ const dataSlice = createSlice({
         [getForm.fulfilled]: (state, action) => {
             state.formData.getData = action.payload.getData
             // state.stepStatus = state.stepStatus
-            state.status = action.payload
+            state.formData.status = action.payload.status
         },
         [getAddress.fulfilled]:(state,action) =>{
             state.formData.getData = action.payload.getData

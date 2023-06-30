@@ -87,3 +87,10 @@ export async function apiGetreqlistsSurveyor(data) {
         data,
     })
 }
+export async function apiGetlistsInstaller(data) {
+    return ApiService.fetchData({
+        url: COMMANAPILINK + 'Installer/ViewInstaller',
+        method: 'Post',
+        data,
+    })
+}

@@ -14,6 +14,7 @@ export const getServeyList = createAsyncThunk(
     async (params) => {
         try{
             const response = await apiGetSurveList(params)
+            console.log(response)
             return response.data
         }
         catch(error)
@@ -93,22 +94,38 @@ const dataSlice = createSlice({
             state.filterData = action.payload
         },
     },
-    extraReducers: {
-        [getServeyList.fulfilled]: (state, action) => {
+    extraReducers:(builder) => {
+        builder
+        .addCase(getServeyList.fulfilled,(state, action)=>{
             state.SurveyList = action.payload
             state.tableData.totalPages = action.payload.total
             state.loading = false
-        },
-        [getServeyList.pending]: (state) => {
+        })
+        .addCase(getServeyList.pending,(state) =>{
             state.loading = true
-        },
-        [getSurveyStatistic.pending]: (state) => {
+        })
+        .addCase(getSurveyStatistic.pending,(state) =>{
             state.statisticLoading = true
-        },
-        [getSurveyStatistic.fulfilled]: (state, action) => {
+        })
+        .addCase(getSurveyStatistic.fulfilled,(state, action)=>{
             state.statisticData = action.payload
             state.statisticLoading = false
-        },
+        })
+        // [getServeyList.fulfilled]: (state, action) => {
+            // state.SurveyList = action.payload
+            // state.tableData.totalPages = action.payload.total
+            // state.loading = false
+       // },
+        // [getServeyList.pending]: (state) => {
+        //     state.loading = true
+        // },
+        // [getSurveyStatistic.pending]: (state) => {
+        //     state.statisticLoading = true
+        // },
+        // [getSurveyStatistic.fulfilled]: (state, action) => {
+        //     state.statisticData = action.payload
+        //     state.statisticLoading = false
+        // },
     },
 })
 

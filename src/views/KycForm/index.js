@@ -191,7 +191,7 @@ const DetailForm = () => {
           }
             // onNextChange?.(values, 'personalInformation', setSubmitting)
       }
-
+console.log(stepStatus)
     return (
         <Container className="h-full">
             <AdaptableCard className="h-full" bodyClass="h-full">

@@ -29,6 +29,14 @@ import { text } from 'd3-fetch'
 import { verifyDocumentsDetails } from '../store/dataSlice'
 import { HiEye,HiDownload } from 'react-icons/hi'
 import {MdDownload} from 'react-icons/md'
+import Invoice from './Report.pdf'
+import { Document, Page } from "react-pdf";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+import {PDFtoIMG} from 'react-pdf-to-image';
+
+
 // const documentTypes = [
 //     { value: 'ssn', label: 'SSN Certificate', desc: '' },
 //     { value: 'driversLicense', label: 'Drivers License', desc: '' },
@@ -39,9 +47,10 @@ import {MdDownload} from 'react-icons/md'
 const DocumentTypeIcon = ({ type }) => {
     switch (type) {
         case '2':
-            return <NationalIdSvg />
+            return  <DriversLicenseSvg />
+
         case '3':
-            return <DriversLicenseSvg />
+            return <NationalIdSvg />
         default:
             return null
     }
@@ -50,8 +59,17 @@ const DocumentTypeIcon = ({ type }) => {
 
 const DocumentUploadField = (props) => {
     const [selectedImg, setSelectedImg] = useState({})
+    const [numPages, setNumPages] = useState(null);
     const [viewOpen, setViewOpen] = useState(false)
     const { label, name, children, touched, errors, path ,exe } = props
+    console.log(exe)
+    if(exe === "pdf")
+    {
+
+    }
+    else{
+
+    
     const onViewOpen = (img) => {
         setSelectedImg(img)
         setViewOpen(true)
@@ -82,15 +100,76 @@ const DocumentUploadField = (props) => {
     // }
     const FinalPath = COMMANPATH + path + name + exe
     console.log(FinalPath)
+    function onDocumentLoadSuccess({ numPages }) {
+        setNumPages(numPages);
+      }
+    const PDFJS = require("pdfjs-dist/webpack");
+
+    const readFileData = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+        resolve(e.target.result);
+        };
+        reader.onerror = (err) => {
+        reject(err);
+        };
+        reader.readAsDataURL(file);
+    });
+    };
+
+//param: file -> the input file (e.g. event.target.files[0])
+//return: images -> an array of images encoded in base64 
+const convertPdfToImages = async (file) => {
+  const images = [];
+  const data = await readFileData(file);
+  const pdf = await PDFJS.getDocument(data).promise;
+  const canvas = document.createElement("canvas");
+  for (let i = 0; i < pdf.numPages; i++) {
+    const page = await pdf.getPage(i + 1);
+    const viewport = page.getViewport({ scale: 1 });
+    const context = canvas.getContext("2d");
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    await page.render({ canvasContext: context, viewport: viewport }).promise;
+    images.append(canvas.toDataURL());
+  }
+  canvas.remove();
+  return images;
+}
+    // const Img =  convertPdfToImages(Invoice)
+    // console.log(Img)
     return (
         <>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
         <div className="group relative rounded border p-2 flex">
+            
+        {/* <PDFtoIMG file={Invoice}>
+            {({pages}) => {
+                 if (!pages.length) return 'Loading...';
+                return pages.map((page, index)=>
+                    <img key={index} src={page} alt ={''}/>
+                )
+            }}
+        </PDFtoIMG> */}
              <img
                         className="rounded max-h-full max-w-full"
                         src={FinalPath}
                         alt={label}
             />
+            {/* <div className="rounded max-h-full max-w-full"> */}
+            {/* <Document
+            file={Invoice}
+            options={{ workerSrc: {pdfjsWorker} }}
+            onLoadSuccess={onDocumentLoadSuccess}
+            className="rounded max-h-full max-w-full"
+            >
+            {Array.from(new Array(numPages), (el, index) => (
+                <Page key={`page_${index + 1}`} pageNumber={index + 1} className="w-full" />
+            ))}
+            </Document> */}
+            {/* </div> */}
+            
             <div className="absolute inset-2 bg-gray-900/[.7] group-hover:flex hidden text-xl items-center justify-center">
                         <span
                             onClick={() => onViewOpen(FinalPath)}
@@ -105,7 +184,8 @@ const DocumentUploadField = (props) => {
                             <MdDownload />
                         </span>
 
-                    </div>
+            </div>
+            
         </div>
         </div>
         <Dialog
@@ -120,6 +200,8 @@ const DocumentUploadField = (props) => {
                     alt={label}
                 />
         </Dialog>
+
+    
         </>
         // <FormItem
         //     label={label}
@@ -134,6 +216,7 @@ const DocumentUploadField = (props) => {
         //     </Field>
         // </FormItem>
     )
+}
 }
 const documentMapping = {
     
@@ -191,6 +274,7 @@ const UploadDocuments = ({
       return error;
     }
   };
+
   const [dialogIsOpen, setIsOpen] = useState(false)
   const [dialog1IsOpen,setIsOpen1] = useState(false)
   const openNotification = (type,msg) => {
@@ -540,7 +624,7 @@ const validationSchema = Yup.object().shape({
                                          <Field
                                             name = "remark"
                                             component = {Input}
-                                            type = {text}
+                                            type = "text"
                                             placeholder = "Enter rejection remarks here"
                                         />
                                     </FormItem>

@@ -64,7 +64,11 @@ const InsuranceDetails = ({
       return error;
     }
   };
-   
+  const status = {
+       
+    true: 'Yes',
+    false : 'No'
+}
   const [dialogIsOpen, setIsOpen] = useState(false)
   const [dialog1IsOpen,setIsOpen1] = useState(false)
   const openNotification = (type,msg) => {
@@ -246,13 +250,13 @@ console.log(data)
                                         type="text"
                                         name="isInsured"
                                         component={Input}
-                                        value = {data && data.isInsured ? 'Yes' : 'No'}
+                                        value = {data && status[data.isInsured]}
                                         readOnly
                                     />
                                 </FormItem>
-                                
-                                <FormItem
-                                    label="Policy-Expiry-Date"
+                                {status[data.isInsured] === 'Yes' ?(
+                                    <FormItem
+                                    label="Policy Expiry Date"
                                  
                                 >
                                     <Field
@@ -263,6 +267,11 @@ console.log(data)
                                         readOnly
                                     />
                                 </FormItem>
+                                ):(
+                                    <p></p>
+                                )}
+                                
+                                
                                 <div className="flex justify-end gap-2">
                                
                                      <Button
@@ -345,7 +354,7 @@ console.log(data)
                                          <Field
                                             name = "remark"
                                             component = {Input}
-                                            type = {text}
+                                            type = "text"
                                             placeholder = "Enter rejection remarks here"
                                         />
                                     </FormItem>

@@ -222,7 +222,7 @@ const onNext = async(values, setSubmitting) => {
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
-   
+   console.log(data)
     return (
         <>
             <div className="mb-8">
@@ -358,7 +358,7 @@ const onNext = async(values, setSubmitting) => {
                                          <Field
                                             name = "remark"
                                             component = {Input}
-                                            type = {text}
+                                            type = "text"
                                             placeholder = "Enter rejection remarks here"
                                         />
                                     </FormItem>

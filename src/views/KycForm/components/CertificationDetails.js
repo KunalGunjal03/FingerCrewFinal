@@ -35,6 +35,7 @@ import { text } from 'd3-fetch'
 import { useNavigate } from 'react-router-dom'
 import useThemeClass from 'utils/hooks/useThemeClass'
 import { verifyCertificationDetails } from '../store/dataSlice'
+import { MdDownload } from 'react-icons/md'
 import { HiEye } from "react-icons/hi2";
 import {
     flexRender,
@@ -267,6 +268,7 @@ const ActionColumn = ({ row }) => {
 
         setViewOpen(true)
         const imageFileName = COMMANPATH ;
+        console.log(row)
               const imageFilePath = row.cerificate_path;
               const imagefile = row.certification_fileName;
               const imagefileextension =row.certification_extention;
@@ -279,7 +281,26 @@ const ActionColumn = ({ row }) => {
             //    console.log(selectedRow)
         // navigate(`/SurveyView/${row.survey_id}`)
     }
-
+    const onDownload = () =>{
+        const imageFileName = COMMANPATH ;
+        console.log(row)
+              const imageFilePath = row.cerificate_path;
+              const imagefile = row.certification_fileName;
+              const imagefileextension =row.certification_extention;
+                
+               const finalfilepath= imageFileName + imageFilePath + imagefile + imagefileextension;
+        fetch(finalfilepath)
+			.then(response => {
+				response.blob().then(blob => {
+					let url = window.URL.createObjectURL(blob);
+					let a = document.createElement('a');
+					a.href = url;
+					a.download = 'Certificate';
+					a.click();
+				});
+				//window.location.href = response.url;
+		});
+    }
     // const onDelete = () => {
     //     dispatch(toggleDeleteConfirmation(true))
     //     dispatch(setSelectedProduct(row.id))
@@ -292,6 +313,12 @@ const ActionColumn = ({ row }) => {
                 onClick={onView}
             >
                 <HiEye/>
+            </span>
+            <span
+                className={`cursor-pointer p-2 hover:${textTheme}`}
+                onClick={onDownload}
+            >
+                <MdDownload />
             </span>
         </div>
     )
@@ -558,7 +585,7 @@ const onDialogReject = async(status,values)=>{
                                          <Field
                                             name = "remark"
                                             component = {Input}
-                                            type = {text}
+                                            type = "text"
                                             placeholder = "Enter rejection remarks here"
                                         />
                                     </FormItem>

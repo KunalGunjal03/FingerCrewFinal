@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from 'components/template/Header'
-// import SidePanel from 'components/template/SidePanel'
+import SidePanel from 'components/template/SidePanel'
 import Notification from 'components/template/Notification'
 import UserDropdown from 'components/template/UserDropdown'
 import SideNavToggle from 'components/template/SideNavToggle'

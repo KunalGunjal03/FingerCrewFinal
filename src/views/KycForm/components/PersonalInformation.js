@@ -70,7 +70,11 @@ const PersonalInformation = ({
     const formData = useSelector(
         (state) => state.accountDetailForm.data.formData.getData
     )
- 
+    
+    const resp = useSelector(
+        (state) => state.accountDetailForm.data
+    )
+    console.log(resp)
     // const responseData = useSelector(
     //     (state) => state.accountDetailForm.data.formData.responseData
     // )
@@ -216,7 +220,7 @@ const PersonalInformation = ({
         
         
     }
-    const onNext = async(values, setSubmitting) => {
+    const onNext = async() => {
         try{
         
           
@@ -234,7 +238,7 @@ const PersonalInformation = ({
         remark: Yup.string().required('Please enter your rejection remark')
         .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
     })
-    // console.log(disable)
+  
     return (
         <>
             <div className="mb-8">
@@ -247,7 +251,7 @@ const PersonalInformation = ({
                 // validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true)
-                        onNext(values, setSubmitting)
+                        onNext()
 
                     
                 }}
@@ -447,7 +451,7 @@ const PersonalInformation = ({
                                          <Field
                                             name = "remark"
                                             component = {Input}
-                                            type = {text}
+                                            type = "text"
                                             placeholder = "Enter rejection remarks here"
                                         />
                                     </FormItem>

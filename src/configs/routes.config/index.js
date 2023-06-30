@@ -34,6 +34,12 @@ export const protectedRoutes = [
         authority: [],
     },
     {
+        key: 'installerlist',
+        path: '/installerlist',
+        component: React.lazy(() => import('views/lists/InstallerList')),
+        authority: [],
+    },
+    {
         key: 'survey',
         path: '/Survey',
         component: React.lazy(() =>
@@ -45,6 +51,32 @@ export const protectedRoutes = [
         key: 'SurveyView',
         path: '/SurveyView/:Id',
         component: React.lazy(() => import('views/Models/Survey/components/SurveyView')),
+        authority: [],
+    },
+    {
+        key: 'Bookinglist',
+        path: '/BookingList',
+        component: React.lazy(() =>
+            import('views/Models/BookingList')
+        ),
+        authority: [],
+    },
+    {
+        key: 'BookingDetails',
+        path: '/BookingDetails/:Id',
+        component: React.lazy(() => import('views/Models/BookingList/components/BookingView')),
+        authority: [],
+    },
+    {
+        key:'bookinginfo',
+        path:'/bookinginfo',
+        component: React.lazy(() => import ('views/Models/BookingList/components/BookingDetails/BookingTableDetails')),
+        authority: []
+    },
+    {
+        key: 'VerifyInstaller',
+        path: '/VerifyInstaller/:Id',
+        component: React.lazy(() => import('views/KycForms')),
         authority: [],
     },
     // {
@@ -84,5 +116,65 @@ export const protectedRoutes = [
         authority: [],
 
     },
+    {
+        key: 'addRoles',
+        path: '/addRoles',
+        component: React.lazy(() => import('views/Models/Roles/addRoles')),
+        authority: [],
+    },
+    {
+        key: 'viewRoles',
+        path: '/viewRoles',
+        component: React.lazy(() => import('views/Models/Roles/viewRoles')),
+        authority: [],
+    },
+    {
+        key: 'assignRole',
+        path: '/assignRole',
+        component: React.lazy(() => import('views/Models/Roles/assignRole')),
+        authority: [],
+    },
+    {
+        key: 'editRole',
+        path: '/editRole/:Id',
+        component: React.lazy(() => import('views/Models/update')),
+        authority: [],
+    },
+    {
+        key: 'viewAssignRoles',
+        path: '/viewAssignRoles',
+        component: React.lazy(() => import('views/Models/Roles/viewAssignRoles')),
+        authority: [],
+    },
+    {
+        key: 'addRights',
+        path: '/addRights',
+        component: React.lazy(() => import('views/Models/Rights/addRights')),
+        authority: [],
+    },
+    {
+        key: 'viewRights',
+        path: '/viewRights',
+        component: React.lazy(() => import('views/Models/Rights/viewRights')),
+        authority: [],
+    },
+    {
+        key: 'addpackage',
+        path: '/addpackage',
+        component: React.lazy(() => import('views/Models/Package/package/addpackage')),
+        authority: [],
+    },
+    {
+        key: 'viewPackage',
+        path: '/viewPackage',
+        component: React.lazy(() => import('views/Models/Package/package/viewPackage')),
+        authority: [],
+    },
+    {
+        key: 'editPackage',
+        path: '/editPackage/:Id',
+        component: React.lazy(() => import('views/Models/Package/editPackage')),
+        authority: [],
+    }
     
 ]
