@@ -32,63 +32,13 @@ const SurveyorData = ({ data = {} }) =>{
         <Card>
             <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto">
                 <div className="flex xl:flex-col items-center gap-4 mt-4">
-                    <h5 className='flex xl:flex-col items-left '>Surveyor</h5>
+                    <h5 className='flex xl:flex-col items-left '>Surveyor Information</h5>
                     <Avatar size={90} shape="circle" src={0} />
                     <h4 className="font-bold">{"Surveyor name"}</h4>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-7 gap-x-4 mt-8">
-                    <CustomerInfoField title="Email" value={data.email} />
-                    <CustomerInfoField
-                        title="Phone"
-                        value={0}
-                    />
-                    <CustomerInfoField
-                        title="Location"
-                        value={0}
-                    />
-                    <CustomerInfoField
-                        title="Date of birth"
-                        value={0}
-                    />
-                    <CustomerInfoField
-                        title="Title"
-                        value={0}
-                    />
-                    <div className="mb-7">
-                        <span>Social</span>
-                        <div className="flex mt-4">
-                            <Button
-                                className="mr-2"
-                                shape="circle"
-                                size="sm"
-                                icon={
-                                    <FaFacebookF className="text-[#1773ea]" />
-                                }
-                            />
-                            <Button
-                                className="mr-2"
-                                shape="circle"
-                                size="sm"
-                                icon={<FaTwitter className="text-[#1da1f3]" />}
-                            />
-                            <Button
-                                className="mr-2"
-                                shape="circle"
-                                size="sm"
-                                icon={
-                                    <FaLinkedinIn className="text-[#0077b5]" />
-                                }
-                            />
-                            <Button
-                                className="mr-2"
-                                shape="circle"
-                                size="sm"
-                                icon={
-                                    <FaPinterestP className="text-[#df0018]" />
-                                }
-                            />
-                        </div>
-                    </div>
+                  
+                    
                 </div>
             </div>
         </Card>

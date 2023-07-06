@@ -88,6 +88,9 @@ const ActionIconType = ({ type }) => {
 
         case 'Rejected':
             return <HiOutlinePencil />
+
+        case 'Under Process':
+                return <HiEye />
         default:
             return null
     }
@@ -211,6 +214,7 @@ const SurveyorTable = () => {
         Rejected: 'bg-red-500',
         Verified : 'bg-emerald-500',
         Pending: 'bg-yellow-400',
+        "Under Process": 'bg-yellow-400',
     }
     const columns = useMemo(
         () => [

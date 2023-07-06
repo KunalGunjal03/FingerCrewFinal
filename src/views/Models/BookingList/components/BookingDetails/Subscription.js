@@ -22,7 +22,7 @@ const Subscription = () => {
 
     return (
         <div className="mb-8">
-            <h6 className="mb-4">Subscription</h6>
+            {/* <h6 className="mb-4">Subscription</h6> */}
             {/* {data.map((sub) => ( */}
                 <Card  className="mb-4" bordered>
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">

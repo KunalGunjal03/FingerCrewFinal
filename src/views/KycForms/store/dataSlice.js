@@ -5,14 +5,15 @@ import { apiGetpersonalData } from 'services/AccountServices'
 // import { apiGetSurveyorSkills } from 'services/AccountServices'
 // import { apiGetPreviousExp } from 'services/AccountServices'
 // import {apiGetCertificationDetails} from 'services/AccountServices'
- //import { apiGetBankDetails } from 'services/AccountServices'
+ import { apiGetBanksDetails } from 'services/AccountServices'
 // import { apiGetInsuredDetails } from 'services/AccountServices'
 import { apiGetInstallerKYCDetails } from 'services/AccountServices'
 // import { apiGetBackgroundDetails } from 'services/AccountServices'
-// import { apiGetUploadDetails } from 'services/AccountServices'
-import { VerifyPersonalDetails } from 'services/VerificationServices'
-import { VerifyKYCDetails } from 'services/VerificationServices'
-//import { VerifyBankDetails } from 'services/VerificationServices'
+import { apiGetInstallerUploadDetails } from 'services/AccountServices'
+// import { VerifyPersonalDetails } from 'services/VerificationServices'
+// import { VerifyKYCDetails } from 'services/VerificationServices'
+// import { VerifyBankDetails } from 'services/VerificationServices'
+//import { verifyDocumentsDetails } from 'services/VerificationServices'
 export const getForm = createAsyncThunk(
     'accountDetailForm/data/getForm',
     async (data) => {
@@ -59,14 +60,14 @@ export const getForm = createAsyncThunk(
 //         return response.data
 //     }
 // )
-// export const getBank = createAsyncThunk(
-//     'accountDetailForm/data/getForm',
-//     async (data) => {
-//         const response = await apiGetBankDetails(data)
-//         console.log(response)
-//         return response.data
-//     }
-// )
+export const getBank = createAsyncThunk(
+    'accountDetailForm/data/getForm',
+    async (data) => {
+        const response = await apiGetBanksDetails(data)
+        console.log(response)
+        return response.data
+    }
+)
 // export const getInsured = createAsyncThunk(
 //     'accountDetailForm/data/getForm',
 //     async (data) => {
@@ -92,44 +93,44 @@ export const getForm = createAsyncThunk(
 //     }
 // )
 
-// export const getUpload = createAsyncThunk(
-//     'accountDetailForm/data/getForm',
+export const getDocuments = createAsyncThunk(
+    'accountDetailForm/data/getForm',
+    async (data) => {
+        const response = await apiGetInstallerUploadDetails(data)
+        console.log(response)
+        return response.data
+    }
+)
+// export const verifyPersonalDetails = createAsyncThunk(
+//     'accountDetailForm/data/getStatus',
 //     async (data) => {
-//         const response = await apiGetUploadDetails(data)
-//         console.log(response)
-//         return response.data
+//         try{
+//         const response = await VerifyPersonalDetails(data)
+//         console.log( response)
+//         return response
 //     }
+//     catch(error)
+//     {
+//         console.error(error)
+//         return error;
+//     }
+// }
 // )
-export const verifyPersonalDetails = createAsyncThunk(
-    'accountDetailForm/data/getStatus',
-    async (data) => {
-        try{
-        const response = await VerifyPersonalDetails(data)
-        console.log( response)
-        return response
-    }
-    catch(error)
-    {
-        console.error(error)
-        return error;
-    }
-}
-)
-export const verifyKYCDetails = createAsyncThunk(
-    'accountDetailForm/data/getStatus',
-    async (data) => {
-        try{
-        const response = await VerifyKYCDetails(data)
-        console.log( response)
-        return response
-    }
-    catch(error)
-    {
-        console.error(error)
-        return error;
-    }
-}
-)
+// export const verifyKYCDetails = createAsyncThunk(
+//     'accountDetailForm/data/getStatus',
+//     async (data) => {
+//         try{
+//         const response = await VerifyKYCDetails(data)
+//         console.log( response)
+//         return response
+//     }
+//     catch(error)
+//     {
+//         console.error(error)
+//         return error;
+//     }
+// }
+// )
 // export const verifyBankDetails = createAsyncThunk(
 //     'accountDetailForm/data/getStatus',
 //     async (data) => {
@@ -144,6 +145,14 @@ export const verifyKYCDetails = createAsyncThunk(
 //         return error;
 //     }
 // }
+// )
+// export const verifyDocumentsDetails = createAsyncThunk(
+//     'accountDetailForm/data/getStatus',
+//     async (data) => {
+//         const response = await VerifyDocumentsDetails(data)
+//         console.log( response)
+//         return response
+//     }
 // )
 
 const dataSlice = createSlice({
@@ -187,9 +196,9 @@ const dataSlice = createSlice({
         },
         stepStatus: {
             0: { status: 'pending' },
-              1: { status: 'pending' },
-            // 2: { status: 'pending' },
-            // 3: { status: 'pending' },
+             1: { status: 'pending' },
+             2: { status: 'pending' },
+              3: { status: 'pending' },
             // 4: { status: 'pending' },
             // 5: { status: 'pending' },
             // 6: { status: 'pending' },

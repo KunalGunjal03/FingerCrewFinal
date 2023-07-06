@@ -28,7 +28,7 @@ import { HiEye, HiTrash } from 'react-icons/hi'
 import { Dialog, Upload } from 'components/ui'
 import * as Yup from 'yup'
 import { text } from 'd3-fetch'
-import { verifyKYCDetails } from '../store/dataSlice'
+//import { verifyKYCDetails } from '../store/dataSlice'
 //import DefaultImg from "../../../../public/img/default.png"
 //const { SingleValue } = components
 
@@ -144,14 +144,14 @@ const fetchData = async (requestParam) => {
     console.log(requestParam)
       const response = await dispatch(getKYC(requestParam));
       const imageFileName = COMMANPATH ;
-      console.log(response.payload.getData)
-      const data = response.payload.getData
+      console.log(response.payload.getdata)
+      const data = response.payload.getdata
       console.log(data)
       const imageFilePath = data.installer_photo_path;
-    //   const imagefile = data.installer_file_name;
-    //   const imagefileextension = data.installer_file_extension;
+     const imagefile = data.installer_file_name;
+     const imagefileextension = data.installer_file_extension;
 
-       const finalfilepath= imageFileName + imageFilePath;
+       const finalfilepath= imageFileName + imageFilePath + imagefile + imagefileextension;
        console.log(finalfilepath)
        setImageUrl(finalfilepath)
      console.log(finalfilepath)
@@ -183,164 +183,166 @@ const fetchData = async (requestParam) => {
 //       return error;
 //     }
 //   };
-const [dialogIsOpen, setIsOpen] = useState(false)
-const [dialog1IsOpen,setIsOpen1] = useState(false)
+// const [dialogIsOpen, setIsOpen] = useState(false)
+// const [dialog1IsOpen,setIsOpen1] = useState(false)
 const [selectedImg, setSelectedImg] = useState({})
     const [viewOpen, setViewOpen] = useState(false)
-const openNotification = (type,msg) => {
-    toast.push(
-        <Notification
-            title={msg}
-            type={type}
+// const openNotification = (type,msg) => {
+//     toast.push(
+//         <Notification
+//             title={msg}
+//             type={type}
             
-        />,{
-            placement: 'top-end'
-        })
+//         />,{
+//             placement: 'top-end'
+//         })
             
-       
-    
-}
-const openDialog = (e) => {
-    setIsOpen(true)
-
-}
-const OpenRejectionDialog = (e)=>{
-    setIsOpen1(true)
-}
 const onDialogClose = (e) => {
-   console.log(e)
-//    OpenRejectionDialog()
-   
-    setIsOpen(false)
-    // setRejectionRemarkVisible(true)
-}
-const onDialog1Close = (e) => {
-    setIsOpen(true)
-     setIsOpen1(false)
-     // setRejectionRemarkVisible(true)
- }
-// let isVerified = false;
-const onDialogOk = async(status,values)=>{
-
-  var verified = {}
-//   setIsOpen(true)
-//   setIsOpen1(true)
+}     
     
-    try
-    {
-        // if(status === "Reject")
-        // {
-            verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
-            console.log(verified)
-           const  response = await dispatch(verifyKYCDetails( verified));
+// }
+// const openDialog = (e) => {
+//     setIsOpen(true)
+
+// }
+// const OpenRejectionDialog = (e)=>{
+//     setIsOpen1(true)
+// }
+// const onDialogClose = (e) => {
+//    console.log(e)
+// //    OpenRejectionDialog()
+   
+//     setIsOpen(false)
+//     // setRejectionRemarkVisible(true)
+// }
+// const onDialog1Close = (e) => {
+//     setIsOpen(true)
+//      setIsOpen1(false)
+//      // setRejectionRemarkVisible(true)
+//  }
+// // let isVerified = false;
+// const onDialogOk = async(status,values)=>{
+
+//   var verified = {}
+// //   setIsOpen(true)
+// //   setIsOpen1(true)
+    
+//     try
+//     {
+//         // if(status === "Reject")
+//         // {
+//             verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+//             console.log(verified)
+//            const  response = await dispatch(verifyKYCDetails( verified));
             
-        //     // const response =  VerifyPersonalDetails(verified)
-            console.log(response.payload)
-            const resp = response.payload
-        //     // if(response)
-        //     // {
-                openNotification('success',resp.remarks)
-                setIsOpen(false)
-                setIsOpen1(false)
-                setTimeout(() => {
-                    onNextChange?.('personalInformation')
-                 }, 500)
+//         //     // const response =  VerifyPersonalDetails(verified)
+//             console.log(response.payload)
+//             const resp = response.payload
+//         //     // if(response)
+//         //     // {
+//                 openNotification('success',resp.remarks)
+//                 setIsOpen(false)
+//                 setIsOpen1(false)
+//                 setTimeout(() => {
+//                     onNextChange?.('personalInformation')
+//                  }, 500)
                
  
-        // }
-        // else if(status === "Accept")
-        // {
-        //     verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
-        //     console.log(verified)
-        //     dispatch(verifyPersonalDetails( verified));
+//         // }
+//         // else if(status === "Accept")
+//         // {
+//         //     verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+//         //     console.log(verified)
+//         //     dispatch(verifyPersonalDetails( verified));
             
-        //     // const response =  VerifyPersonalDetails(verified)
-        //     // console.log(response)
-        //     // if(response)
-        //     // {
-        //         openNotification('success')
-        //         setIsOpen(false)
-        //         setIsOpen1(false)
-        //         setTimeout(() => {
-        //             onNextChange?.('personalInformation')
-        //          }, 500)
-        //         setIsvalid(true)
-        // }
-        //           // }
-    }
-    catch(error)
-    {
-        console.error(error)
-        return error;
-    }
-      // onNextChange?.(values, 'personalInformation', setSubmitting)
-}
+//         //     // const response =  VerifyPersonalDetails(verified)
+//         //     // console.log(response)
+//         //     // if(response)
+//         //     // {
+//         //         openNotification('success')
+//         //         setIsOpen(false)
+//         //         setIsOpen1(false)
+//         //         setTimeout(() => {
+//         //             onNextChange?.('personalInformation')
+//         //          }, 500)
+//         //         setIsvalid(true)
+//         // }
+//         //           // }
+//     }
+//     catch(error)
+//     {
+//         console.error(error)
+//         return error;
+//     }
+//       // onNextChange?.(values, 'personalInformation', setSubmitting)
+// }
 
-const onDialogReject = async(status,values)=>{
-   try
-   {
-    console.log(status)
-    console.log(values)
-   const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "0",rejection_remarks: values.remark}
-    console.log(verified)
-   const  response = await dispatch(verifyKYCDetails( verified));
+// const onDialogReject = async(status,values)=>{
+//    try
+//    {
+//     console.log(status)
+//     console.log(values)
+//    const verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "0",rejection_remarks: values.remark}
+//     console.log(verified)
+//    const  response = await dispatch(verifyKYCDetails( verified));
     
-//     // const response =  VerifyPersonalDetails(verified)
-    console.log(response.payload)
-    const resp = response.payload
-//     // if(response)
-//     // {
-        openNotification('danger',resp.remarks)
-        setIsOpen(false)
-        setIsOpen1(false)
-        setTimeout(() => {
-            onNextChange?.('addressInformation')
-         }, 500)
+// //     // const response =  VerifyPersonalDetails(verified)
+//     console.log(response.payload)
+//     const resp = response.payload
+// //     // if(response)
+// //     // {
+//         openNotification('danger',resp.remarks)
+//         setIsOpen(false)
+//         setIsOpen1(false)
+//         setTimeout(() => {
+//             onNextChange?.('addressInformation')
+//          }, 500)
         
-   }
-   catch(error)
-   {
-    console.error(error)
-    return error
-   }
+//    }
+//    catch(error)
+//    {
+//     console.error(error)
+//     return error
+//    }
    
    
     
     
     
-}
+// }
 const onNext = async(values, setSubmitting) => {
-    try{
+    onNextChange?.(values, 'KYCForm', setSubmitting)
+    // try{
     
       
-        openDialog()
+    //     openDialog()
       
         
-    }
-    catch(error)
-    {
-        console.log(error)
-    }
+    // }
+    // catch(error)
+    // {
+    //     console.log(error)
+    // }
     
 }
 const formData = useSelector(
     (state) => state.accountDetailForm.data.formData.getData
 )
-const validationSchema = Yup.object().shape({
-    remark: Yup.string().required('Please enter your rejection remark')
-    .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
-})
+// const validationSchema = Yup.object().shape({
+//     remark: Yup.string().required('Please enter your rejection remark')
+//     .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
+// })
 const onViewOpen = (img) => {
     setSelectedImg(img)
     setViewOpen(true)
 }
 const onImgDialogClose = () => {
     setViewOpen(false)
-    setTimeout(() => {
-        setSelectedImg({})
-    }, 300)
+    // setTimeout(() => {
+    //     setSelectedImg({})
+    // }, 300)
 }
-console.log(data)
+//console.log(data)
 return (
     <>
         <div className="mb-8">
@@ -408,13 +410,12 @@ return (
                                 </div>
                                
                                <div className="flex justify-end gap-2">
-                                    <Button
-                                    // loading={isSubmitting}
-                                    variant="solid"
-                                    type="submit"
-                                    icon={<FiCheckCircle />}
+                               <Button
+                                         loading={isSubmitting}
+                                        variant="solid"
+                                        type="submit"
                                     >
-                                    Validate
+                                    Next
                                     </Button>
                                 </div>
                             </div>
@@ -426,7 +427,7 @@ return (
                 )
             }}
         </Formik>
-        <Dialog
+        {/* <Dialog
                 isOpen={dialogIsOpen}
                 onClose={onDialogClose}
                 onRequestClose={onDialogClose}
@@ -451,8 +452,8 @@ return (
                     </div>
                 </div>
 
-            </Dialog>
-            <Dialog
+            </Dialog> */}
+            {/* <Dialog
                 isOpen={dialog1IsOpen}
                 onClose={onDialog1Close}
                 onRequestClose={onDialog1Close}
@@ -461,7 +462,7 @@ return (
                     <h5 className="mb-4">KYC Details Verification</h5>
                     <div className="max-h-96 overflow-y-auto px-2 ">
                             {/* <p> Enter Rejection remarks</p> */}
-                        <Formik
+                        {/* <Formik
                         initialValues={{
                             remark: ''
                             
@@ -506,7 +507,7 @@ return (
                     </div>
                     
                 </div>
-            </Dialog>
+            </Dialog> */} 
             <Dialog
                 isOpen={viewOpen}
                 onClose={onImgDialogClose}

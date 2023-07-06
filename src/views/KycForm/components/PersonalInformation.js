@@ -20,6 +20,7 @@ import * as Yup from 'yup'
 import { verifyPersonalDetails } from '../store/dataSlice'
 
 import { text } from 'd3-fetch'
+import { FaBullseye } from 'react-icons/fa'
 
 const PersonalInformation = ({
     data = {
@@ -368,11 +369,11 @@ const PersonalInformation = ({
                                 </div>
                                 <div className="flex justify-end gap-2">
                                     <Button
-                                    // loading={isSubmitting}
+                                    // loading={isSubmit
                                     variant="solid"
                                     type="submit"
                                     icon={<FiCheckCircle />}
-                                    // disable = { disable }
+                                    disabled = {false}
                                     >
                                     Validate
                                     </Button>

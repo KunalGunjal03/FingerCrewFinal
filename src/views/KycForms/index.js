@@ -14,6 +14,10 @@ const PersonalInformation = lazy(() =>
     import('./components/PersonalInformation')
 )
  const KYCForm = lazy(() => import('./components/KYCForm'))
+ const BankDetails = lazy(() =>
+     import('./components/BankDetails')
+  )
+  const UploadDocuments = lazy(() => import ('./components/UploadDocuments'))
 // const AddressDetails = lazy(() => import('./components/AddressDetails'))
 // const EducationalQualificationDetails = lazy(() =>
 //     import('./components/EducationalQualificationDetails')
@@ -27,9 +31,7 @@ const PersonalInformation = lazy(() =>
 
 // const Skills = lazy(() => import ('./components/Skills'))
 // const UploadDocuments = lazy(() => import ('./components/UploadDocuments'))
-// const BankDetails = lazy(() =>
-//      import('./components/BankDetails')
-//  )
+
 //  const BackgroundCheckDetails = lazy (()=> import('./components/BackgroundCheckDetails') )
 //  const InsuranceDetails = lazy(()=> import ('./components/InsuranceDetails'))
 
@@ -117,6 +119,22 @@ const DetailForm = () => {
                                     currentStepStatus={currentStepStatus}
                                 />
                             )}
+                              {currentStep === 2 && (
+                                <BankDetails
+                                    data={formData}
+                                    onNextChange={handleNextChange}
+                                    onBackChange={handleBackChange}
+                                    currentStepStatus={currentStepStatus}
+                                />
+                              )}
+                               {currentStep === 3 && (
+                                <UploadDocuments
+                                    data={formData}
+                                    onNextChange={handleNextChange}
+                                    onBackChange={handleBackChange}
+                                    currentStepStatus={currentStepStatus}
+                                />
+                            )} 
                             {/*currentStep === 2 && (
                                 <AddressDetails
                                     data={formData}

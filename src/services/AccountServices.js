@@ -172,3 +172,21 @@ export async function apiGetSurveyorSkills(data) {
     })
   
   }
+  export async function apiGetBanksDetails(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'InstallerDetailsDisplay/getBankDetails',
+        method: 'post',
+        data,
+        
+    })
+  
+  }
+  export async function apiGetInstallerUploadDetails(data) {
+    return ApiService.fetchData({
+        url:  COMMANAPILINK + 'InstallerDetailsDisplay/getInstallerDocDetails',
+        method: 'post',
+        data,
+        
+    })
+  
+  }

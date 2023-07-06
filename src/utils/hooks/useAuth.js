@@ -20,7 +20,7 @@ function useAuth() {
     const signIn = async (values) => {
         try {
             const resp = await apiSignIn(values)
-
+            console.log(resp)
             if (resp.data) {
                 if(resp.data.status === "Failed")
                 {

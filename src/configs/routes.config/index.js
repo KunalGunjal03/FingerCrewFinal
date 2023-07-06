@@ -74,11 +74,25 @@ export const protectedRoutes = [
         authority: []
     },
     {
+        key:'surveydetails',
+        path:'/surveydetails/:text',
+        component: React.lazy(() => import ('views/Models/BookingList/components/BookingDetails/SurveyImages')),
+        authority: []
+    },
+    {
+        key:'installerinfo',
+        path:'/installerinfo',
+        component: React.lazy(() => import ('views/Models/BookingList/components/BookingDetails/InstallerInfo')),
+        authority: []
+    },
+    {
         key: 'VerifyInstaller',
         path: '/VerifyInstaller/:Id',
         component: React.lazy(() => import('views/KycForms')),
         authority: [],
     },
+   
+    
     // {
     //     key: 'SurveyorInfo',
     //     path: '/SurveyorInfo',

@@ -9,7 +9,7 @@ export const getreqSurveyor = createAsyncThunk(
     async (data) => {
         try{
            const response = await apiGetreqlistsSurveyor(data)
-           console.log(response.data)
+           console.log(response)
             return response.data
         } 
         catch(error)

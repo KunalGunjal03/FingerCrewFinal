@@ -16,7 +16,7 @@ import { useLocation } from 'react-router-dom'
 import {FiCheckCircle} from 'react-icons/fi'
 
 import * as Yup from 'yup'
-import { verifyPersonalDetails } from '../store/dataSlice'
+//import { verifyPersonalDetails } from '../store/dataSlice'
 
 import { text } from 'd3-fetch'
 
@@ -69,6 +69,11 @@ const PersonalInformation = ({
         (state) => state.accountDetailForm.data.formData.getData
     )
     console.log(formData)
+    const resp = useSelector(
+        (state) => state.accountDetailForm.data
+    )
+    console.log(resp)
+   
  
     // const responseData = useSelector(
     //     (state) => state.accountDetailForm.data.formData.responseData
@@ -90,149 +95,151 @@ const PersonalInformation = ({
     //         console.log(error)
     //     }
     // }
-    const [dialogIsOpen, setIsOpen] = useState(false)
-    const [dialog1IsOpen,setIsOpen1] = useState(false)
-    const openNotification = (type,msg) => {
-        toast.push(
-            <Notification
-                title={msg}
-                type={type}
+    // const [dialogIsOpen, setIsOpen] = useState(false)
+    // const [dialog1IsOpen,setIsOpen1] = useState(false)
+    // const openNotification = (type,msg) => {
+    //     toast.push(
+    //         <Notification
+    //             title={msg}
+    //             type={type}
                 
-            />,{
-                placement: 'top-end'
-            })
+    //         />,{
+    //             placement: 'top-end'
+    //         })
                 
            
         
-    }
-    const openDialog = (e) => {
-        setIsOpen(true)
+    // }
+    // const openDialog = (e) => {
+    //     setIsOpen(true)
 
-    }
-    const OpenRejectionDialog = (e)=>{
-        setIsOpen1(true)
-    }
-    const onDialogClose = (e) => {
-       console.log(e)
-    //    OpenRejectionDialog()
-       setIsvalid(false)
-        setIsOpen(false)
-        // setRejectionRemarkVisible(true)
-    }
-    const onDialog1Close = (e) => {
-        setIsOpen(true)
-         setIsOpen1(false)
-         // setRejectionRemarkVisible(true)
-     }
-    // let isVerified = false;
-    const onDialogOk = async(status,values)=>{
+    // }
+    // const OpenRejectionDialog = (e)=>{
+    //     setIsOpen1(true)
+    // }
+    // const onDialogClose = (e) => {
+    //    console.log(e)
+    // //    OpenRejectionDialog()
+    //    setIsvalid(false)
+    //     setIsOpen(false)
+    //     // setRejectionRemarkVisible(true)
+    // }
+    // const onDialog1Close = (e) => {
+    //     setIsOpen(true)
+    //      setIsOpen1(false)
+    //      // setRejectionRemarkVisible(true)
+    //  }
+    // // let isVerified = false;
+    // const onDialogOk = async(status,values)=>{
     
-      var verified = {}
-    //   setIsOpen(true)
-    //   setIsOpen1(true)
+    //   var verified = {}
+    // //   setIsOpen(true)
+    // //   setIsOpen1(true)
         
-        try
-        {
-            // if(status === "Reject")
-            // {
-                verified = {installer_master_id : formData.installer_master_id,is_verified : "1",rejection_remarks: ''}
-                console.log(verified)
-               const  response = await dispatch(verifyPersonalDetails( verified));
+    //     try
+    //     {
+    //         // if(status === "Reject")
+    //         // {
+    //             verified = {installer_master_id : formData.installer_master_id,is_verified : "1",rejection_remarks: ''}
+    //             console.log(verified)
+    //            const  response = await dispatch(verifyPersonalDetails( verified));
                 
-            //     // const response =  VerifyPersonalDetails(verified)
-                console.log(response.payload)
-                const resp = response.payload
-            //     // if(response)
-            //     // {
-                    openNotification('success',resp.remarks)
-                    setIsOpen(false)
-                    setIsOpen1(false)
-                    // setDisable(true)
-                    setTimeout(() => {
-                        onNextChange?.('personalInformation')
-                     }, 500)
-                    setIsvalid(true)
+    //         //     // const response =  VerifyPersonalDetails(verified)
+    //             console.log(response.payload)
+    //             const resp = response.payload
+    //         //     // if(response)
+    //         //     // {
+    //                 openNotification('success',resp.remarks)
+    //                 setIsOpen(false)
+    //                 setIsOpen1(false)
+    //                 // setDisable(true)
+    //                 setTimeout(() => {
+    //                     onNextChange?.('personalInformation')
+    //                  }, 500)
+    //                 setIsvalid(true)
      
-            // }
-            // else if(status === "Accept")
-            // {
-            //     verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
-            //     console.log(verified)
-            //     dispatch(verifyPersonalDetails( verified));
+    //         // }
+    //         // else if(status === "Accept")
+    //         // {
+    //         //     verified = {surveyor_master_id : formData.surveyor_master_id,is_verified : "1",rejection_remarks: ''}
+    //         //     console.log(verified)
+    //         //     dispatch(verifyPersonalDetails( verified));
                 
-            //     // const response =  VerifyPersonalDetails(verified)
-            //     // console.log(response)
-            //     // if(response)
-            //     // {
-            //         openNotification('success')
-            //         setIsOpen(false)
-            //         setIsOpen1(false)
-            //         setTimeout(() => {
-            //             onNextChange?.('personalInformation')
-            //          }, 500)
-            //         setIsvalid(true)
-            // }
-            //           // }
-        }
-        catch(error)
-        {
-            console.error(error)
-            return error;
-        }
-          // onNextChange?.(values, 'personalInformation', setSubmitting)
-    }
+    //         //     // const response =  VerifyPersonalDetails(verified)
+    //         //     // console.log(response)
+    //         //     // if(response)
+    //         //     // {
+    //         //         openNotification('success')
+    //         //         setIsOpen(false)
+    //         //         setIsOpen1(false)
+    //         //         setTimeout(() => {
+    //         //             onNextChange?.('personalInformation')
+    //         //          }, 500)
+    //         //         setIsvalid(true)
+    //         // }
+    //         //           // }
+    //     }
+    //     catch(error)
+    //     {
+    //         console.error(error)
+    //         return error;
+    //     }
+    //       // onNextChange?.(values, 'personalInformation', setSubmitting)
+    // }
 
-    const onDialogReject = async(status,values)=>{
-       try
-       {
-        console.log(status)
-        console.log(values)
-       const verified = {installer_master_id : formData.installer_master_id,is_verified : "0",rejection_remarks: values.remark}
-        console.log(verified)
-       const  response = await dispatch(verifyPersonalDetails( verified));
+    // const onDialogReject = async(status,values)=>{
+    //    try
+    //    {
+    //     console.log(status)
+    //     console.log(values)
+    //    const verified = {installer_master_id : formData.installer_master_id,is_verified : "0",rejection_remarks: values.remark}
+    //     console.log(verified)
+    //    const  response = await dispatch(verifyPersonalDetails( verified));
         
-    //     // const response =  VerifyPersonalDetails(verified)
-        console.log(response.payload)
-        const resp = response.payload
-    //     // if(response)
-    //     // {
-            openNotification('danger',resp.remarks)
-            setIsOpen(false)
-            setIsOpen1(false)
-            setTimeout(() => {
-                onNextChange?.('personalInformation')
-             }, 500)
-            setIsvalid(true)
-       }
-       catch(error)
-       {
-        console.error(error)
-        return error
-       }
+    // //     // const response =  VerifyPersonalDetails(verified)
+    //     console.log(response.payload)
+    //     const resp = response.payload
+    // //     // if(response)
+    // //     // {
+    //         openNotification('danger',resp.remarks)
+    //         setIsOpen(false)
+    //         setIsOpen1(false)
+    //         setTimeout(() => {
+    //             onNextChange?.('personalInformation')
+    //          }, 500)
+    //         setIsvalid(true)
+    //    }
+    //    catch(error)
+    //    {
+    //     console.error(error)
+    //     return error
+    //    }
        
        
         
         
         
-    }
-    const onNext = async(values, setSubmitting) => {
-        try{
+    // }
+    const onNext = (values, setSubmitting) => {
+        onNextChange?.(values, 'personalInformation', setSubmitting)
+    
+        // try{
         
           
-            openDialog()
+        //     openDialog()
           
             
-        }
-        catch(error)
-        {
-            console.log(error)
-        }
+        // }
+        // catch(error)
+        // {
+        //     console.log(error)
+        // }
         
     }
-    const validationSchema = Yup.object().shape({
-        remark: Yup.string().required('Please enter your rejection remark')
-        .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
-    })
+    // const validationSchema = Yup.object().shape({
+    //     remark: Yup.string().required('Please enter your rejection remark')
+    //     .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
+    // })
     // console.log(disable)
     return (
         <>
@@ -246,6 +253,7 @@ const PersonalInformation = ({
                 // validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(true)
+                    
                         onNext(values, setSubmitting)
 
                     
@@ -269,7 +277,7 @@ const PersonalInformation = ({
                                             type="text"
                                             name="salutation"
                                             component={Input}
-                                            value = {formData && formData.salutation} 
+                                            value = {data && data.salutation} 
                                             readOnly
                                         />
                                 </FormItem>
@@ -281,7 +289,7 @@ const PersonalInformation = ({
                                         type="text"
                                         name="installer_name"
                                         component={Input}
-                                        value = {formData && formData.installer_name}
+                                        value = {data && data.installer_name}
                                         readOnly
                                     />
                                 </FormItem>
@@ -295,7 +303,7 @@ const PersonalInformation = ({
                                         type="text"
                                         name="installer_company"
                                         component={Input}
-                                        value = {formData && formData .installer_company} 
+                                        value = {data && data.installer_company} 
                                         readOnly
                                     />
                                 </FormItem>
@@ -307,7 +315,7 @@ const PersonalInformation = ({
                                         type="text"
                                         name="installer_email_id"
                                         component={Input}
-                                        value = {formData && formData.installer_email_id} 
+                                        value = {data && data.installer_email_id} 
                                         readOnly
                                     />
                                 </FormItem>
@@ -322,7 +330,7 @@ const PersonalInformation = ({
                                             type="text"
                                             name="installer_contact_number"
                                             component={Input}
-                                            value = {formData  && formData .installer_contact_number} 
+                                            value = {data  && data.installer_contact_number} 
                                             readOnly
                                            />
                                        
@@ -334,7 +342,7 @@ const PersonalInformation = ({
                                         <Field name="installer_dob" 
                                          type="text"
                                          component={Input}
-                                         value = {formData  && formData.installer_dob}
+                                         value = {data && data.installer_dob}
                                          readOnly >
                                         </Field>
                                             
@@ -376,14 +384,14 @@ const PersonalInformation = ({
                                     
                                 </div> */}
                                 <div className="flex justify-end gap-2">
-                                    <Button
-                                    // loading={isSubmitting}
-                                    variant="solid"
-                                    type="submit"
-                                    icon={<FiCheckCircle />}
-                                    // disable = { disable }
+                                <Button
+                                        loading={isSubmitting}
+                                        variant="solid"
+                                        type="submit"
                                     >
-                                    Validate
+                                         {currentStepStatus === 'complete'
+                                            ? 'Save'
+                                            : 'Next'}
                                     </Button>
                                 </div>
                                 </div>
@@ -404,7 +412,7 @@ const PersonalInformation = ({
                     )
                 }}
             </Formik>
-            <Dialog
+            {/* <Dialog
                 isOpen={dialogIsOpen}
                 onClose={onDialogClose}
                 onRequestClose={onDialogClose}
@@ -439,7 +447,7 @@ const PersonalInformation = ({
                     <h5 className="mb-4">Personal Details Verification</h5>
                     <div className="max-h-96 overflow-y-auto px-2 ">
                             {/* <p> Enter Rejection remarks</p> */}
-                        <Formik
+                        {/* <Formik
                         initialValues={{
                             remark: ''
                             
@@ -485,7 +493,7 @@ const PersonalInformation = ({
                     </div>
                     
                 </div>
-            </Dialog>
+            </Dialog> */} 
         </>
     )
 }

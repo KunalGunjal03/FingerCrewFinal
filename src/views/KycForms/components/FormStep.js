@@ -10,8 +10,8 @@ import { BiCaretRight } from "react-icons/bi";
 const steps = [
     { label: 'Personal Information', value: 0},
      { label: 'KYCForm', value: 1 },
-    // { label: 'Address Details', value: 2 },
-    // { label: 'Qualification Details', value: 3 },
+     { label: 'Bank Details', value: 2 },
+     { label: 'Uploaded Documents', value: 3 },
     // { label:'Certification Details',value: 4},
     // { label:'Experience Details',value:5},
     // {label:'Skills',value:6},
@@ -27,6 +27,7 @@ const FormStep = ({ currentStep, currentStepStatus, stepStatus }) => {
     const dispatch = useDispatch()
 
     const onStepChange = (step) => {
+        console.log(step)
         const selectedStepStatus = stepStatus[step].status
 
         dispatch(setStepStatus('complete'))

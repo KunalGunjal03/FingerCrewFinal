@@ -190,7 +190,7 @@ const BookingTable = () =>{
     
         const onView = () => {
             
-            navigate(`/BookingDetails/${row.booking_No}`)
+            navigate(`/BookingDetails/${row.booking_mast_id}`)
         }
     
         // const onDelete = () => {

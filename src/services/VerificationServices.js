@@ -288,7 +288,7 @@ try {
   const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
 
   const response = await BaseService({
-    url: COMMANAPILINK+'Surveyor/finalstatus',
+    url: COMMANAPILINK + '/Surveyor/finalstatus',
     method: 'post',
     data: data,
     headers: {
