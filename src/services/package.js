@@ -92,4 +92,20 @@ export const updatePackageData = async (data) => {
   }
 };
 
+//To Fetch ALL Package Mapping Data
+export async function GetPackageMapping(data) {
+  return ApiService.fetchData({
+      url: COMMANAPILINK + 'Mapping/GetAllPackageMapping',
+      method: 'Post',
+      data,
+  })
+};
 
+// To Fetch Single Package Mapping Data
+export async function apiGetSinglePackageMapping(data) {
+  return ApiService.fetchData({
+      url: COMMANAPILINK + 'Mapping/ViewPackageMapping',
+      method: 'Post',
+      data,
+  })
+};

@@ -5,7 +5,7 @@ import { AdaptableCard } from 'components/shared'
 import PackageTable from 'views/Models/Package/packagelist/components/PackageTable'
 import PackageTableTool from 'views/Models/Package/packagelist/components/PackageTableTools'
 
-injectReducer('listsSurveyorList', reducer)
+injectReducer('listsPackageList', reducer)
 
 const Packagelist = () => {
     return (
@@ -16,6 +16,6 @@ const Packagelist = () => {
             </div>
             <PackageTable/>           
         </AdaptableCard>
-    )
+    ) 
 }
 export default Packagelist

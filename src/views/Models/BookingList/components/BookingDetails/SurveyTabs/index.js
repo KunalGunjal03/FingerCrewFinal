@@ -7,6 +7,8 @@ import { setCurrentStep } from './store/stateSlice'
 import reducer from './store'
 import { injectReducer } from 'store/index'
 import { Card } from 'components/ui'
+import { useLocation } from 'react-router-dom'
+import { getSurveyDetails } from './store/dataSlice'
 injectReducer('surveyDetailForm', reducer)
 
 const SurveyBasicDetails = lazy(() =>
@@ -15,11 +17,11 @@ const SurveyBasicDetails = lazy(() =>
 const ElectricDetails = lazy(()=> import('./components/ElectriceDetails') )
 const RoofStructure = lazy(()=> import('./components/RoofStructure'))
 const ExistingPVDetails = lazy(()=> import('./components/ExistingPvDetails'))
-const SurveyTabs = ({
-    data
-}) =>{
-    console.log(data)
+const SurveyTabs = () =>{
+    
     const dispatch = useDispatch()
+    const {token,tokenKey} = useSelector((state) => state.auth.user)
+    const location = useLocation()
     const stepStatus = useSelector(
         (state) => state.surveyDetailForm.data.stepStatus
     )
@@ -27,14 +29,32 @@ const SurveyTabs = ({
     const currentStep = useSelector(
         (state) => state.surveyDetailForm.state.currentStep
     )
+    const data = useSelector((state) => state.surveyDetailForm?.data?.BookingDetails?.getData)
+    console.log(data)
     const formData = useSelector(
         (state) => state.surveyDetailForm.data.formData.getData
     )
-  
     useEffect(() => {
-        // dispatch(getForm())
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        const path = location.pathname.substring(
+        location.pathname.lastIndexOf('/') + 1
+    )
+    const requestParam = {survey_no : path , 
+       token : token , 
+       tokenKey : tokenKey
+   }
+       console.log(requestParam)
+    fetchData(requestParam);
+}, []);
+const fetchData = (requestParam) => {
+    try {
+      dispatch(getSurveyDetails( requestParam));
+      //console.log(surveyor_master_id)
+      
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+};
     const handleNextChange = (values, name) => {
         const nextStep = currentStep + 1
         dispatch(setFormData({ [name]: values }))

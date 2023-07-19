@@ -5,7 +5,13 @@ import NumberFormat from 'react-number-format'
 import { useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 
-const Subscription = () => {
+const Subscription = ({
+    data={
+        package_name:'',
+        valid_from:'',
+        valid_to:''
+    },
+}) => {
     const [subscribed, setSubscribed] = useState(true)
 
     // const data = useSelector(
@@ -19,14 +25,15 @@ const Subscription = () => {
     const subscribe = useCallback(() => {
         setSubscribed(true)
     }, [])
-
+    console.log(data)
     return (
         <div className="mb-8">
-            {/* <h6 className="mb-4">Subscription</h6> */}
             {/* {data.map((sub) => ( */}
                 <Card  className="mb-4" bordered>
+                <h6 className="mb-4 ">Subscription</h6>
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         <div className="flex items-center gap-3">
+                            
                             <div>
                                 <Avatar
                                     className="bg-emerald-500"
@@ -36,7 +43,7 @@ const Subscription = () => {
                             </div>
                             <div>
                                 <div className="flex items-center">
-                                    <h6>{"Business board pro"}</h6>
+                                    <h6>{data && data.package_name }</h6>
                                     <Tag className="bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-100 rounded-md border-0 mx-2">
                                         <span className="capitalize">
                                             {"Active"}
@@ -44,16 +51,15 @@ const Subscription = () => {
                                     </Tag>
                                 </div>
                                 <div>
-                                    <span>Billing monthly {}</span>
-                                    <span> | Next payment on 12/10/2021</span>
+                                    <span>Valid from</span>
+                                    <span> {data && data.valid_from} To {data && data.valid_to} </span>
                                     {/* <span>
                                         Next payment on{' '}
                                         {dayjs
                                             .unix()
                                             .format('MM/DD/YYYY')}
                                     </span> */}
-                                    <span>
-                                        <span className="mx-1">for $59.90</span>
+                                    
                                         {/* <NumberFormat
                                             className="font-semibold text-gray-900 dark:text-gray-100"
                                             displayType="text"
@@ -64,7 +70,7 @@ const Subscription = () => {
                                             prefix={'$'}
                                             thousandSeparator={true}
                                         /> */}
-                                    </span>
+                                    
                                 </div>
                             </div>
                         </div>

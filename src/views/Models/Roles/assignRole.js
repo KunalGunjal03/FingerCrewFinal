@@ -11,10 +11,10 @@ const validationSchema = Yup.object().shape({
     user_id: Yup.string().required('user_id Required'),
 });
 
-const openNotification = (type) => {
+const openNotification = (type, remarks) => {
   toast.push(
     <Notification title={type.charAt(0).toUpperCase() + type.slice(1)} type={type}>
-        Role Saved Successfully
+      {remarks}
     </Notification>
   );
 };
@@ -62,9 +62,16 @@ const AddRole = ({ data = { roleid: '',user_id:''} }) => {
       const handleSubmit = async (values, { resetForm, setSubmitting }) => {
         try {
           setSubmitting(true);
-          await assignRoleUser(values);
-          console.log(values);
+          //await assignRoleUser(values);
+          const response = await assignRoleUser(values);
+          if (response && response.status === "Success") {
+            const { remarks } = response;
+            openNotification('success', remarks);
+          } else {
+            console.error('Invalid response format:', response);
+          }
           openNotification('success');
+          console.log(values);
           resetForm({ roleid: '', user_id: '' });
         } catch (error) {
           console.error(error);

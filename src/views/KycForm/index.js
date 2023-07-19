@@ -6,24 +6,13 @@ import { getForm, setStepStatus, setFormData } from './store/dataSlice'
 import { setCurrentStep } from './store/stateSlice'
 import reducer from './store'
 import { injectReducer } from 'store/index'
-import { Card,Button,Dialog,toast,Notification,FormItem,FormContainer,Input } from 'components/ui'
+import { Card,Button,Dialog,toast,Notification } from 'components/ui'
 import {StickyFooter} from 'components/shared'
 import { FiCheckCircle } from 'react-icons/fi'
 import { getVerificationDetails } from './store/dataSlice'
 import { useLocation ,useNavigate} from 'react-router-dom'
-// import {
-//     Input,
-//     Checkbox,
-//     Select,
-//     FormItem,
-//     FormContainer,
-//     Dialog,
-//     toast,
-//     Notification
-// } from 'components/ui'
-import { Field, Form, Formik, getIn } from 'formik'
-import * as Yup from 'yup'
-import { text } from 'd3-fetch'
+import { MdArrowBackIosNew } from 'react-icons/md'
+// import { Breadcrumbs } from '@material-tailwind/react'
 injectReducer('accountDetailForm', reducer)
 
 const PersonalInformation = lazy(() =>
@@ -58,7 +47,6 @@ const DetailForm = () => {
         (state) => state.accountDetailForm.data.stepStatus
     )
     const [dialogIsOpen, setIsOpen] = useState(false)
-    const [dialog1IsOpen,setIsOpen1] = useState(false)
     const openNotification = (type,msg) => {
         toast.push(
             <Notification
@@ -111,11 +99,6 @@ const DetailForm = () => {
         () => stepStatus[currentStep].status,
         [stepStatus, currentStep]
     )
-    const onDialog1Close = (e) => {
-        setIsOpen(true)
-         setIsOpen1(false)
-         // setRejectionRemarkVisible(true)
-     }
     const openDialog = (e) => {
 
         setIsOpen(true)
@@ -129,7 +112,7 @@ const DetailForm = () => {
          // setRejectionRemarkVisible(true)
      }
      const OpenRejectionDialog = (e)=>{
-        setIsOpen1(true)
+        setIsOpen(false)
     }
     useEffect(() => {
         const path = location.pathname.substring(
@@ -142,10 +125,6 @@ const DetailForm = () => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
-    const validationSchema = Yup.object().shape({
-        remark: Yup.string().required('Please enter your rejection remark')
-        .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
-    })
     const onDialogOk = async(status,values)=>{
 
         var verified = {}
@@ -158,10 +137,8 @@ const DetailForm = () => {
               // {
                 //   verified = {surveyor_master_id : formData.surveyor_master_id}
                 //   console.log(verified)
-                const param = {surveyor_master_id:SurveyorID.surveyor_master_id,Is_approved:1,rejection_remarks:''}
-                console.log(param)
-                
-                 const  response = await dispatch(getVerificationDetails ( param));
+                console.log(SurveyorID)
+                 const  response = await dispatch(getVerificationDetails ( SurveyorID));
 
             //   //     // const response =  VerifyPersonalDetails(verified)
 
@@ -216,42 +193,43 @@ const DetailForm = () => {
           }
             // onNextChange?.(values, 'personalInformation', setSubmitting)
       }
-      const onDialogReject = async(status,values)=>{
-        try
-        {
-         console.log(status)
-         console.log(values)
-        console.log(SurveyorID)
-        const param = {surveyor_master_id:SurveyorID.surveyor_master_id,Is_approved:0,rejection_remarks: values.remark}
-        console.log(param)
-        const  response = await dispatch(getVerificationDetails ( param));
-         console.log(response)
-     //     // const response =  VerifyPersonalDetails(verified)
-         console.log(response.payload)
-         const resp = response.payload
-     //     // if(response)
-     //     // {
-             openNotification('danger',resp.remarks)
-             setIsOpen(false)
-             setIsOpen1(false)
-            //  setTimeout(() => {
-            //      onNextChange?.('personalInformation')
-            //   }, 500)
-             
+      const onBackClick = ()=>{
+        
+        try{
+            navigate('/registrationlist')
         }
         catch(error)
         {
-         console.error(error)
-         return error
+            console.error(error)
         }
-        
-        
-         
-         
-         
-     }
+    }
 console.log(stepStatus)
     return (
+        <div className="grid grid-cols-6 gap-2">
+            {/* <Breadcrumbs>
+        <a href="#"     >
+            <span>Dashboard</span>
+        </a>
+        
+            <span>Registration list</span>
+        
+        <span>Surveyor Verification</span>
+        </Breadcrumbs> */}
+        <div className="col-end-7 col-span-2 flex justify-end">
+        
+        <Button
+                                        // loading={isSubmitting}
+                                        // variant="solid"
+                                        type="submit"
+                                        size="md"
+                                        icon = {<MdArrowBackIosNew/>}
+                                        variant="twoTone"
+                                        onClick = {onBackClick}
+                                    >
+                                    Back
+                                    </Button>
+        </div>
+        <div className="col-start-1 col-end-7">
         <Container className="h-full">
             <AdaptableCard className="h-full" bodyClass="h-full">
                 <div className="grid lg:grid-cols-5 xl:grid-cols-3 2xl:grid-cols-5 gap-4 h-full">
@@ -421,64 +399,9 @@ console.log(stepStatus)
                 </div>
 
             </Dialog>
-            <Dialog
-                isOpen={dialog1IsOpen}
-                onClose={onDialog1Close}
-                onRequestClose={onDialog1Close}
-            >
-                <div className="flex flex-col h-full justify-between">
-                    <h5 className="mb-4">Reject Surveyor</h5>
-                    <div className="max-h-96 overflow-y-auto px-2 ">
-                            {/* <p> Enter Rejection remarks</p> */}
-                        <Formik
-                        initialValues={{
-                            remark: ''
-                            
-                        }}
-                        validationSchema={validationSchema}
-                        onSubmit={(values) => {
-                            onDialogReject('Reject',values)
-                        }}
-                        >
-                        {({ touched, errors }) => (
-                            <Form>
-                                <FormContainer>
-                                    <FormItem
-                                     label="Rejection remark"
-                                     invalid={errors.remark && touched.remark}
-                                     errorMessage={errors.remark}
-                                    >
-                                         <Field
-                                            name = "remark"
-                                            component = {Input}
-                                            type = "text"
-                                            placeholder = "Enter rejection remarks here"
-                                        />
-                                    </FormItem>
-                                    <div className="text-right mt-2">
-                                    {/* <Button
-                                        className="ltr:mr-2 rtl:ml-2"
-                                        // variant="plain"
-                                        onClick={onDialog1Close}
-                                    >
-                                        Cancel
-                                    </Button> */}
-                                    <Button variant="solid" type="submit" onClick={onDialogReject}
-                                    color = "red-600"
-                                    >
-                                    Confirm
-                                    </Button>
-                                </div>
-                                </FormContainer>
-                            </Form>
-                        )}
-                        </Formik>
-                           
-                    </div>
-                    
-                </div>
-            </Dialog>
         </Container>
+        </div>
+        </div>
     )
 }
 

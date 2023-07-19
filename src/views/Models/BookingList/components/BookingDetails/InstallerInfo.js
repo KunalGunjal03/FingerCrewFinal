@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Avatar, Button, Notification, toast } from 'components/ui'
+import { Card, Avatar, Button, Notification, toast , Tag} from 'components/ui'
 import {
     FaFacebookF,
     FaTwitter,
@@ -11,21 +11,20 @@ import { ConfirmDialog ,AdaptableCard} from 'components/shared'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import Subscription from './Subscription'
+import { HiOutlineUser } from 'react-icons/hi'
 import { COMMANPATH } from 'constants/api.constant'
-
 
 
 const CustomerInfoField = ({ title, value }) => {
     return (
         <div>
-            <span>{title}</span>
-            <p className="text-gray-700 dark:text-gray-200 font-semibold">
+            <span>{value}</span>
+            {/* <p className="text-gray-700 dark:text-gray-200 font-semibold">
                 {value}
-            </p>
+            </p> */}
         </div>
     )
 }
-
 const InstallerData = ({
      data = {
         installer_master_id : '',
@@ -44,22 +43,68 @@ const InstallerData = ({
     }
     console.log(FinalPath)
     return(
-        <Card>
-            <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto mt-2">
-                <div className="flex xl:flex-col items-center gap-4 mt-4">
-                    <h5 className='flex xl:flex-col items-left '>Installer Information</h5>
-                    <Avatar size={90} shape="circle" src={FinalPath}></Avatar>
-                    <h4 className="font-bold">{data.installer_name}</h4>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-7 gap-x-4 mt-8">
-                <CustomerInfoField title="Email" value={data.installer_email} />
-                    <CustomerInfoField
-                        title="Phone"
-                        value={data.installer_contact}
-                    />
-                </div>
-            </div>
-        </Card>
+        <div className="mb-8">
+            {/* {data.map((sub) => ( */}
+                <Card  className="mb-4" bordered>
+                <h6 className="mb-4 ">Solar Company Details</h6>
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div className="flex items-center gap-2">
+                            
+                            <div>
+                               <Avatar  shape="circle" src={FinalPath} ></Avatar>
+                            </div>
+                            <div>
+                                <div className="flex items-center">
+                                    <h6>{data && data.installer_company }</h6>
+                                </div>
+                                <div>
+                                <CustomerInfoField  value={data && data.installer_email} />
+                     <CustomerInfoField
+                        //  title="Phone"
+                         value={data && data.installer_contact}
+        />
+                                    {/* <span>
+                                        Next payment on{' '}
+                                        {dayjs
+                                            .unix()
+                                            .format('MM/DD/YYYY')}
+                                    </span> */}
+                                    
+                                        {/* <NumberFormat
+                                            className="font-semibold text-gray-900 dark:text-gray-100"
+                                            displayType="text"
+                                            value={(
+                                                Math.round(sub.amount * 100) /
+                                                100
+                                            ).toFixed(2)}
+                                            prefix={'$'}
+                                            thousandSeparator={true}
+                                        /> */}
+                                    
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </Card>
+            {/* ))} */}
+        </div>
+        // <Card>
+        //     <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto ">
+        //         <div className="flex xl:flex-col items-center gap-4 ">
+        //             <h5 className='flex xl:flex-col items-left '>Installer Information</h5>
+        //             <Avatar size={90} shape="circle" src={FinalPath} ></Avatar>
+        //             <h4 className="font-bold">{data.installer_name}</h4>
+        //         </div>
+        //         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-7 gap-x-4 mt-8">
+        //         <CustomerInfoField title="Email" value={data.installer_email} />
+        //             <CustomerInfoField
+        //                 title="Phone"
+        //                 value={data.installer_contact}
+        //             />
+        //         </div>
+        //     </div>
+        // </Card>
     )
 }
 

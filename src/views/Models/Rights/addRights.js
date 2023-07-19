@@ -9,22 +9,22 @@ import * as Yup from 'yup';
 const validationSchema = Yup.object().shape({
     roleid: Yup.string().required('User Role Required'),
     menuid: Yup.string().required('menu is Required'),
-    submenuid: Yup.string().required('Submenu is Required'),
+    // submenuid: Yup.string().required('Submenu is Required'),
 });
 
-const openNotification = (type) => {
+const openNotification = (type, remarks) => {
   toast.push(
     <Notification title={type.charAt(0).toUpperCase() + type.slice(1)} type={type}>
-        Assign Right Saved Successfully
+      {remarks}
     </Notification>
   );
 };
 
-const AddRole = ({ data = { roleid: '',menuid:'',} }) => {
+const AddRole = ({ data = { roleid: '',menuid:'',submenuid:''} }) => {
     const [roleOptions, setRoleOptions] = useState([]);
     const [menuOptions, setMenuOptions] = useState([]);
     const [subMenuOptions, setSubMenuOptions] = useState([]);
-    const [selectedMenu, setSelectedMenu] = useState(null);
+    const [selectedMenu, setSelectedMenu] = useState([]);
 
     // For Role Dropdown
     useEffect(() => {
@@ -67,37 +67,40 @@ const AddRole = ({ data = { roleid: '',menuid:'',} }) => {
 
       //For Submenu Dropdown
       const fetchSubmenuOptions = async (selectedMenuId) => {
-        console.log(selectedMenuId)
-        
         try {
           const response = await AllmenuData();
           const options = response.getdata;
-          console.log(options)
           const transformedOptions1 = options
-          .filter(
-            (option) =>
-              option.submenuid !== "0" && // Filter submenuid not equal to 0
-              option.submenuid === selectedMenuId // Filter submenu based on mainmenuid
-          )
-          .map((option) => ({
-            value: option.submenuid,
-            label: option.menu,
-          }));
-          console.log(transformedOptions1)
-        setSubMenuOptions(transformedOptions1);
-            } catch (error) {
+            .filter(
+              (option) =>
+                option.submenuid !== "0" && // Filter submenuid not equal to 0
+                option.submenuid === selectedMenuId // Filter submenu based on mainmenuid
+            )
+            .map((option) => ({
+              value: option.mainMenuId,
+              label: option.menu,
+            }));
+          setSubMenuOptions(transformedOptions1);
+        } catch (error) {
           console.error(error);
         }
       };
       
       useEffect(() => {
-        fetchSubmenuOptions();
-      }, []);
+        fetchSubmenuOptions(selectedMenu?.value || ""); // Fetch submenu options based on selected menu
+      }, [selectedMenu]);
       
       const handleSubmit = async (values, { resetForm, setSubmitting }) => {
         try {
           setSubmitting(true);
-          await saveAssignRight(values);
+          //await saveAssignRight(values);
+          const response = await saveAssignRight(values);
+          if (response && response.status === "Success") {
+            const { remarks } = response;
+            openNotification('success', remarks);
+          } else {
+            console.error('Invalid response format:', response);
+          }
           console.log(values);
           openNotification('success');
         } catch (error) {
@@ -105,7 +108,7 @@ const AddRole = ({ data = { roleid: '',menuid:'',} }) => {
         } finally {
           setSubmitting(false);
         }
-      };   
+    };   
   
   return (
     <>
@@ -166,8 +169,6 @@ const AddRole = ({ data = { roleid: '',menuid:'',} }) => {
                 </FormItem>
                 <FormItem
                   label="Submenu"
-                  invalid={errors.submenuid && touched.submenuid}
-                  errorMessage={errors.submenuid}
                 >
                   <Field name="submenuid">
                     {({ field, form }) => (
@@ -178,6 +179,8 @@ const AddRole = ({ data = { roleid: '',menuid:'',} }) => {
                         options={subMenuOptions}
                         value={subMenuOptions.find((option) => option.value === field.value)}
                         onChange={(option) => form.setFieldValue(field.name, option?.value || '')}
+                        // value={subMenuOptions.find((option) => option.value === field.value)}
+                        // onChange={(option) => form.setFieldValue(field.name, option?.value || '')}
                       />
                     )}
                   </Field>

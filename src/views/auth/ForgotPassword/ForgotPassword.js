@@ -29,6 +29,7 @@ const ForgotPassword = (props) =>{
         try {
           
             const resp = await apiForgotPassword(values)
+            console.log(resp)
             console.log(resp.data)
             const {remarks} = resp.data
             

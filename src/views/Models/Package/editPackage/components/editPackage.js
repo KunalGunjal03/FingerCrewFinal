@@ -9,13 +9,25 @@ import { useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom'
 import { ErrorMessage } from 'formik';
-// import '../../../../../assets/styles/components/color.css';
+import '../../../../../assets/styles/components/color.css';
 
 const validationSchema = Yup.object().shape({
-  package_name: Yup.string().required('Package name  Required'),
-  price: Yup.string().required('Price Required'),
-  tax: Yup.string().required('Tax Required'),
-  service_fees: Yup.string().required('Service fees Required'),
+  package_name: Yup.string().required('Package name Required'),
+  price: Yup.string()
+    .required('Price Required')
+    .test('is-numeric', 'Only numeric values are allowed for price', value => {
+      return /^\d+(\.\d+)?$/.test(value);
+    }),
+  tax: Yup.string()
+    .required('Tax Required')
+    .test('is-numeric', 'Only numeric values are allowed for tax', value => {
+      return /^\d+(\.\d+)?$/.test(value);
+    }),
+  service_fees: Yup.string()
+    .required('Service fees Required')
+    .test('is-numeric', 'Only numeric values are allowed for service fees', value => {
+      return /^\d+(\.\d+)?$/.test(value);
+    }),
   package_validity: Yup.string().required('Package validity is Required'),
 });
 
@@ -51,6 +63,14 @@ const EditPackage = () => {
     (state) => state.accountDetailForm.data.formData.getData[0]
   );
 
+  const openNotification = (type, remarks) => {
+    toast.push(
+      <Notification title={type.charAt(0).toUpperCase() + type.slice(1)} type={type}>
+        {remarks}
+      </Notification>
+    );
+  };
+
   const handleSubmit = async (values, { setSubmitting }) => {
     setSubmitting(true);
     try {
@@ -59,11 +79,16 @@ const EditPackage = () => {
         ...values 
       };
       const response = await updatePackageData(request);
-      toast.push(
-        <Notification title="Success" type="success">
-          Package data updated successfully.
-        </Notification>
-      );
+      if (response && response.status === "Success") {
+        const { remarks } = response;
+        toast.push(
+          <Notification title="Success" type="success">
+            {remarks}
+          </Notification>
+        );
+      } else {
+        console.error('Invalid response format:', response);
+      }
     } catch (error) {
       console.error(error);
     } finally {

@@ -553,6 +553,7 @@ const validationSchema = Yup.object().shape({
                                          variant="solid"
                                          type="submit"
                                          icon={<FiCheckCircle />}
+                                         disabled ={data.Registrationstatus === "4" ? false :true}
                                      >
                                     Validate
                                      </Button>

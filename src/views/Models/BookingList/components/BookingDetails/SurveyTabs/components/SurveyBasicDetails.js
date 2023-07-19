@@ -20,7 +20,6 @@ const SurveyBasicDetails = ({
     onNextChange,
     currentStepStatus
 }) => {
-    console.log(data)
     const onNext = (values, setSubmitting) => {
         onNextChange?.(values, 'surveybasicdetails', setSubmitting)
     
@@ -78,7 +77,33 @@ const SurveyBasicDetails = ({
                                         readOnly
                                     />
                                 </FormItem>
-                                </div>            
+                                </div>     
+                                <div className="md:grid grid-cols-2 gap-4">
+                                   
+                                    <FormItem
+                                        label="Description"
+                                      
+                                    >
+                                        <Field
+                                            type="text"
+                                            name="survey_des"
+                                            component={Input}
+                                            value = {data  && data.survey_des} 
+                                            readOnly
+                                           />
+                                       
+                                           </FormItem>
+                                        <FormItem
+                                        label="Solar Company Name"
+                                            >
+                                        <Field name="survey_location" 
+                                         type="text"
+                                         component={Input}
+                                         value = {data && data.installer_company_name}
+                                         readOnly >
+                                        </Field>
+                                    </FormItem>
+                                </div>          
                                 <div className="md:grid grid-cols-2 gap-4">
                                    
                                     <FormItem
@@ -87,9 +112,9 @@ const SurveyBasicDetails = ({
                                     >
                                         <Field
                                             type="text"
-                                            name="survey_scheduled_date"
+                                            name="survey_date"
                                             component={Input}
-                                            value = {data  && data.survey_scheduled_date} 
+                                            value = {data  && data.survey_date} 
                                             readOnly
                                            />
                                        
@@ -100,19 +125,43 @@ const SurveyBasicDetails = ({
                                         <Field name="survey_location" 
                                          type="text"
                                          component={Input}
-                                         value = {data && data.survey_location}
+                                         value = {data && data.location }
                                          readOnly >
                                         </Field>
                                     </FormItem>
                                 </div>
                                 <div className="md:grid grid-cols-2 gap-4">
                                 <FormItem
-                                        label="Status"
+                                        label="Client Name"
                                             >
-                                        <Field name="survye_status" 
+                                        <Field name="survey_client_name" 
                                          type="text"
                                          component={Input}
-                                         value = {data && data.survye_status}
+                                         value = {data && data.survey_client_name}
+                                         readOnly >
+                                        </Field>
+                                    </FormItem>
+                                    
+                                    <FormItem
+                                        label="Status"
+                                            >
+                                        <Field name="survey_status" 
+                                         type="text"
+                                         component={Input}
+                                         value = {data && data.survey_status}
+                                         readOnly >
+                                        </Field>
+                                    </FormItem>
+                                </div>
+                                
+                                <div className="md:grid grid-cols-2 gap-4">
+                                <FormItem
+                                        label="Remark"
+                                            >
+                                        <Field name="rejection_remarks" 
+                                         type="text"
+                                         component={Input}
+                                         value = {data && data.rejection_remarks}
                                          readOnly >
                                         </Field>
                                     </FormItem>

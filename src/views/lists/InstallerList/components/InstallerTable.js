@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef ,useCallback,useState} from 'react'
 import { HiOutlinePencil } from 'react-icons/hi'
-
+import {Tooltip} from 'components/ui'
 import { useDispatch, useSelector } from 'react-redux'
 import { getInstaller } from '../store/dataSlice'
 import useThemeClass from 'utils/hooks/useThemeClass'
@@ -97,12 +97,14 @@ const ActionColumn = ({ row }) => {
     //console.log(row)    
     return (
         <div className="flex justify-start text-lg">
+            <Tooltip title="view">
             <span
                 className={`cursor-pointer p-2 hover:${textTheme}`}
                 onClick={onEdit}
             >
                 <HiEye/>
             </span>
+            </Tooltip> 
             {/* <span
                 className="cursor-pointer p-2 hover:text-red-500"
                 onClick={onDelete}
@@ -236,9 +238,15 @@ const InstallerTable = () => {
             {
                 header: 'Date of Birth',
                 accessorKey: 'installer_dob',
+                // cell: (props) => {
+                //     const row = props.row.original
+                //     return <span className="capitalize">{row.installer_dob}</span>
+                // },
                 cell: (props) => {
                     const row = props.row.original
-                    return <span className="capitalize">{row.installer_dob}</span>
+                    const bookingDate = new Date(row.installer_dob);
+                    const formattedDate = bookingDate.toLocaleDateString('en-GB'); // Change 'en-GB' to your desired locale
+                    return <span className="capitalize">{formattedDate}</span>;     
                 },
             },
             

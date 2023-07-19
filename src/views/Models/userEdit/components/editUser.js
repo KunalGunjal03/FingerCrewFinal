@@ -7,9 +7,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getForm } from '../store/dataSlice';
 import { useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
+import { Link } from 'react-router-dom'
 import { ErrorMessage } from 'formik';
-//import '../../../../assets/styles/components/color.css';
-
+import '../../../../assets/styles/components/color.css';
 
 const validationSchema = Yup.object().shape({
   employee_code: Yup.string().required('Employee Code Required'),
@@ -23,7 +23,7 @@ const validationSchema = Yup.object().shape({
     )
     .required('Contact Number Required'),
   user_role: Yup.string().required('Select User Role'),
-  password: Yup.string().required('Password Required'),
+  //password: Yup.string().required('Password Required'),
 });
 
 const EditUser = () => {
@@ -123,23 +123,23 @@ const EditUser = () => {
                     <Field type="text" name="username" as={Input} />
                     <ErrorMessage name="username" component="div" className="error-message" />
                   </FormItem>
-                </div>
+                </div >
+                <div className="md:grid grid-cols-2 gap-4">
                 <FormItem label="Full Name">
                   <Field type="text" name="user_fullname" as={Input} />
                   <ErrorMessage name="user_fullname" component="div" className="error-message" />
                 </FormItem>
-                <div className="md:grid grid-cols-2 gap-4">
-                  <FormItem label="Email">
+                <FormItem label="Email">
                     <Field type="text" name="user_mail_id" as={Input} />
                     <ErrorMessage name="user_mail_id" component="div" className="error-message" />
                   </FormItem>
+                </div>               
+                <div className="md:grid grid-cols-2 gap-4">                 
                   <FormItem label="Contact Number">
                     <Field type="text" name="contact_detail" as={Input} />
                     <ErrorMessage name="contact_detail" component="div" className="error-message" />
                   </FormItem>
-                </div>
-                <div className="md:grid grid-cols-2 gap-4">
-                <FormItem
+                  <FormItem
                   label="Roles"
                   invalid={errors.user_role && touched.user_role}
                   errorMessage={errors.user_role}
@@ -157,11 +157,17 @@ const EditUser = () => {
                     )}
                   </Field>
                 </FormItem>
-                  <FormItem label="Password">
-                    <Field type="text" name="password" as={Input} />
-                  </FormItem>
                 </div>
                 <div className="flex justify-end gap-2">
+                <Link
+                      className="block lg:inline-block md:mb-0 mb-4"
+                      to="/viewUser"
+                  >
+                      <Button>
+                          Back
+                      </Button>
+                  </Link>
+
                   <Button
                     loading={isSubmitting}
                     variant="solid"

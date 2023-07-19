@@ -57,7 +57,7 @@ const MobileNav = () => {
 
         return `side-nav-${navMode}`
     }
-
+    console.log(navigationConfig)
     return (
         <>
             {smaller.md && (

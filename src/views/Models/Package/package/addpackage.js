@@ -6,35 +6,66 @@ import { savePackageData } from 'services/package';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object().shape({
-  package_name: Yup.string().required('Package Name Required'),
-  price: Yup.string().required('Price is Required'),
-  tax:Yup.string().required('tax is Required'),
-  service_fees: Yup.string().required('Service fees Required'),
-  package_validity: Yup.string().required('Package validity Required'),
+  package_name: Yup.string().required('Package name Required'),
+  price: Yup.string()
+    .required('Price Required')
+    .test('is-numeric', 'Only numeric values are allowed for price', value => {
+      return /^\d+(\.\d+)?$/.test(value);
+    }),
+  tax: Yup.string()
+    .required('Tax Required')
+    .test('is-numeric', 'Only numeric values are allowed for tax', value => {
+      return /^\d+(\.\d+)?$/.test(value);
+    }),
+  service_fees: Yup.string()
+    .required('Service fees Required')
+    .test('is-numeric', 'Only numeric values are allowed for service fees', value => {
+      return /^\d+(\.\d+)?$/.test(value);
+    }),
+  package_validity: Yup.string().required('Package validity is Required'),
 });
 
-const openNotification = (type) => {
+const openNotification = (type, remarks) => {
   toast.push(
     <Notification title={type.charAt(0).toUpperCase() + type.slice(1)} type={type}>
-      Package Data Saved Successfully
+      {remarks}
     </Notification>
   );
 };
 
 const AddPackage = ({ data = { package_name: '', price: '', tax: '', service_fees: '', package_validity: ''} }) => {
 
-  const handleSubmit = async (values, {resetForm, setSubmitting }) => {
+  // const handleSubmit = async (values, {resetForm, setSubmitting }) => {
+  //   try {
+  //     setSubmitting(true);
+  //     await savePackageData(values);
+  //     openNotification('success');
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setSubmitting(false);
+  //     resetForm()
+  //   }
+  // };
+
+  const handleSubmit = async (values, { resetForm, setSubmitting }) => {
     try {
       setSubmitting(true);
-      await savePackageData(values);
-      openNotification('success');
+      const response = await savePackageData(values);
+      if (response && response.status === "Success") {
+        const { remarks } = response;
+        openNotification('success', remarks);
+      } else {
+        console.error('Invalid response format:', response);
+      }
     } catch (error) {
       console.error(error);
     } finally {
       setSubmitting(false);
-      resetForm()
+      resetForm();
     }
   };
+  
   
   return (
     <>
@@ -94,8 +125,8 @@ const AddPackage = ({ data = { package_name: '', price: '', tax: '', service_fee
                 </FormItem>
               <FormItem
                   label="service_fees"
-                  invalid={errors.username && touched.username}
-                  errorMessage={errors.username}
+                  invalid={errors.service_fees && touched.service_fees}
+                  errorMessage={errors.service_fees}
                 >
                   <Field
                     type="text"

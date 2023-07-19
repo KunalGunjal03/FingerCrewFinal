@@ -1,5 +1,5 @@
 import ApiService from './ApiService'
-import { COMMANAPILINK } from 'constants/api.constant'
+import { COMMANAPILINK, LOCALPATH } from 'constants/api.constant'
 export async function apiSignIn(data) {
     return ApiService.fetchData({
         url: COMMANAPILINK + 'Authentication/Login',

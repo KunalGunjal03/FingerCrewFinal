@@ -43,6 +43,8 @@ const dataSlice = createSlice({
         loading: false,
         BookingList: [],
         BookingDetails:[],
+        InstallerDetails:[],
+        PackageDetails:[],
         filterData: [],
     },
     reducers: {
@@ -52,6 +54,12 @@ const dataSlice = createSlice({
         },
         setBookingDetails:(state,action)=>{
         state.BookingDetails = action.payload
+        },
+        setInstallerDetails:(state,action)=>{
+            state.InstallerDetails = action.payload.getInstallerData
+        },
+        setPackageDetails:(state,action)=>{
+            state.PackageDetails = action.payload.GetPackageDetails
         },
         setFilterData: (state, action) => {
             state.filterData = action.payload
@@ -65,13 +73,16 @@ const dataSlice = createSlice({
         })
         .addCase(getBookingDetails.fulfilled, (state, action) => {
             state.BookingDetails = action.payload
+            state.InstallerDetails = action.payload.getInstallerData
+            state.PackageDetails = action.payload.GetPackageDetails
           })
+          
     
      
     },
 })
 
-export const {  setBookingList, setFilterData,setBookingDetails } =
+export const {  setBookingList, setFilterData,setBookingDetails  } =
     dataSlice.actions
 
 

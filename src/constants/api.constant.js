@@ -2,6 +2,7 @@ export const TOKEN_TYPE = 'Bearer '
 export const REQUEST_HEADER_AUTH_KEY = 'Authorization'
 export const TOKEN_KEY = 'tokenKey'
 export const COMMANAPILINK = 'http://fingercrewapi.alphonsol.com/'
+// export const COMMANAPILINK = 'https://localhost:44305/'
 export const LOCALPATH = 'https://localhost:44305/'
 // export const COMMANAPILINK = 'http://fingercrewapilive.alphonsol.com/'
 export const IsVeriied = false

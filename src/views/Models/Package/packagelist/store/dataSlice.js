@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { GetPackageAllData} from 'services/package';
 
 export const getSurveyor = createAsyncThunk(
-  'listsSurveyorList/data/getSurveyor',
+  'listsPackageList/data/getSurveyor',
   async (data) => {
     try {
       const response = await GetPackageAllData(data);
@@ -31,7 +31,7 @@ export const initialFilterData = {
 }
 
 const dataSlice = createSlice({
-  name: 'listsSurveyorList/data',
+  name: 'listsPackageList/data',
   initialState: {
     loading: false,
     surveyorList: [],

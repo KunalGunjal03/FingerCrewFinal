@@ -29,19 +29,13 @@ const BookingDetails = () => {
     }
      const [formData, setFormData] = useState([])
     const data = useSelector((state) => state.crmBookinglist?.data?.BookingDetails?.getData)
-
+    const InstallerData = useSelector((state) => state.crmBookinglist?.data?.BookingDetails?.getInstallerData)
+    const PackageData = useSelector((state) => state.crmBookinglist?.data?.BookingDetails?.GetPackageDetails)
+    console.log(PackageData)
     const navigate = useNavigate()
     const {token,tokenKey} = useSelector((state) => state.auth.user)
     const location = useLocation()
     console.log(data)
-    var InstallerData 
-    if(data)
-    {
-     InstallerData = { installer_master_id : data[0].installer_master_id, installer_name: data[0].installer_name, installer_company: data[0].installer_company,installer_contact: data[0].installer_contact,
-        installer_email: data[0].installer_email,kyc_path: data[0].kyc_path
-    }
-     
-    }
     const path = location.pathname.substring(
         location.pathname.lastIndexOf('/') + 1
     )
@@ -83,33 +77,37 @@ const fetchData = (requestParam) => {
     // }, [])   
     console.log(formData)
     return (
-        <Container>
-            <AdaptableCard>
-                <Tabs value={currentTab} onChange={(val) => onTabChange(val)}>
-                    <TabList>
-                        {Object.keys(settingsMenu).map((key) => (
-                            <TabNav key={key} value={key} disabled = {false}>
-                                {settingsMenu[key].label}
-                            </TabNav>
-                        ))}
-                    </TabList>
-                </Tabs>
-                <div className="py-2">
-                    <Suspense fallback={<></>}>
-                        {currentTab === 'bookingDetails' && (
+        // <Container>
+        //     <AdaptableCard>
+        //         <Tabs value={currentTab} onChange={(val) => onTabChange(val)}>
+        //             <TabList>
+        //                 {Object.keys(settingsMenu).map((key) => (
+        //                     <TabNav key={key} value={key} disabled = {false}>
+        //                         {settingsMenu[key].label}
+        //                     </TabNav>
+        //                 ))}
+        //             </TabList>
+        //         </Tabs>
+        //         <div className="py-2">
+        //             <Suspense fallback={<></>}>
+        //                 {currentTab === 'bookingDetails' && (
                             
-                            <BookingTableDetails data={data} onNextChange={onTabChange} />
-                        )}
-                        {currentTab === 'surveydetails' && (
-                            <Survey  data = {formData[0]}/>
-                        )}
-                        {/* {currentTab === 'installerinfo' && (
-                            <Installer data = {InstallerData}/>
-                        )} */}
-                    </Suspense>
-                </div>
-            </AdaptableCard>
-        </Container>
+        //                     <BookingTableDetails data={data} InstallerData = {InstallerData} PackageData={PackageData} onNextChange={onTabChange} />
+        //                 )}
+        //                 {currentTab === 'surveydetails' && (
+        //                     <Survey  data = {formData[0]}/>
+        //                 )}
+        //                 {/* {currentTab === 'installerinfo' && (
+        //                     <Installer data = {InstallerData}/>
+        //                 )} */}
+        //             </Suspense>
+        //         </div>
+        //     </AdaptableCard>
+        // </Container>
+        <>
+        <div><BookingTableDetails data={data} InstallerData = {InstallerData} PackageData={PackageData} onNextChange={onTabChange} /></div>
+        </>
+        
     )
 }
 

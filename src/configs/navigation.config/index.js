@@ -1,64 +1,40 @@
-// import { UI_COMPONENTS_PREFIX_PATH } from 'constants/route.constant'
-// import {
-//    NAV_ITEM_TYPE_TITLE,
-//    NAV_ITEM_TYPE_COLLAPSE,
-//    NAV_ITEM_TYPE_ITEM,
-//   } from 'constants/navigation.constant'
+//--------------First Dynamic COde
+import { UI_COMPONENTS_PREFIX_PATH } from 'constants/route.constant'
+import {
+   NAV_ITEM_TYPE_TITLE,
+   NAV_ITEM_TYPE_COLLAPSE,
+   NAV_ITEM_TYPE_ITEM,
+  } from 'constants/navigation.constant'
 //   import { fetchMenuData } from 'services/menu.js';
 //   let navigationConfig = [];
-
 //   let getMenuConfig = async () => {
 //     const data ={ "userid" :"2"}
 //     let menuData = await fetchMenuData(data);
 //       navigationConfig.push(menuData);
-
 //     return navigationConfig;
 // }
 // navigationConfig = getMenuConfig();
-
 // if (!Array.isArray(navigationConfig)) {
-
 //  navigationConfig = [navigationConfig];
 // }
 // export default navigationConfig;
-
-// import { UI_COMPONENTS_PREFIX_PATH } from 'constants/route.constant';
-// import {
-//   NAV_ITEM_TYPE_TITLE,
-//   NAV_ITEM_TYPE_COLLAPSE,
-//   NAV_ITEM_TYPE_ITEM,
-// } from 'constants/navigation.constant';
+// console.log(navigationConfig);
 
 
-
-
-// // // const userInfo = useSelector((state) => state.auth.user)
-// // // console.log(userInfo.id)
-
+//--------Second Dynamic Code 
+// import { fetchMenuData } from 'services/menu.js';
+// let navigationConfig = [];
 // const fetchData = async () => {
-// //  const userInfo = useSelector((state) => state.auth.user)
-// //   console.log(userInfo.id)
 //   const data = { userid: "2" };
-//   try
-//   {
-//     let menuData = await fetchMenuData(data);
-//     navigationConfig.push(menuData);
-//   }
-//   catch(error)
-//   {
-//     console.error(error)
-//   }
-  
-  
+//   let menuData = await fetchMenuData(data);
+//   console.log(menuData)
+//   navigationConfig.push(menuData);
 // };
-
 // fetchData();
-import { fetchMenuData } from 'services/menu.js';
-import {
-  NAV_ITEM_TYPE_TITLE,
-  NAV_ITEM_TYPE_COLLAPSE,
-  NAV_ITEM_TYPE_ITEM,
-} from 'constants/navigation.constant'
+// export default navigationConfig;
+
+
+///------------hardcore code 
 const navigationConfig = [
   {
 
@@ -71,10 +47,10 @@ const navigationConfig = [
     authority: [],
     subMenu: [
   {
-    key: 'home',
+    key: 'Home',
     path: '/home',
     title: 'HOME',
-    translateKey: 'nav.home',
+    translateKey: 'nav.Home',
     icon: 'home',
     type: NAV_ITEM_TYPE_ITEM,
     authority: [],
@@ -92,12 +68,103 @@ const navigationConfig = [
     subMenu: []
   },
   {
-    key: "User",
+    key: "registrationlist",
     path: "",
-    title: "User",
-    translateKey: "nav.User",
+    title: "Solar Surveyor",
+    translateKey: "nav.surveyor",
     icon: "singleMenu",
     type: "collapse",
+    authority: [],
+    visible: "true",
+    subMenu: [
+        
+        {
+          key: "registrationlist",
+          path: "/registrationlist",
+          title: "Registartion Request List",
+          translateKey: "nav.surveyor",
+          icon: "singleMenu",
+          type: "collapse",
+          authority: [],
+          visible: "true",
+          subMenu: []
+        },
+        {
+          key: "surveyor",
+          path: "/serveyorlist",
+          title: "Surveyor List",
+          translateKey: "nav.surveyor",
+          icon: "singleMenu",
+          type: "collapse",
+          authority: [],
+          visible: "true",
+          subMenu: []
+        }
+    ]
+  },
+  {
+    key: "installer",
+    path: "",
+    title: "Solar Company",
+    translateKey: "nav.installer",
+    icon: "singleMenu",
+    type: "collapse",
+    authority: [],
+    visible: "true",
+    subMenu: [
+      {
+        key: "installerlist",
+        path: "/installerlist",
+        title: "Registration List",
+        translateKey: "nav.installer",
+        icon: "singleMenu",
+        type: "collapse",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "InstallerLists",
+        path: "/InstallerLists",
+        title: " Solar Company List",
+        translateKey: "nav.installer",
+        icon: "singleMenu",
+        type: "collapse",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "Bookinglist",
+        path: "/BookingList",
+        title: "Booking List",
+        translateKey: "nav.Bookinglist",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "RejectionList",
+        path: "/RejectionList",
+        title: "Rejection List",
+        translateKey: "nav.RejectionList",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+    ]
+  },
+  {
+    key: "RBSC",
+    path: "",
+    title: "User details",
+    translateKey: "RBSC",
+    icon: "singleMenu",
+    type: "item",
     authority: [],
     visible: "true",
     subMenu: [
@@ -123,120 +190,6 @@ const navigationConfig = [
         visible: "true",
         subMenu: []
       },
-    ]
-  },
-  {
-    key: "survey",
-    path: "",
-    title: "Survey",
-    translateKey: "nav.survey",
-    icon: "singleMenu",
-    type: "collapse",
-    authority: [],
-    visible: "true",
-    subMenu: [
-      {
-        key: "survey",
-        path: "/Survey",
-        title: "Survey Queue",
-        translateKey: "nav.survey",
-        icon: "singleMenu",
-        type: "collapse",
-        authority: [],
-        visible: "true",
-        subMenu: []
-      },
-      {
-        key: "Bookinglist",
-        path: "/BookingList",
-        title: "Booking List",
-        translateKey: "nav.Bookinglist",
-        icon: "singleMenu",
-        type: "item",
-        authority: [],
-        visible: "true",
-        subMenu: []
-      },
-    ]
-  },
-  {
-    key: "registrationlist",
-    path: "",
-    title: "Surveyor",
-    translateKey: "nav.surveyor",
-    icon: "singleMenu",
-    type: "collapse",
-    authority: [],
-    visible: "true",
-    subMenu: [
-        // {
-        //   key: "surveyor",
-        //   path: "/serveyorlist",
-        //   title: "Surveyor List",
-        //   translateKey: "nav.surveyor",
-        //   icon: "singleMenu",
-        //   type: "collapse",
-        //   authority: [],
-        //   visible: "true",
-        //   subMenu: []
-        // },
-        {
-          key: "registrationlist",
-          path: "/registrationlist",
-          title: " Surveyor Registration List",
-          translateKey: "nav.surveyor",
-          icon: "singleMenu",
-          type: "collapse",
-          authority: [],
-          visible: "true",
-          subMenu: []
-        }
-        // {
-        //   key: "VerifySurveyor",
-        //   path: "/VerifySurveyor/:text",
-        //   title: "Verify Surveyor",
-        //   translateKey: "nav.VerifySurveyor",
-        //   icon: "singleMenu",
-        //   type: "item",
-        //   authority: [],
-        //   visible: "false",
-        //   subMenu: []
-        // },
-    ]
-  },
-  {
-    key: "installer",
-    path: "",
-    title: "Installer",
-    translateKey: "nav.installer",
-    icon: "singleMenu",
-    type: "collapse",
-    authority: [],
-    visible: "true",
-    subMenu: [
-      {
-        key: "installerlist",
-        path: "/installerlist",
-        title: " Installer Registration List",
-        translateKey: "nav.installer",
-        icon: "singleMenu",
-        type: "collapse",
-        authority: [],
-        visible: "true",
-        subMenu: []
-      }
-    ]
-  },
-  {
-    key: "Role Master",
-    path: "",
-    title: "Roles Master",
-    translateKey: "nav.Role",
-    icon: "singleMenu",
-    type: "collapse",
-    authority: [],
-    visible: "true",
-    subMenu: [
       {
         key: "addRoles",
         path: "/addRoles",
@@ -259,19 +212,6 @@ const navigationConfig = [
         visible: "true",
         subMenu: []
       },
-
-    ]
-  },
-  {
-    key: "Assign Role",
-    path: "",
-    title: "AssignRole",
-    translateKey: "nav.AssignRole",
-    icon: "singleMenu",
-    type: "collapse",
-    authority: [],
-    visible: "true",
-    subMenu: [
       {
         key: "assignRole",
         path: "/assignRole",
@@ -293,19 +233,7 @@ const navigationConfig = [
         authority: [],
         visible: "true",
         subMenu: []
-      }
-    ]
-  },
-  {
-    key: "Assign Rights",
-    path: "",
-    title: "AssignRights",
-    translateKey: "nav.AssignRights",
-    icon: "singleMenu",
-    type: "collapse",
-    authority: [],
-    visible: "true",
-    subMenu: [
+      },
       {
         key: "addRights",
         path: "/addRights",
@@ -362,6 +290,116 @@ const navigationConfig = [
         visible: "true",
         subMenu: []
       },
+      {
+        key: "packageMap",
+        path: "/packageMap",
+        title: "Package Mapping",
+        translateKey: "nav.packageMap",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "addSuspend",
+        path: "/addSuspend",
+        title: "add Suspend",
+        translateKey: "nav.addSuspend",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "viewSuspend",
+        path: "/viewSuspend",
+        title: "view Suspend",
+        translateKey: "nav.viewSuspend",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "viewCancelSuspend",
+        path: "/viewCancelSuspend",
+        title: "view Cancel Suspend",
+        translateKey: "nav.viewCancelSuspend",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "addBlacklist",
+        path: "/addBlacklist",
+        title: "add Blacklist",
+        translateKey: "nav.addBlacklist",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "viewBlacklist",
+        path: "/viewBlacklist",
+        title: "view Blacklist",
+        translateKey: "nav.viewBlacklist",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "viewCancelBlacklist",
+        path: "/viewCancelBlacklist",
+        title: "view Cancel Blacklist",
+        translateKey: "nav.viewCancelBlacklist",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "viewFAQ",
+        path: "/viewFAQ",
+        title: "view FAQ",
+        translateKey: "nav.viewFAQ",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "viewRateReview",
+        path: "/viewRateReview",
+        title: "view Rate & Review",
+        translateKey: "nav.viewRateReview",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      },
+      {
+        key: "map",
+        path: "/map",
+        title: "Tracker Partner",
+        translateKey: "nav.map",
+        icon: "singleMenu",
+        type: "item",
+        authority: [],
+        visible: "true",
+        subMenu: []
+      }
     ]
   },
   // {

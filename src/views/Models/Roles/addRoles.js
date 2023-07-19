@@ -9,10 +9,10 @@ const validationSchema = Yup.object().shape({
     RoleDescription: Yup.string().required('User Role Required'),
 });
 
-const openNotification = (type) => {
+const openNotification = (type, remarks) => {
   toast.push(
     <Notification title={type.charAt(0).toUpperCase() + type.slice(1)} type={type}>
-      User Role Saved Successfully
+      {remarks}
     </Notification>
   );
 };
@@ -22,7 +22,14 @@ const AddRole = ({ data = { RoleDescription: ''} }) => {
   const handleSubmit = async (values, {resetForm, setSubmitting }) => {
     try {
       setSubmitting(true);
-      await saveRoleData(values);
+      //await saveRoleData(values);
+      const response = await saveRoleData(values);
+      if (response && response.status === "Success") {
+        const { remarks } = response;
+        openNotification('success', remarks);
+      } else {
+        console.error('Invalid response format:', response);
+      }
       openNotification('success');
     } catch (error) {
       console.error(error);

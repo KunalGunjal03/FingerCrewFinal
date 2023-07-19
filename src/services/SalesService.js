@@ -73,9 +73,16 @@ export async function apiGetSalesOrderDetails(params) {
     })
 }
 
+// export async function apiGetlistsSurveyor(data) {
+//     return ApiService.fetchData({
+//         url: COMMANAPILINK + 'ViewSurveyor/ViewAllSurveyor',
+//         method: 'Post',
+//         data,
+//     })
+// }
 export async function apiGetlistsSurveyor(data) {
     return ApiService.fetchData({
-        url: COMMANAPILINK + 'ViewSurveyor/ViewAllSurveyor',
+        url: COMMANAPILINK + 'ViewSurvey/Viewsurveycountandrating',
         method: 'Post',
         data,
     })
@@ -90,6 +97,13 @@ export async function apiGetreqlistsSurveyor(data) {
 export async function apiGetlistsInstaller(data) {
     return ApiService.fetchData({
         url: COMMANAPILINK + 'Installer/ViewInstaller',
+        method: 'Post',
+        data,
+    })
+}
+export async function apiGetlistsInstallerSurveyCount(data) {
+    return ApiService.fetchData({
+        url: COMMANAPILINK + 'Installer/ViewInstallerSurveyCount',
         method: 'Post',
         data,
     })

@@ -6,8 +6,9 @@ import { getForm, setStepStatus, setFormData } from './store/dataSlice'
 import { setCurrentStep } from './store/stateSlice'
 import reducer from './store'
 import { injectReducer } from 'store/index'
-import { Card } from 'components/ui'
-
+import { Card,Button } from 'components/ui'
+import { MdArrowBackIosNew } from 'react-icons/md'
+import { useNavigate } from 'react-router-dom'
 injectReducer('accountDetailForm', reducer)
 
 const PersonalInformation = lazy(() =>
@@ -37,6 +38,7 @@ const PersonalInformation = lazy(() =>
 
 const DetailForm = () => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const stepStatus = useSelector(
         (state) => state.accountDetailForm.data.stepStatus
     )
@@ -80,8 +82,32 @@ const DetailForm = () => {
         [stepStatus, currentStep]
     )
     //console.log(currentStep)
-
+    const onBackClick = ()=>{
+        
+        try{
+            navigate('/installerlist')
+        }
+        catch(error)
+        {
+            console.error(error)
+        }
+    }
     return (
+        <div className="grid grid-cols-6 gap-2">
+        <div className="col-end-7 col-span-2 flex justify-end">
+        <Button
+                                        // loading={isSubmitting}
+                                        // variant="solid"
+                                        type="submit"
+                                        size="md"
+                                        icon = {<MdArrowBackIosNew/>}
+                                        variant="twoTone"
+                                        onClick = {onBackClick}
+                                    >
+                                    Back
+                                    </Button>
+        </div>
+        <div className="col-start-1 col-end-7">
         <Container className="h-full">
             <AdaptableCard className="h-full" bodyClass="h-full">
                 <div className="grid lg:grid-cols-5 xl:grid-cols-3 2xl:grid-cols-5 gap-4 h-full">
@@ -218,6 +244,8 @@ const DetailForm = () => {
                 </div>
             </AdaptableCard>
         </Container>
+        </div>
+        </div>
     )
 }
 

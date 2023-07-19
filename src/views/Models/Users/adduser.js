@@ -20,10 +20,10 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required('password Required'),
 });
 
-const openNotification = (type) => {
+const openNotification = (type, remarks) => {
   toast.push(
     <Notification title={type.charAt(0).toUpperCase() + type.slice(1)} type={type}>
-      User Data Saved Successfully
+      {remarks}
     </Notification>
   );
 };
@@ -51,7 +51,14 @@ const AddUser = ({ data = { username: '', user_fullname: '', user_mail_id: '', c
   const handleSubmit = async (values, {resetForm, setSubmitting }) => {
     try {
       setSubmitting(true);
-      await saveUserData(values);
+      //await saveUserData(values);
+      const response = await saveUserData(values);
+          if (response && response.status === "Success") {
+            const { remarks } = response;
+            openNotification('success', remarks);
+          } else {
+            console.error('Invalid response format:', response);
+          }
       openNotification('success');
     } catch (error) {
       console.error(error);

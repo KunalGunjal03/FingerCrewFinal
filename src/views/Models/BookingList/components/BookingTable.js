@@ -4,7 +4,7 @@ import useThemeClass from 'utils/hooks/useThemeClass'
 import { HiEye } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom'
 import { getBookingList } from '../store/dataSlice'
-import { Badge ,Table, Pagination, Select} from 'components/ui'
+import { Badge ,Table, Pagination, Select, Tooltip} from 'components/ui'
 import {
     useReactTable,
     getCoreRowModel,
@@ -119,14 +119,14 @@ const BookingTable = () =>{
               
             },
             {
-                header :'Date',
+                header :'Booking Date',
                 accessorKey: 'booking_date',
-                cell: (props) => {
-                    const row = props.row.original
-                    const bookingDate = new Date(row.booking_date);
-                    const formattedDate = bookingDate.toLocaleDateString('en-GB'); // Change 'en-GB' to your desired locale
-                    return <span className="capitalize">{formattedDate}</span>;     
-                },
+                // cell: (props) => {
+                //     const row = props.row.original
+                //     const bookingDate = new Date(row.booking_date);
+                //     const formattedDate = bookingDate.toLocaleDateString('en-GB'); // Change 'en-GB' to your desired locale
+                //     return <span className="capitalize">{formattedDate}</span>;     
+                // },
               
             },
             {
@@ -200,12 +200,14 @@ const BookingTable = () =>{
     
         return (
             <div className="flex justify-left text-lg">
+                <Tooltip title="view">
                 <span
                     className={`cursor-pointer p-2 hover:${textTheme}`}
                     onClick={onView}
                 >
                     <HiEye/>
                 </span>
+                </Tooltip>
             </div>
         )
     }

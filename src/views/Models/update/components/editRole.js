@@ -10,7 +10,7 @@ import { useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom'
 import { ErrorMessage } from 'formik';
-// import '../../../../assets/styles/components/color.css';
+import '../../../../assets/styles/components/color.css';
 
 const validationSchema = Yup.object().shape({
   roledescription: Yup.string().required('Role Required'),

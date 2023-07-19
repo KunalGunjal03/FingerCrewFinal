@@ -1,8 +1,9 @@
-import React,{useMemo,lazy} from 'react'
-import { Table, Badge,Pagination,Select } from 'components/ui'
+import React,{useMemo,lazy,useState,useEffect} from 'react'
+import { Table, Badge,Pagination,Select,Input,Button } from 'components/ui'
 import { useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 import { HiEye } from "react-icons/hi2";
+import { FcSearch } from 'react-icons/fc';
 import useThemeClass from 'utils/hooks/useThemeClass'
 import { FcDownload } from 'react-icons/fc'
 import { AdaptableCard } from 'components/shared'
@@ -20,6 +21,9 @@ import {
     flexRender,
 } from '@tanstack/react-table'
 import InstallerInfo from './InstallerInfo';
+import { rankItem } from '@tanstack/match-sorter-utils'
+import { MdArrowBackIosNew } from 'react-icons/md';
+import { theme } from 'twin.macro';
 const { Tr, Th, Td, THead, TBody, Sorter } = Table
 
 const statusColor = {
@@ -72,7 +76,53 @@ const SurveyFormColumn = ({row}) =>{
         </div>
     )
 }
+function DebouncedInput({
+    value: initialValue,
+    onChange,
+    debounce = 500,
+    ...props
+}) {
+    const [value, setValue] = useState(initialValue)
 
+    useEffect(() => {
+        setValue(initialValue)
+    }, [initialValue])
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            onChange(value)
+        }, debounce)
+
+        return () => clearTimeout(timeout)
+    }, [value,debounce,onChange])
+
+    return (
+        <div className="flex justify-end">
+            <div className="flex items-center mb-2">
+                
+                <Input
+                    {...props}
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    icon = {<FcSearch />}
+                />
+                {/* <span className="mr-2"><FcSearch style={{ fontSize: '25px' }}/></span> */}
+            </div>
+        </div>
+    )
+}
+const fuzzyFilter = (row, columnId, value, addMeta) => {
+    // Rank the item
+    const itemRank = rankItem(row.getValue(columnId), value)
+    
+    // Store the itemRank info
+    addMeta({
+        itemRank,
+    })
+
+    // Return if the item should be filtered in/out
+    return itemRank.passed
+}
 const BookingTableDetails = ({
         data={
                 booking_mast_id : '',
@@ -89,23 +139,31 @@ const BookingTableDetails = ({
                 survey_scheduled_date:'',
                 survye_status:''
             },
+        InstallerData={
+            installer_master_id:'',
+            installer_name:'',
+            installer_company:'',
+            installer_email:'',
+            kyc_path:'',
+            installer_contact:''
+        },
+        PackageData={
+            package_name:'',
+            valid_from:'',
+            valid_to:''
+        },
             onNextChange
         }) =>{
-            
+            const [columnFilters, setColumnFilters] = React.useState([])
+            const [globalFilter, setGlobalFilter] = React.useState('')
+            const navigate = useNavigate()
             const ActionColumn = ({ row }) => {
                 // const dispatch = useDispatch()
                 const { textTheme } = useThemeClass()
                 const navigate = useNavigate()
             
                 const onView = async () => {
-                    if(Array.isArray(data) && data)
-                    {
-                        const filteredData = data.filter(item => item.survey_no === row.survey_no);
-                        console.log(filteredData)
-                        
-                            onNextChange?.('surveydetails',filteredData)
-                       
-                    }
+                    navigate(`/bookingSurveyDetails/${row.survey_no}`)
                     
                    
                     
@@ -132,12 +190,12 @@ const BookingTableDetails = ({
                     {
                         header :'Booking Date',
                         accessorKey: 'booking_date',
-                        cell: (props) => {
-                            const row = props.row.original
-                            const bookingDate = new Date(row.booking_date);
-                            const formattedDate = bookingDate.toLocaleDateString('en-GB'); // Change 'en-GB' to your desired locale
-                            return <span className="capitalize">{formattedDate}</span>;     
-                        },
+                        // cell: (props) => {
+                        //     const row = props.row.original
+                        //     const bookingDate = new Date(row.booking_date);
+                        //     const formattedDate = bookingDate.toLocaleDateString('en-GB'); // Change 'en-GB' to your desired locale
+                        //     return <span className="capitalize">{formattedDate}</span>;     
+                        // },
                       
                     },
                     {
@@ -194,6 +252,16 @@ const BookingTableDetails = ({
     const table = useReactTable({
         data,
         columns,
+        filterFns: {
+            fuzzy: fuzzyFilter,
+        },
+        state: {
+            columnFilters,
+            globalFilter,
+        },
+        onColumnFiltersChange: setColumnFilters,
+        onGlobalFilterChange: setGlobalFilter,
+        globalFilterFn: fuzzyFilter,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getSortedRowModel: getSortedRowModel(),
@@ -227,14 +295,46 @@ const BookingTableDetails = ({
     const onSelectChange = (value) => {
         table.setPageSize(Number(value))
     }
+    const onBackClick = ()=>{
+        
+        try{
+            navigate('/BookingList')
+        }
+        catch(error)
+        {
+            console.error(error)
+        }
+    }
+    console.log(InstallerData)
+    console.log(PackageData)
+    console.log(data)
     return (
     <>
         {/* <InstallerInfo /> */}
-        <div className="grid lg:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-6 gap-2 h-full">
-        <div className='2xl:col-span-4 lg:col-span-4 xl:col-span-4 mt-4'>
-        <AdaptableCard className="mb-4">
+       <div className="grid lg:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-6 gap-2 h-full">
+           
+            <div className="col-start-1 col-end-3 ">
+            <AdaptableCard>
+            <InstallerInfo data = {InstallerData}/>
+                </AdaptableCard>
+            </div>
+            <div className="col-start-3 col-span-2">
+                <AdaptableCard>
+                <Subscription data={PackageData}/>
+                
+                </AdaptableCard>
+            </div>        
+        <AdaptableCard className="col-start-1 col-end-7">
             {/* <h5>Booking Details</h5>
             <p className="mb-4"></p> */}
+            <div className='flex justify-end' >
+            <DebouncedInput
+                value={globalFilter ?? ''}
+                onChange={(value) => setGlobalFilter(String(value))}
+                className="p-2 font-lg shadow border border-block"
+                placeholder="Search"
+            />
+            </div>
             {data ?(
             <div className="mb-4">
             <Table>
@@ -311,15 +411,8 @@ const BookingTableDetails = ({
                 <p></p>
             )}
         </AdaptableCard>
-        </div>
-        <div className='2xl:col-span-2 lg:col-span-2 xl:col-span-2 '>
-        <div className="w-full mt-4 2xl:col-span-3 lg:col-span-3 xl:col-span-3">
-                <AdaptableCard>
-                    <Subscription />
-                </AdaptableCard>
-            </div>
-        <InstallerInfo/>
-        </div>
+        
+            
         </div>
         
         </>

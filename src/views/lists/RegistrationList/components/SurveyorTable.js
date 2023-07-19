@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef ,useCallback,useState} from 'react'
 import { HiOutlinePencil } from 'react-icons/hi'
-
+import {Tooltip} from 'components/ui'
 import { useDispatch, useSelector } from 'react-redux'
 import { getreqSurveyor } from '../store/dataSlice'
 import useThemeClass from 'utils/hooks/useThemeClass'
@@ -80,21 +80,21 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
 const ActionIconType = ({ type }) => {
     console.log(type)   
     switch (type) {
-        case 'Pending':
+        case 'Partner Registered':
             return  <HiOutlinePencil />
-
-        case 'Verified':
-            return <HiEye />
-
-        case 'Rejected':
-            return <HiOutlinePencil />
-
-        case 'Under Process':
-                return <HiEye />
         default:
-            return null
+            return <HiEye/>
     }
 }
+// const TooltipType = ({type}) =>{
+
+//     switch (type) {
+//         case 'Partner Registered':
+//             return  <Tooltip title="View"/>
+//         default:
+//             return <Tooltip title="View"/>
+//     }
+// }
 const ActionColumn = ({ row }) => {
     // const dispatch = useDispatch()
     const { textTheme } = useThemeClass()
@@ -115,6 +115,7 @@ const ActionColumn = ({ row }) => {
     //console.log(row)    
     return (
         <div className="flex justify-start text-lg">
+            <Tooltip title={row.registration_status === "Partner Registered" ? "verify" : "view"} placement="right">
             <span
                 className={`cursor-pointer p-2 hover:${textTheme}`}
                 onClick={onEdit}
@@ -123,6 +124,7 @@ const ActionColumn = ({ row }) => {
                 type = {row.registration_status}
                 />
             </span>
+            </Tooltip>
             {/* <span
                 className="cursor-pointer p-2 hover:text-red-500"
                 onClick={onDelete}

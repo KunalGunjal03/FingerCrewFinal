@@ -20,7 +20,7 @@ import * as Yup from 'yup'
 import { verifyPersonalDetails } from '../store/dataSlice'
 
 import { text } from 'd3-fetch'
-import { FaBullseye } from 'react-icons/fa'
+import { set } from 'lodash'
 
 const PersonalInformation = ({
     data = {
@@ -39,7 +39,7 @@ const PersonalInformation = ({
    
     const location = useLocation()
     const [isvalid, setIsvalid] = useState(false);
-    // const [disable,setDisable] = useState(false);
+    const [disable,setDisable] = useState(false);
     const {token,tokenKey} = useSelector((state) => state.auth.user)
 
      useEffect(() => {
@@ -76,26 +76,7 @@ const PersonalInformation = ({
         (state) => state.accountDetailForm.data
     )
     console.log(resp)
-    // const responseData = useSelector(
-    //     (state) => state.accountDetailForm.data.formData.responseData
-    // )
-
-    // const d =  useSelector(
-    //     (state) => state.accountDetailForm.data.getData
-    // )
-    // console.log(d)
-    // const {signOut} = useAuth()
    
-    // if(formData === null )
-    // {
-    //     try{
-    //         dispatch(signOut)
-    //     }
-    //     catch(error)
-    //     {
-    //         console.log(error)
-    //     }
-    // }
     const [dialogIsOpen, setIsOpen] = useState(false)
     const [dialog1IsOpen,setIsOpen1] = useState(false)
     const openNotification = (type,msg) => {
@@ -188,6 +169,12 @@ const PersonalInformation = ({
           // onNextChange?.(values, 'personalInformation', setSubmitting)
     }
 
+    
+   
+   
+       
+      
+
     const onDialogReject = async(status,values)=>{
        try
        {
@@ -239,7 +226,20 @@ const PersonalInformation = ({
         remark: Yup.string().required('Please enter your rejection remark')
         .matches(/^[aA-zZ0-9\s]+$/,'Special character not alowed!'),
     })
-  
+
+    
+
+  console.log(data)
+  //console.log(data.Registrationstatus)
+//   if(data.Registrationstatus === "1")
+//   {
+//     setDisable(true)
+    
+//   }
+//   else
+//   {
+//     setDisable(false)
+//   }
     return (
         <>
             <div className="mb-8">
@@ -257,6 +257,7 @@ const PersonalInformation = ({
                     
                 }}
             >
+                
                 {({ values, touched, errors, isSubmitting }) => {
                     return (
                         
@@ -369,15 +370,16 @@ const PersonalInformation = ({
                                 </div>
                                 <div className="flex justify-end gap-2">
                                     <Button
-                                    // loading={isSubmit
+                                    // loading={isSubmitting}
                                     variant="solid"
                                     type="submit"
                                     icon={<FiCheckCircle />}
-                                    disabled = {false}
+                                    disabled ={data.Registrationstatus === "4" ? false :true}
                                     >
                                     Validate
                                     </Button>
                                 </div>
+    
                                 </div>
                                 
                                 ) : (
