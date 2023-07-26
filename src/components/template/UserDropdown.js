@@ -29,6 +29,7 @@ const dropdownItemList = [
 export const UserDropdown = ({ className }) => {
     
     const userInfo = useSelector((state) => state.auth.user)
+    console.log(userInfo)
     const { signOut } = useAuth()
 
     const UserAvatar = (

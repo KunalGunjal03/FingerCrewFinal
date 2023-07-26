@@ -89,14 +89,14 @@ export async function apiGetlistsSurveyor(data) {
 }
 export async function apiGetreqlistsSurveyor(data) {
     return ApiService.fetchData({
-        url: COMMANAPILINK + 'ViewSurveyor/Viewsurveyorreqlist',
+        url: COMMANAPILINK + 'ViewSurveyor/ViewAllFilterSurveyor',
         method: 'Post',
         data,
     })
 }
 export async function apiGetlistsInstaller(data) {
     return ApiService.fetchData({
-        url: COMMANAPILINK + 'Installer/ViewInstaller',
+        url: COMMANAPILINK + 'Installer/ViewAllFilterInstaller',
         method: 'Post',
         data,
     })
@@ -104,6 +104,20 @@ export async function apiGetlistsInstaller(data) {
 export async function apiGetlistsInstallerSurveyCount(data) {
     return ApiService.fetchData({
         url: COMMANAPILINK + 'Installer/ViewInstallerSurveyCount',
+        method: 'Post',
+        data,
+    })
+}
+export async function apigetCities(data) {
+    return ApiService.fetchData({
+        url: COMMANAPILINK + 'City/ViewCity',
+        method: 'Post',
+        data,
+    })
+}
+export async function apigetStates (data) {
+    return ApiService.fetchData({
+        url: COMMANAPILINK + 'State/GetAllState',
         method: 'Post',
         data,
     })

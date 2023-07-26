@@ -85,7 +85,7 @@ const DetailForm = () => {
     const onBackClick = ()=>{
         
         try{
-            navigate('/installerlist')
+            navigate('/Registrationlist')
         }
         catch(error)
         {

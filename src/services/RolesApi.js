@@ -139,7 +139,7 @@ export const updateRoleData = async (data) => {
 //To Fetch ALL Assign Role Data
 export async function apiGetlistsAssignRoles(data) {
   return ApiService.fetchData({
-      url: COMMANAPILINK + 'Role/ViewAssignRolelist',
+      url: COMMANAPILINK + 'Role/AssignRoleFilter',
       method: 'Post',
       data,
   })
@@ -174,7 +174,7 @@ export const DeleteAssignRoleData = async (userroledetailsid) => {
     const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
     const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
     const response = await BaseService({
-      url: 'http://fingercrewapi.alphonsol.com/Role/DeleteRole', // Replace with the actual URL for fetching role options
+      url: 'http://fingercrewapi.alphonsol.com/Role/DeleteAssignRole', // Replace with the actual URL for fetching role options
       method: 'post',
       headers: {
         Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,

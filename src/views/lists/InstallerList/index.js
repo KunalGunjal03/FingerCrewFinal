@@ -14,7 +14,7 @@ const InstallerList = () => {
     return (
         <AdaptableCard className="h-full" bodyClass="h-full">
             <div className="lg:flex items-center justify-between mb-4">
-                <h3 className="mb-4 lg:mb-0">Solar Company Registration List</h3>
+                <h3 className="mb-4 lg:mb-0">Installer registration request list</h3>
                 <InstallerTableTools/>
             </div>
             <InstallerTable/>

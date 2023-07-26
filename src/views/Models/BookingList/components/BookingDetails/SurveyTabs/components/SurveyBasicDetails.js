@@ -166,7 +166,7 @@ const SurveyBasicDetails = ({
                                         </Field>
                                     </FormItem>
                                 </div>
-                                <div className="flex justify-end gap-2">
+                                {/* <div className="flex justify-end gap-2">
                                 <Button
                                         loading={isSubmitting}
                                         variant="solid"
@@ -176,7 +176,7 @@ const SurveyBasicDetails = ({
                                             ? 'Save'
                                             : 'Next'}
                                     </Button>
-                                </div>
+                                </div> */}
                                 </div>
                                 
                                 ) : (

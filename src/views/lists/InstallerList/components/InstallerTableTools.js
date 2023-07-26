@@ -3,8 +3,8 @@ import { Button } from 'components/ui'
 import { HiDownload, HiPlusCircle } from 'react-icons/hi'
 import { Link } from 'react-router-dom'
 import {useSelector} from 'react-redux'
+import {InstallerFilter} from './InstallerFilter'
 
-// import UserTableSearch from './UserTableSearch'
 
 const InstallerTableTools = () => {
     const data= useSelector((state) => state.listsInstallerList.data.InstallerList.getData)
@@ -61,15 +61,13 @@ const InstallerTableTools = () => {
                 <HiDownload className="inline-block mr-1" />
                     Export
                 </Button>
-            {/* </Link> */}
-            {/* <Link
-                className="block lg:inline-block md:mb-0 mb-4"
-                to="/adduser"
-            >
-                <Button block variant="solid" size="sm" icon={<HiPlusCircle />}>
-                    Add User
-                </Button>
-            </Link> */}
+      
+                 <div className="mb-4">
+        <InstallerFilter 
+       
+        />
+        </div>
+         
         </div>
     )
 }

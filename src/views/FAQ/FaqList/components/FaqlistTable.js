@@ -76,21 +76,20 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
     return itemRank.passed
 }
 
-const SurveyorColumn = ({ row }) => {
-   
-    return (    
-        <div className="flex items-center">
-           {/* <Avatar size={28} shape="circle" src={Img} /> */}
-            {/* {row.registration_no} */}
-            <span className={`ml-2 rtl:mr-2 font-semibold`}>{row.user_name}</span>
-        </div>
-    )
-}
+// const SurveyorColumn = ({ row }) => {
+//     return (    
+//         <div className="flex items-center">
+//            {/* <Avatar size={28} shape="circle" src={Img} /> */}
+//             {/* {row.registration_no} */}
+//             <span className={`ml-2 rtl:mr-2 font-semibold`}>{row.user_name}</span>
+//         </div>
+//     )
+// }
 
 const FaqlistTable = () => {
     const [columnFilters, setColumnFilters] = React.useState([])
     const [globalFilter, setGlobalFilter] = React.useState('')
-    const {signOut} = useAuth()
+    // const {signOut} = useAuth()
     const tableRef = useRef(null)
     const dispatch = useDispatch()
 
@@ -134,12 +133,12 @@ const FaqlistTable = () => {
     const columns = useMemo(
         () => [
             {
-                header: 'faq_mast_ID',
+                header: 'Faq id',
                 accessorKey: 'faq_mast_ID',
                
             },    
             {
-                header: 'lookup_id',
+                header: 'User id',
                 accessorKey: 'lookup_id',
                 cell: (props) => {
                     const row = props.row.original
@@ -200,7 +199,7 @@ const FaqlistTable = () => {
     {
         try{
             
-            dispatch(signOut)
+            // dispatch(signOut)
         }
         catch(error)
         {

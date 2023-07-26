@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { apiGetElectricDetails,apiGetSurveyDetails } from 'services/BookingServices'
+import { apiGetElectricDetails,apiGetSurveyDetails ,apiGetPVDetails} from 'services/BookingServices'
 
 export const getSurveyDetails = createAsyncThunk(
     'surveyDetailForm/data/getBookingDetails',
@@ -24,6 +24,25 @@ export const getElectricDetails = createAsyncThunk(
     async (params) => {
         try{
             const response = await apiGetElectricDetails(params)
+            console.log(response)
+            return response.data
+        }
+        catch(error)
+        {
+            console.error(error)
+            return error
+        }
+        
+       
+        
+    }
+)
+
+export const getPVDetails = createAsyncThunk(
+    'surveyDetailForm/data/getElectricDetails',
+    async (params) => {
+        try{
+            const response = await apiGetPVDetails(params)
             console.log(response)
             return response.data
         }

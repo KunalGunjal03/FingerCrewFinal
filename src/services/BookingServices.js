@@ -19,6 +19,13 @@ export async function apiGetBookingDetails(data) {
 }
 export async function apiGetSurveyDetails(data) {
     return ApiService.fetchData({
+        url: LOCALPATH + 'SurveyDetails/ViewSurveyDetails',
+        method: 'post',
+        data,
+    })
+}
+export async function apiGetRejectedSurveyDetails(data) {
+    return ApiService.fetchData({
         url: LOCALPATH + 'ViewRejection/ViewSurveyDetails',
         method: 'post',
         data,
@@ -26,7 +33,14 @@ export async function apiGetSurveyDetails(data) {
 }
 export async function apiGetElectricDetails(data) {
     return ApiService.fetchData({
-        url: LOCALPATH + 'SurveyDetails/ViewElectricDetails',
+        url: COMMANAPILINK + 'SurveyDetails/ViewElectricDetails',
+        method: 'post',
+        data,
+    })
+}
+export async function apiGetPVDetails(data) {
+    return ApiService.fetchData({
+        url: COMMANAPILINK + 'SurveyDetails/ViewPreviousPVDetails',
         method: 'post',
         data,
     })
@@ -41,7 +55,7 @@ export async function apiGetBookSurveyByID(data) {
 }
 export async function apiGetRejectionList(data) {
     return ApiService.fetchData({
-        url: 'https://localhost:44305/ViewRejection/ViewRejectionList',
+        url: COMMANAPILINK + 'ViewRejection/ViewRejectionList',
         method: 'post',
         data,
     })

@@ -279,7 +279,7 @@ console.log(data)
                                          variant="solid"
                                          type="submit"
                                          icon={<FiCheckCircle />}
-                                         disabled ={data.Registrationstatus === "4" ? false :true}
+                                         disabled ={(data.Registrationstatus === "4" || data.Registrationstatus === "7")  ? false : true }
                                      >
                                     Validate
                                      </Button>

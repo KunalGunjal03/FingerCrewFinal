@@ -120,7 +120,7 @@ const DetailForm = () => {
         )
 
 
-        const rquestParam = { surveyor_master_id : path }
+        const rquestParam = { surveyor_master_id : path , Is_approved : 1}
         setSurveyorID(rquestParam)
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -175,7 +175,7 @@ const DetailForm = () => {
                         openNotification('success',resp.remarks)
                         setIsOpen(false)
                         setTimeout(() => {
-                            navigate('/registrationlist')
+                            navigate('/registrationrequestlist')
                            }, 500)
                     }
 
@@ -196,7 +196,7 @@ const DetailForm = () => {
       const onBackClick = ()=>{
         
         try{
-            navigate('/registrationlist')
+            navigate('/registrationrequestlist')
         }
         catch(error)
         {

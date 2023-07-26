@@ -90,7 +90,7 @@ const SurveyorColumn = ({ row }) => {
 const RateReviewlistTable = () => {
     const [columnFilters, setColumnFilters] = React.useState([])
     const [globalFilter, setGlobalFilter] = React.useState('')
-    const {signOut} = useAuth()
+    // const {signOut} = useAuth()
     const tableRef = useRef(null)
     const dispatch = useDispatch()
 
@@ -206,7 +206,7 @@ const RateReviewlistTable = () => {
     {
         try{
             
-            dispatch(signOut)
+            // dispatch(signOut)
         }
         catch(error)
         {

@@ -3,13 +3,19 @@ import { Button } from 'components/ui'
 import { HiDownload, HiPlusCircle } from 'react-icons/hi'
 import { Link } from 'react-router-dom'
 import {useSelector} from 'react-redux'
-import { PackageMappingFilter } from './PackageMappingFilter'
+import { getreqSurveyor, setTableData, setFilterData } from '../store/dataSlice'
+import SurveyorFilter from './SurveyorFilter'
 
-const PackageTableTools = () => {
+// import UserTableSearch from './UserTableSearch'
+
+const SurveyorTableTools = () => {
     const data= useSelector((state) => state.listsSurveyorList.data.surveyorList.getData)
     const handleExport =  () => {
+ 
     console.log(data)
     exportToCSV(data);
+
+  
   };
 
   const exportToCSV = (data) => {
@@ -18,7 +24,7 @@ const PackageTableTools = () => {
 
     const downloadLink = document.createElement('a');
     downloadLink.href = URL.createObjectURL(blob);
-    downloadLink.setAttribute('download', 'packageMapping-list.csv');
+    downloadLink.setAttribute('download', 'surveyor-list.csv');
 
     downloadLink.style.display = 'none';
     document.body.appendChild(downloadLink);
@@ -31,29 +37,36 @@ const PackageTableTools = () => {
     const rows = data.map((row) => Object.values(row).join(',')).join('\n');
     return headers + rows;
   };
-
-  return (
-    <div>
-    <div className="flex flex-col lg:flex-row lg:items-center">
-       <Button  block size="sm" onClick={handleExport}>
-       <HiDownload className="block lg:inline-block md:mx-2 md:mb-0 mb-4 mr-1" />
-           Export
-       </Button>
-       <PackageMappingFilter/>
-       </div>
-       &nbsp; &nbsp;
-<div>
-            <Link
+    return (
+        <div className="flex flex-col lg:flex-row lg:items-center">
+             {/* <UserTableSearch /> */}
+            {/* <ProductFilter />  */}
+            {/* <Link
+                className="block lg:inline-block md:mx-2 md:mb-0 mb-4"
+                to="/data/user-list.csv"
+                target="_blank"
+                download
+            > */}
+                <Button block size="sm" onClick={handleExport}>
+                <HiDownload className="inline-block mr-1" />
+                    Export
+                </Button>
+            {/* </Link> */}
+            {/* <Link
                 className="block lg:inline-block md:mb-0 mb-4"
-                to="/addpackage"
+                to="/adduser"
             >
                 <Button block variant="solid" size="sm" icon={<HiPlusCircle />}>
-                    Add Package
+                    Add User
                 </Button>
-            </Link>
+            </Link> */}
+            <div className="mb-4">
+        <SurveyorFilter 
+       
+        />
         </div>
         </div>
     )
 }
 
-export default PackageTableTools
+export default SurveyorTableTools

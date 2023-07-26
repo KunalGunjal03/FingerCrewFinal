@@ -291,19 +291,19 @@ export const protectedRoutes = [
     },
     {
         key: 'RegistartionRequestList',
-        path: '/registrationlist',
+        path: '/registrationrequestlist',
         component: React.lazy(() => import('views/lists/RegistrationList')),
         authority: [],
     },
     {
         key: 'RegistrationList',
-        path: '/installerlist',
+        path: '/Registrationlist',
         component: React.lazy(() => import('views/lists/InstallerList')),
         authority: [],
     },
     {
         key: 'SolarCompanyList',
-        path: '/InstallerLists',
+        path: '/Solarcompanylist',
         component: React.lazy(() => import('views/lists/InstallerLists')),
         authority: [],
     },
@@ -404,7 +404,7 @@ export const protectedRoutes = [
     },
     {
         key: 'AddRole',
-        path: '/addRoles',
+        path: '/addRole',
         component: React.lazy(() => import('views/Models/Roles/addRoles')),
         authority: [],
     },

@@ -56,16 +56,36 @@ const ElectricDetails = ({
     }
     const data = useSelector((state) => state.surveyDetailForm?.data?.ElectricDetails?.getData  )
     console.log(data)
-    const accordianData = [
-        {
-            title:"Main busbar rating",
-            // desc:"tafkdvadbaaasdam,dadslkadadakdla aca sa,casaqpas"
-        },
-        {
-            title:"Main breaker rating",
-            // desc:"*******************************************"
+    let uniqueData = [];
+    if(data)
+    {
+    //  const uniqueQuestions = Array.from(new Set(data.map((item) => item.Questions)));
+    const questionMap = data.reduce((acc, item) => {
+        if (!acc[item.Questions]) {
+          acc[item.Questions] = [item];
+        } else {
+          acc[item.Questions].push(item);
         }
-    ]
+        return acc;
+      }, {});
+       uniqueData = Object.values(questionMap);
+
+    // uniqueData = uniqueQuestions.map((question) => {
+    //     return data.find((item) => item.Questions === question);
+    //   });
+      console.log(uniqueData)
+    }
+    
+    // const accordianData = [
+    //     {
+    //         title:"Main busbar rating",
+    //         // desc:"tafkdvadbaaasdam,dadslkadadakdla aca sa,casaqpas"
+    //     },
+    //     {
+    //         title:"Main breaker rating",
+    //         // desc:"*******************************************"
+    //     }
+    // ]
     useEffect(() => {
         const path = location.pathname.substring(
         location.pathname.lastIndexOf('/') + 1
@@ -88,6 +108,7 @@ const fetchData = (requestParam) => {
     }
 };
     const AccordianItem = ({open,toggle,title,data}) =>{  
+        console.log(data)
         return(
             <div className="w-full">
                 <div className='py-[12px] ' onClick={toggle}>
@@ -107,9 +128,11 @@ const fetchData = (requestParam) => {
                 <Collapse isOpened={open}>
                 <Formik>
             <Form>
+            
             <FormContainer>
             <div className="md:grid grid-cols-3 gap-2 ml-2 mt-2  border-gray-200 py-[12px] dark:!border-white/10">
-                {data.MQuestionvalue ?(
+
+                
                     <FormItem
                     label=""           
                     >
@@ -117,13 +140,13 @@ const fetchData = (requestParam) => {
                                                type="text"
                                                name="mbrating"
                                                component={Input}
-                                               value = {data.MQuestionvalue} 
+                                               value = {data[0].MQuestionvalue} 
                                                readOnly
                                            />
                    </FormItem>
-                ):(
-                <p></p>
-                ) }
+            
+                    
+                
                 
                 {/* <div className='justify-start'>
                 <Button
@@ -144,17 +167,26 @@ const fetchData = (requestParam) => {
                     <p></p>
                 )}
             </div>
-               
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+            {Array.isArray(data) && data.length!== 0 ? (
+                                    data.map((items) => (
+            
                     <div className="group relative rounded border p-2 flex ">
                         <img
                                     className="rounded max-h-auto max-w-auto"
-                                    src={COMMANPATH + data.ImagePath}
+                                    src={COMMANPATH + items.ImagePath}
                                     alt={"label"}
                         />
                     </div>
-                </div>
+           
+             ))
+                                 
+             ) : (
+                 <p>No data available.</p>
+             )} 
+              </div>
             </FormContainer>
+             
             </Form>
             </Formik>  
                               
@@ -165,29 +197,46 @@ const fetchData = (requestParam) => {
     return(
         <div>
                  <div className="grid grid-flow-row-dense grid-cols-3 grid-rows-1 gap-4">
-                 <div className='col-span-2'>
+                 <div className='col-span-2 mb-6'>
                  <h3 className="mb-2">Electric Details</h3>
                  </div>
-                 <div className="flex justify-end gap-2">
-                <Button
-                    variant="solid"
-                    type="submit"
-                    onClick={() =>handleOpen()}
-                    >
-                    {openAll && open ? 'Close All' : 'Open All'}
-                    </Button>
-
-                </div>
-            </div>
-            { data && data.map((data,index)=>{
-                return <AccordianItem 
-                key={index}
-                open={open === index  || openAll } 
-                title={data.Questions}
-                toggle={()=>toggle(index)}
-                data = {data}/>
+                 {data && data.length > 0?(
+                         <div className="flex justify-end gap-2">
+                         <Button
+                             variant="solid"
+                             type="submit"
+                             onClick={() =>handleOpen()}
+                             >
+                             {openAll && open ? 'Close All' : 'Open All'}
+                             </Button>
+         
+                         </div>
+                        ):(
+                        <p></p>
+                        )}
                 
-            })}
+            </div>
+            {data && data.length>0 ? (
+                <div>
+                    {uniqueData.map((group, index) => {
+                return (
+                    <AccordianItem
+                    key={index}
+                    open={open === index || openAll}
+                    title={group[0].Questions} // Use the first item's question as the title
+                    toggle={() => toggle(index)}
+                    data={group} // Pass the entire array of entries for this question
+                    />
+                );
+                })}
+                
+                </div>
+                
+            ):(
+                <p>No data available.</p> 
+            )}
+            
+
             
         </div>
         // <>

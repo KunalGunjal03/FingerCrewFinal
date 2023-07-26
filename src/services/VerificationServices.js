@@ -1,6 +1,6 @@
 import ApiService from './ApiService'
 import BaseService from './BaseService';
-import { TOKEN_TYPE, REQUEST_HEADER_AUTH_KEY, TOKEN_KEY, COMMANAPILINK } from '../constants/api.constant';
+import { TOKEN_TYPE, REQUEST_HEADER_AUTH_KEY, TOKEN_KEY, COMMANAPILINK, LOCALPATH } from '../constants/api.constant';
 
 export const VerifyPersonalDetails = async (data) => {
     console.log(data)

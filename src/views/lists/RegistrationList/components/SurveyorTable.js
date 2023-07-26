@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef ,useCallback,useState} from 'react'
 import { HiOutlinePencil } from 'react-icons/hi'
-import {Tooltip} from 'components/ui'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { getreqSurveyor } from '../store/dataSlice'
 import useThemeClass from 'utils/hooks/useThemeClass'
@@ -83,18 +83,9 @@ const ActionIconType = ({ type }) => {
         case 'Partner Registered':
             return  <HiOutlinePencil />
         default:
-            return <HiEye/>
+            return <HiEye />
     }
 }
-// const TooltipType = ({type}) =>{
-
-//     switch (type) {
-//         case 'Partner Registered':
-//             return  <Tooltip title="View"/>
-//         default:
-//             return <Tooltip title="View"/>
-//     }
-// }
 const ActionColumn = ({ row }) => {
     // const dispatch = useDispatch()
     const { textTheme } = useThemeClass()
@@ -115,16 +106,15 @@ const ActionColumn = ({ row }) => {
     //console.log(row)    
     return (
         <div className="flex justify-start text-lg">
-            <Tooltip title={row.registration_status === "Partner Registered" ? "verify" : "view"} placement="right">
             <span
                 className={`cursor-pointer p-2 hover:${textTheme}`}
                 onClick={onEdit}
             >
+                  {/* <HiEye/> */}
                 <ActionIconType
                 type = {row.registration_status}
                 />
             </span>
-            </Tooltip>
             {/* <span
                 className="cursor-pointer p-2 hover:text-red-500"
                 onClick={onDelete}
@@ -135,7 +125,7 @@ const ActionColumn = ({ row }) => {
     )
 }
 //Added for Avatar //
-var Img = "http://fingercrewapi.alphonsol.com//FingerCrew/2023/June/15.06.2023/Surveyor/Documents/7020702110/360_F_350696716_k5DaMluvXolFKxGIM3psna1svysIbwNB.jpg"
+//var Img = "http://fingercrewapi.alphonsol.com//FingerCrew/2023/June/15.06.2023/Surveyor/Documents/7020702110/360_F_350696716_k5DaMluvXolFKxGIM3psna1svysIbwNB.jpg"
 const SurveyorColumn = ({ row }) => {
    
     return (    
@@ -216,7 +206,9 @@ const SurveyorTable = () => {
         Rejected: 'bg-red-500',
         Verified : 'bg-emerald-500',
         Pending: 'bg-yellow-400',
-        "Under Process": 'bg-yellow-400',
+        'Partner Approved': 'bg-emerald-500',
+        'Partner Registered': 'bg-yellow-400',
+        
     }
     const columns = useMemo(
         () => [
@@ -233,10 +225,18 @@ const SurveyorTable = () => {
             {
                 header: 'Date',
                 accessorKey: 'registration_date',
+                // cell: (props) => {
+                //     const row = props.row.original
+                //     return <span className="capitalize">{row.registration_date}</span>
+                // },
                 cell: (props) => {
                     const row = props.row.original
-                    return <span className="capitalize">{row.registration_date}</span>
+                    const bookingDate = new Date(row.registration_date);
+                    const formattedDate = bookingDate.toLocaleDateString('en-GB'); // Change 'en-GB' to your desired locale
+                    return <span className="capitalize">{formattedDate}</span>;     
                 },
+                
+
             },
             
             

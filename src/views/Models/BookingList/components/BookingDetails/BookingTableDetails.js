@@ -1,5 +1,5 @@
 import React,{useMemo,lazy,useState,useEffect} from 'react'
-import { Table, Badge,Pagination,Select,Input,Button } from 'components/ui'
+import { Table, Badge,Pagination,Select,Input,Button ,Tooltip} from 'components/ui'
 import { useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 import { HiEye } from "react-icons/hi2";
@@ -171,15 +171,17 @@ const BookingTableDetails = ({
                 } 
                 return (
                     <div className="flex justify-left text-lg">
-                        <span
-                            className={`cursor-pointer p-2 hover:${textTheme}`}
-                            onClick={onView}
-                        >
-                            <HiEye/>
-                        </span>
-                    </div>
-                )
-            }
+                        <Tooltip title="view">
+                            <span
+                                className={`cursor-pointer p-2 hover:${textTheme}`}
+                                onClick={onView}
+                            >
+                                <HiEye/>
+                            </span>
+                            </Tooltip>
+                                </div>
+                            )
+                        }
             const columns = useMemo(
                 () => [
                     {

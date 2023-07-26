@@ -32,6 +32,7 @@ const BookingDetails = () => {
     const InstallerData = useSelector((state) => state.crmBookinglist?.data?.BookingDetails?.getInstallerData)
     const PackageData = useSelector((state) => state.crmBookinglist?.data?.BookingDetails?.GetPackageDetails)
     console.log(PackageData)
+    console.log(InstallerData)
     const navigate = useNavigate()
     const {token,tokenKey} = useSelector((state) => state.auth.user)
     const location = useLocation()

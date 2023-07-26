@@ -1,12 +1,49 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { apiGetBookingList,apiGetSurveyDetails } from 'services/BookingServices'
+import { apiGetElectricDetails,apiGetRejectedSurveyDetails ,apiGetPVDetails} from 'services/BookingServices'
 
-export const getSurveyDetails = createAsyncThunk(
+export const getRejectedSurveyDetails = createAsyncThunk(
     'surveyDetailForm/data/getBookingDetails',
     async (params) => {
         try{
-            const response = await apiGetSurveyDetails(params)
-            console.log(response.data)
+            const response = await apiGetRejectedSurveyDetails(params)
+            console.log(response)
+            return response.data
+        }
+        catch(error)
+        {
+            console.error(error)
+            return error
+        }
+        
+       
+        
+    }
+)
+export const getElectricDetails = createAsyncThunk(
+    'surveyDetailForm/data/getElectricDetails',
+    async (params) => {
+        try{
+            const response = await apiGetElectricDetails(params)
+            console.log(response)
+            return response.data
+        }
+        catch(error)
+        {
+            console.error(error)
+            return error
+        }
+        
+       
+        
+    }
+)
+
+export const getPVDetails = createAsyncThunk(
+    'surveyDetailForm/data/getElectricDetails',
+    async (params) => {
+        try{
+            const response = await apiGetPVDetails(params)
+            console.log(response)
             return response.data
         }
         catch(error)
@@ -40,6 +77,7 @@ const dataSlice = createSlice({
         loading: false,
         BookingList: [],
         BookingDetails:[],
+        ElectricDetails:[],
         filterData: [],
         stepStatus: {
             0: { status: 'pending' },
@@ -69,9 +107,12 @@ const dataSlice = createSlice({
     },
     extraReducers:(builder) => {
         builder
-        .addCase(getSurveyDetails.fulfilled, (state, action) => {
+        .addCase(getRejectedSurveyDetails.fulfilled, (state, action) => {
             state.BookingDetails = action.payload
           })
+        .addCase(getElectricDetails.fulfilled,(state,action) =>{
+            state.ElectricDetails =action.payload   
+        })
     
      
     },

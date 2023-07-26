@@ -60,7 +60,7 @@ export const DeleteRightData = async (userrightsid) => {
     const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
     const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
     const response = await BaseService({
-      url: 'http://fingercrewapi.alphonsol.com/Role/DeleteRole', // Replace with the actual URL for fetching role options
+      url: 'http://fingercrewapi.alphonsol.com/Rights/DeleteRights', // Replace with the actual URL for fetching role options
       method: 'post',
       headers: {
         Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,

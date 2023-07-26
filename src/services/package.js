@@ -95,7 +95,7 @@ export const updatePackageData = async (data) => {
 //To Fetch ALL Package Mapping Data
 export async function GetPackageMapping(data) {
   return ApiService.fetchData({
-      url: COMMANAPILINK + 'Mapping/GetAllPackageMapping',
+      url: COMMANAPILINK + 'Mapping/GetAllFilterPackageMapping',
       method: 'Post',
       data,
   })

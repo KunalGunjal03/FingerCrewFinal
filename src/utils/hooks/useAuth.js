@@ -39,6 +39,7 @@ function useAuth() {
                         setUser(
                             {
                                 avatar: '',
+                                id : resp.data.userDatas[0].id,
                                 userName:resp.data.userDatas[0].UserName,
                                 name: resp.data.userDatas[0].Name,
                                 email: resp.data.userDatas[0].Email,

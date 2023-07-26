@@ -3,14 +3,12 @@ import { Container, AdaptableCard } from 'components/shared'
 import FormStep from './components/FormStep'
 import { useDispatch, useSelector } from 'react-redux'
 import { getForm, setStepStatus, setFormData } from './store/dataSlice'
-import { useLocation } from 'react-router-dom'
 import { setCurrentStep } from './store/stateSlice'
 import reducer from './store'
 import { injectReducer } from 'store/index'
-import { Card,Button } from 'components/ui'
-import { getSurveyDetails } from './store/dataSlice'
-import { useNavigate } from 'react-router-dom'
-import { MdArrowBackIosNew } from 'react-icons/md'
+import { Card } from 'components/ui'
+import { useLocation } from 'react-router-dom'
+import { getRejectedSurveyDetails } from './store/dataSlice'
 injectReducer('surveyDetailForm', reducer)
 
 const SurveyBasicDetails = lazy(() =>
@@ -20,8 +18,8 @@ const ElectricDetails = lazy(()=> import('./components/ElectriceDetails') )
 const RoofStructure = lazy(()=> import('./components/RoofStructure'))
 const ExistingPVDetails = lazy(()=> import('./components/ExistingPvDetails'))
 const SurveyTabs = () =>{
+    
     const dispatch = useDispatch()
-    const navigate = useNavigate()
     const {token,tokenKey} = useSelector((state) => state.auth.user)
     const location = useLocation()
     const stepStatus = useSelector(
@@ -32,12 +30,9 @@ const SurveyTabs = () =>{
         (state) => state.surveyDetailForm.state.currentStep
     )
     const data = useSelector((state) => state.surveyDetailForm?.data?.BookingDetails?.getData)
-    console.log(data)
+    console.log(data)   
     const formData = useSelector(
         (state) => state.surveyDetailForm.data.formData.getData
-    )
-    const path = location.pathname.substring(
-        location.pathname.lastIndexOf('/') + 1
     )
     useEffect(() => {
         const path = location.pathname.substring(
@@ -52,7 +47,7 @@ const SurveyTabs = () =>{
 }, []);
 const fetchData = (requestParam) => {
     try {
-      dispatch(getSurveyDetails( requestParam));
+      dispatch(getRejectedSurveyDetails( requestParam));
       //console.log(surveyor_master_id)
       
     } catch (error) {
@@ -81,32 +76,7 @@ const fetchData = (requestParam) => {
         () => stepStatus[currentStep].status,
         [stepStatus, currentStep]
     )
-    const onBackClick = ()=>{
-        
-        try{
-            navigate('/RejectionList')
-        }
-        catch(error)
-        {
-            console.error(error)
-        }
-    }
     return(
-        <div className="grid grid-cols-6 gap-2">
-        <div className="col-end-7 col-span-2 flex justify-end">
-        <Button
-                                        // loading={isSubmitting}
-                                        // variant="solid"
-                                        type="submit"
-                                        size="md"
-                                        icon = {<MdArrowBackIosNew/>}
-                                        variant="twoTone"
-                                        onClick = {onBackClick}
-                                    >
-                                    Back
-                                    </Button>
-        </div>
-        <div className="col-start-1 col-end-7">
         <Container className="h-full">
         <AdaptableCard className="h-full" bodyClass="h-full">
             <div className="grid lg:grid-cols-5 xl:grid-cols-3 2xl:grid-cols-5 gap-4 h-full">
@@ -169,8 +139,6 @@ const fetchData = (requestParam) => {
             </div>
         </AdaptableCard>
     </Container>
-    </div>
-    </div>
     )
 }
 

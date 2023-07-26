@@ -20,7 +20,6 @@ const SurveyBasicDetails = ({
     onNextChange,
     currentStepStatus
 }) => {
-    console.log(data)
     const onNext = (values, setSubmitting) => {
         onNextChange?.(values, 'surveybasicdetails', setSubmitting)
     
@@ -55,7 +54,7 @@ const SurveyBasicDetails = ({
                                 <div>
                                 <div className="md:grid grid-cols-2 gap-4">
                                 <FormItem
-                                        label="Survey No"
+                                        label="Survey No."
                                        
                                     >
                                         <Field
@@ -68,7 +67,7 @@ const SurveyBasicDetails = ({
                                 </FormItem>
                                    
                                     <FormItem
-                                    label="Surveyor Name"
+                                    label="Surveyor name"
                                 >
                                     <Field
                                         type="text"
@@ -78,7 +77,7 @@ const SurveyBasicDetails = ({
                                         readOnly
                                     />
                                 </FormItem>
-                                </div>  
+                                </div>     
                                 <div className="md:grid grid-cols-2 gap-4">
                                    
                                     <FormItem
@@ -108,7 +107,7 @@ const SurveyBasicDetails = ({
                                 <div className="md:grid grid-cols-2 gap-4">
                                    
                                     <FormItem
-                                        label="Survey Date"
+                                        label="Survey date"
                                       
                                     >
                                         <Field
@@ -126,7 +125,7 @@ const SurveyBasicDetails = ({
                                         <Field name="survey_location" 
                                          type="text"
                                          component={Input}
-                                         value = {data && data.location}
+                                         value = {data && data.location }
                                          readOnly >
                                         </Field>
                                     </FormItem>
@@ -154,6 +153,7 @@ const SurveyBasicDetails = ({
                                         </Field>
                                     </FormItem>
                                 </div>
+                                
                                 <div className="md:grid grid-cols-2 gap-4">
                                 <FormItem
                                         label="Remark"

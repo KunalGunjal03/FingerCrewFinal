@@ -53,7 +53,7 @@ export const RoleOptionsDrop = async () => {
 //To Fetch ALL User Data
 export async function apiGetlistsUser(data) {
   return ApiService.fetchData({
-      url: COMMANAPILINK + 'User/ViewAlluserdetails',
+      url: COMMANAPILINK + 'user/ViewAlluserFilterList',
       method: 'Post',
       data,
   })
@@ -87,4 +87,32 @@ export const updateUserData = async (data) => {
     throw new Error(error.response?.data || 'An error occurred while fetching role options');
   }
 };
-
+export async function apiGetlistsAssignRoles(data) {
+  return ApiService.fetchData({
+      url: COMMANAPILINK + 'Role/AssignRoleFilter',
+      method: 'Post',
+      data,
+  })
+};
+//For Delete User data
+export const DeleteUserData = async (user_id) => {
+  try {
+    const accessToken = BaseService.defaults.headers[REQUEST_HEADER_AUTH_KEY];
+    const tokenKey = BaseService.defaults.headers[TOKEN_KEY];
+    const response = await BaseService({
+      url: 'http://fingercrewapi.alphonsol.com/User/DeleteUser', // Replace with the actual URL for fetching role options
+      method: 'post',
+      headers: {
+        Authorization: accessToken ? `${TOKEN_TYPE} ${accessToken}` : undefined,
+        [TOKEN_KEY]: tokenKey || undefined,
+      },
+      data: {
+        user_id: user_id,
+      }
+    });
+    
+  } catch (error) {
+    console.error(error);
+    throw new Error(error.response?.data || 'An error occurred while fetching role options');
+  }
+};
